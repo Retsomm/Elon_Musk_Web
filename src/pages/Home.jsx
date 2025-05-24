@@ -1,30 +1,26 @@
 import { Link } from "react-router-dom";
-import { Rocket, BookMarked, Users, Newspaper } from "lucide-react";
+
 
 import Quotes from "../component/Quotes";
 const sections = [
   {
     name: "公司介紹",
-    icon: <Rocket className="w-12 h-12 text-blue-600" />,
     description:
       "深入了解馬斯克旗下的六大科技公司，探索每一間公司的創新理念與未來願景。",
     link: "/company",
   },
   {
     name: "生平故事",
-    icon: <BookMarked className="w-12 h-12 text-green-600" />,
     description: "馬斯克人生中的重要時刻與成就，從南非到矽谷的旅程。",
     link: "/life",
   },
   {
     name: "最新新聞",
-    icon: <Newspaper className="w-12 h-12 text-purple-600" />,
-    description: "與馬斯克有關的最新新聞、報導與分析，讓你隨時掌握最新動態。",
+    description: "與馬斯克有關的最新新聞，讓你隨時掌握最新動態。",
     link: "/news",
   },
   {
     name: "更多消息",
-    icon: <Users className="w-12 h-12 text-red-600" />,
     description: "與馬斯克有關書籍、影片以及podcast。",
     link: "/info",
   },
@@ -58,9 +54,11 @@ const HomePage = () => {
                 duration-300 
                 hover:scale-105 
                 hover:shadow-xl
+                flex
+                flex-col
+                justify-around
               "
             >
-              <div className="flex justify-center mb-4">{section.icon}</div>
               <h2 className="text-2xl font-semibold mb-4 ">{section.name}</h2>
               <p className="mb-6 leading-loose">{section.description}</p>
               <Link

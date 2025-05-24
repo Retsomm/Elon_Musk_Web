@@ -56,7 +56,7 @@ const BookSection = ({ title, items, isLoading }) => (
         {items.map((item) => (
           <div
             key={item.url}
-            className="card w-80 shadow-md hover:shadow-lg mx-auto"
+            className="card w-70 shadow-md hover:shadow-lg mx-auto"
           >
             <div className="card-body items-center text-center">
               <img
@@ -70,12 +70,10 @@ const BookSection = ({ title, items, isLoading }) => (
               <p className="text-lg font-medium leading-loose">{item.title}</p>
 
               <Link
-                to={item.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                to={`/info/book/${item.id}`}
                 className="btn btn-primary w-fit"
               >
-                書店連結
+                查看更多
               </Link>
             </div>
           </div>
@@ -123,12 +121,10 @@ const YoutubeSection = ({ title, items, isLoading }) => (
               </p>
 
               <Link
-                to={item.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                to={`/info/youtube/${item.id}`}
                 className="btn btn-primary w-fit"
               >
-                觀看影片
+                查看更多
               </Link>
             </div>
           </div>
@@ -176,12 +172,10 @@ const PodcastSection = ({ title, items, isLoading }) => (
               </p>
 
               <Link
-                to={item.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                to={`/info/podcast/${item.id}`}
                 className="btn btn-primary w-fit"
               >
-                收聽廣播
+                查看更多
               </Link>
             </div>
           </li>

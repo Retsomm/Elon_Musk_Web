@@ -39,29 +39,26 @@ export default function Layout({ currentTheme, onToggleTheme }) {
         className={`hamLists z-999 mt-15 fixed top-15 left-0 right-0 p-2 px-1 flex align-middle justify-between shadow-2xl bg-base-100
       ${isNavOpen ? "max-h-fit" : "hidden"} 
       `}
+        style={{ zIndex: 9998 }}
       >
         <ul className={`hamList ${isNavOpen ? true : false}`}>
           <li>
             <Link to="/company" className="navLink" onClick={toggleNav}>
-              
               公司
             </Link>
           </li>
           <li>
             <Link to="/life" className="navLink" onClick={toggleNav}>
-              
               生平
             </Link>
           </li>
           <li>
             <Link to="/news" className="navLink" onClick={toggleNav}>
-              
               新聞
             </Link>
           </li>
           <li>
             <Link to="/info" className="navLink" onClick={toggleNav}>
-              
               更多消息
             </Link>
           </li>
@@ -73,7 +70,6 @@ export default function Layout({ currentTheme, onToggleTheme }) {
                 style={{ display: "flex", alignItems: "center" }}
                 onClick={() => navigate("/member")}
               >
-                
                 <p className="">會員資料</p>
               </button>
             ) : (

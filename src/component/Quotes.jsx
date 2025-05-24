@@ -9,6 +9,14 @@ const muskQuotes = [
   "持續創新是唯一不被淘汰的方法。",
   "我從不放棄，除非我死了或完全無能為力。",
   "生活不能只關乎解決問題，還要有讓你興奮的東西。",
+  "夢想不該被現實限制，應該用行動去重塑現實。",
+  "每一次挑戰都是通往未來的階梯，勇敢踏上去吧！",
+  "不要問為什麼要做，而是問為什麼不做。",
+  "真正的進步來自於敢於挑戰不可能的勇氣。",
+  "時間是有限的資源，把它花在改變世界的事情上。",
+  "如果你不為自己的目標全力以赴，就別期待別人會幫你。",
+  "偉大的成就從來不是舒適區裡能找到的。",
+  "未來不會自己到來，你必須親手去打造它。",
 ];
 
 const Quotes = () => {
@@ -33,14 +41,10 @@ const Quotes = () => {
           >
             <div className="card-inner">
               <div className="card-front">
-                <p className="leading-loose">
-                  {quote}
-                </p>
+                <p className="leading-loose">{quote}</p>
               </div>
               <div className="card-back">
-                <p className="leading-loose">
-                  OPEN IT
-                </p>
+                <p className="leading-loose">OPEN IT</p>
               </div>
             </div>
           </div>

@@ -18,6 +18,8 @@ const MessageBoard = lazy(() => import("./pages/MessageBoard"));
 const Layout = lazy(() => import("./component/Layout"));
 const ScrollToTop = lazy(() => import("./component/ScrollToTop"));
 const ProtectedRoute = lazy(() => import("./component/ProtectedRoute"));
+const InfoItem = lazy(() => import("./pages/infoItem"));
+
 function App() {
   const { currentTheme, toggleTheme } = useTheme();
   return (
@@ -36,6 +38,7 @@ function App() {
             <Route path="/company" element={<Company />} />
             <Route path="/news" element={<New />} />
             <Route path="/info" element={<Info />} />
+            <Route path="/info/:type/:id" element={<InfoItem />} />
             <Route path="/login" element={<Login />} />
             <Route
               path="/member"
