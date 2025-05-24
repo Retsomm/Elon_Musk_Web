@@ -1,0 +1,128 @@
+* {
+  font-family: "微軟正黑體", sans-serif;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+nav {
+  /* background-color: #c0b8b8; */
+}
+
+input {
+  outline: none;
+  /* background-color: #c0b8b8; */
+}
+.navLink {
+  /* color: black; */
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.navLink:hover {
+  /* color: white; */
+  font-weight: 900;
+}
+.logo {
+  height: 50px;
+}
+.logo img {
+  height: 160%;
+}
+h1,
+p,
+h2 {
+  /* color: black; */
+}
+.dark h1,
+.dark p,
+.dark h2,
+.dark span {
+  /* color: white; */
+}
+.link {
+  display: none;
+}
+/* .companyCard {
+  background-color: #d9d9d9;
+  color: black;
+}
+.dark .companyCard {
+  background-color: #393e46;
+  color: #ffd369;
+}
+.hamburger {
+  color: #222831;
+}
+.dark .hamburger {
+  color: white;
+} */
+@media (min-width: 768px) {
+  .link {
+    display: flex;
+  }
+}
+@media (max-width: 768px) {
+  nav {
+    align-items: center;
+    justify-content: center;
+  }
+}
+.banner {
+  padding-top: 66px;
+}
+main {
+  padding: 20px;
+  /* background-color: #c0b8b8;
+  color: black; */
+}
+.contact {
+  /* background-color: #d9d9d9;
+  color: black; */
+}
+
+.timeContainer {
+  /* background-color: #c0b8b8; */
+}
+/* .newsCard {
+  background-color: #d9d9d9;
+  color: black;
+} */
+.accordion {
+  /* background-color: #c0b8b8; */
+}
+.open {
+  display: block;
+}
+.hamLists {
+  /* background-color: #c0b8b8; */
+}
+
+.dark nav {
+  /* background-color: #222831; */
+}
+.dark .navLink {
+  /* color: #f3f3f3; */
+}
+.dark .navLink:hover {
+  /* color: #ffd369; */
+}
+.dark main {
+  /* background-color: #222831;
+  color: #f3f3f3; */
+}
+.dark .contact {
+  /* background-color: #393e46;
+  color: #ffd369; */
+}
+/* .dark .newsCard {
+  background-color: #393e46;
+  color: #ffd369;
+} */
+/* .dark .accordion {
+  background-color: #222831;
+}
+.dark .hamLists {
+  background-color: #222831;
+} */

@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Block admin and login pages from all bots
+Disallow: /admin
+Disallow: /login
+
+# Block search results pages
+Disallow: /search
+
+# Optional: Block temporary or test pages
+Disallow: /test
+Disallow: /temp
+
+# Allow everything else
+Allow: /
+
+# Sitemap location
+Sitemap: https://vite-react-elon-5dae6.web.app/sitemap.xml
