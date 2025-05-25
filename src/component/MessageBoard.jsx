@@ -18,7 +18,7 @@ function App() {
       setUser(currentUser);
       if (currentUser) {
         const userAvatar = currentUser.photoURL || "/avatar.webp"; // 優先使用 Gmail 頭像，無效時用預設
-        console.log("使用者頭像：", userAvatar); // 檢查頭像 URL
+
         setAvatar(userAvatar);
       } else {
         setAvatar("/avatar.webp");
@@ -35,7 +35,7 @@ function App() {
       messagesRef,
       (snapshot) => {
         const data = snapshot.val();
-        console.log("從 Firebase 載入的資料：", data); // 檢查載入的資料
+
         if (data) {
           const messageList = Object.entries(data)
             .map(([id, message]) => ({
@@ -46,7 +46,6 @@ function App() {
               (message) =>
                 message.content && message.timestamp && message.userId
             );
-          console.log("處理後的訊息列表：", messageList);
           setMessages(
             messageList.sort((a, b) => {
               const dateA = new Date(a.timestamp);

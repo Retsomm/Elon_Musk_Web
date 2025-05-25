@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { books, podcasts, youtubeVideos } from "../component/data";
-
+import FavoriteButton from "../component/FavoriteButton";
 const InfoItem = () => {
   const { type, id } = useParams();
-
   let item;
   if (type === "book") {
     item = books.find((b) => b.id === id);
@@ -17,18 +16,19 @@ const InfoItem = () => {
   if (!item) {
     return <div className="text-center mt-10">找不到資料</div>;
   }
+  const [userId, setUserId] = useState(null);
+  // 收藏狀態
 
   // 書籍詳細頁
   if (type === "book") {
     return (
-      <div className="max-w-xl mx-auto mt-10 card shadow-lg p-6">
+      <div className="max-w-xl mx-auto mt-10 card p-6">
         <img
           src={item.img}
           alt={item.title}
           className="w-40 h-60 object-cover mx-auto mb-4 rounded"
         />
         <h2 className="text-2xl font-bold mb-2 text-center">{item.title}</h2>
-        <p className="mb-4">{item.summary}</p>
         <Link
           to={item.url}
           target="_blank"
@@ -37,16 +37,27 @@ const InfoItem = () => {
         >
           書店連結
         </Link>
-        {item.moreLink && (
-          <Link
-            to={item.moreLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-primary w-fit mx-auto "
-          >
-            更多連結
-          </Link>
-        )}
+        <h3 className="text-2xl font-bold mb-2 text-center">BookNotes</h3>
+        <ul className="list shadow-md">
+          {item.bookNote?.map((t, i) => (
+            <div key={i}>
+              <li
+                key={i}
+                className="list flex p-3 items-center justify-between"
+              >
+                <div className="font-semibold opacity-60 text-left">{t}</div>
+
+                <FavoriteButton
+                  type={type}
+                  id={id}
+                  noteIdx={i}
+                  defaultContent={t}
+                />
+              </li>
+              <div className="divider m-0"></div>
+            </div>
+          ))}
+        </ul>
       </div>
     );
   }
@@ -62,7 +73,7 @@ const InfoItem = () => {
       youtubeId = match ? match[1] : "";
     }
     return (
-      <div className="max-w-2xl mx-auto mt-10 card shadow-lg p-6">
+      <div className="max-w-2xl mx-auto mt-10 card ">
         <div className="aspect-w-16 aspect-h-9 mb-4">
           <iframe
             src={`https://www.youtube.com/embed/${youtubeId}`}
@@ -71,14 +82,28 @@ const InfoItem = () => {
             className="w-full h-64 rounded"
           ></iframe>
         </div>
-        <h2 className="text-2xl font-bold mb-2 text-center">{item.title}</h2>
-        <div className="mb-4">
-          <ul className="list-disc pl-5">
-            {item.hightlight?.map((t, i) => (
-              <li key={i}>{t}</li>
-            ))}
-          </ul>
-        </div>
+
+        <h3 className="text-2xl font-bold mb-2 text-center">hightlight</h3>
+        <ul className="list shadow-md">
+          {item.hightlight?.map((t, i) => (
+            <div key={i}>
+              <li
+                key={i}
+                className="list flex p-3 items-center justify-between"
+              >
+                <div className="font-semibold opacity-60 text-left">{t}</div>
+
+                <FavoriteButton
+                  type={type}
+                  id={id}
+                  noteIdx={i}
+                  defaultContent={t}
+                />
+              </li>
+              <div className="divider m-0"></div>
+            </div>
+          ))}
+        </ul>
       </div>
     );
   }
@@ -99,7 +124,7 @@ const InfoItem = () => {
       }
     }
     return (
-      <div className="max-w-2xl mx-auto mt-10 card shadow-lg p-6">
+      <div className="max-w-2xl mx-auto mt-10 card">
         <div className="w-full mb-4">
           <iframe
             allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"

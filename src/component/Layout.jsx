@@ -79,7 +79,7 @@ export default function Layout({ currentTheme, onToggleTheme }) {
             )}
           </li>
           <li>
-            <div className="navLink flex items-center gap-2">
+            <div className="navLink flex items-center gap-2 tooltip tooltip-bottom" data-tip="switchTheme">
               <span className="text-sm"></span>
               <ThemeToggle
                 currentTheme={currentTheme}
@@ -96,7 +96,7 @@ export default function Layout({ currentTheme, onToggleTheme }) {
         <div className="ham md:hidden left-5 absolute rounded-full p-2">
           <Hamburger className="hamburger cursor-pointer" onClick={toggleNav} />
         </div>
-        <div className="logo">
+        <div className="logo tooltip tooltip-bottom" data-tip="homePage">
           <Link to="/" className="navLink flex text-center">
             <img
               src="/logo.webp"
@@ -131,7 +131,7 @@ export default function Layout({ currentTheme, onToggleTheme }) {
           <li>
             {user ? (
               <button
-                className="navLink p-0 border-none bg-transparent"
+                className="navLink p-0 border-none bg-transparent tooltip tooltip-bottom" data-tip="memberPage"
                 style={{ display: "flex", alignItems: "center" }}
                 onClick={() => navigate("/member")}
               >
@@ -149,7 +149,7 @@ export default function Layout({ currentTheme, onToggleTheme }) {
             )}
           </li>
           <li>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 tooltip tooltip-bottom" data-tip="switchTheme">
               <span className="text-sm"></span>
               <ThemeToggle
                 currentTheme={currentTheme}

@@ -122,14 +122,14 @@ const Login = () => {
         </div>
         <div className="flex flex-col sm:flex-row gap-2 justify-center">
           <button
-            className="btn btn-active btn-success"
+            className="btn btn-active"
             onClick={handleRegister}
             type="button"
           >
             註冊
           </button>
           <button
-            className="btn bg-white text-black border-[#e5e5e5]"
+            className="btn"
             type="submit"
           >
             <svg
@@ -153,7 +153,7 @@ const Login = () => {
             Login with Email
           </button>
           <button
-            className="btn bg-white text-black border-[#e5e5e5]"
+            className="btn"
             type="button"
             onClick={handleGoogleLogin}
           >

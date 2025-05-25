@@ -14,11 +14,11 @@ const Info = lazy(() => import("./pages/Info"));
 const Login = lazy(() => import("./pages/Login"));
 const Member = lazy(() => import("./pages/Member"));
 const Error = lazy(() => import("./pages/Error"));
-const MessageBoard = lazy(() => import("./pages/MessageBoard"));
 const Layout = lazy(() => import("./component/Layout"));
 const ScrollToTop = lazy(() => import("./component/ScrollToTop"));
 const ProtectedRoute = lazy(() => import("./component/ProtectedRoute"));
 const InfoItem = lazy(() => import("./pages/infoItem"));
+const ErrorBoundary = lazy(() => import("./component/ErrorBoundary"));
 
 function App() {
   const { currentTheme, toggleTheme } = useTheme();
@@ -38,7 +38,14 @@ function App() {
             <Route path="/company" element={<Company />} />
             <Route path="/news" element={<New />} />
             <Route path="/info" element={<Info />} />
-            <Route path="/info/:type/:id" element={<InfoItem />} />
+            <Route
+              path="/info/:type/:id"
+              element={
+                <ErrorBoundary>
+                  <InfoItem />
+                </ErrorBoundary>
+              }
+            />
             <Route path="/login" element={<Login />} />
             <Route
               path="/member"
@@ -48,7 +55,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/MessageBoard" element={<MessageBoard />} />
             <Route path="*" element={<Error />} />
           </Route>
         </Routes>

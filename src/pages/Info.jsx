@@ -8,7 +8,9 @@ const Info = () => {
     podcasts: [],
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [filter, setFilter] = useState("");
   const navigate = useNavigate();
+
   useEffect(() => {
     // 模擬動態抓取資料，實際上可替換為 API 呼叫
     setTimeout(() => {
@@ -19,17 +21,55 @@ const Info = () => {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
-      <BookSection title="Books" items={data.books} isLoading={isLoading} />
-      <YoutubeSection
-        title="YouTube"
-        items={data.youtubeVideos}
-        isLoading={isLoading}
-      />
-      <PodcastSection
-        title="Podcast"
-        items={data.podcasts}
-        isLoading={isLoading}
-      />
+      <form className="filter flex justify-center">
+        <input
+          className="btn btn-square"
+          type="reset"
+          value="×"
+          onClick={() => setFilter("")}
+        />
+        <input
+          className="btn"
+          type="radio"
+          name="frameworks"
+          aria-label="Books"
+          checked={filter === "books"}
+          onChange={() => setFilter("books")}
+        />
+        <input
+          className="btn"
+          type="radio"
+          name="frameworks"
+          aria-label="Youtube"
+          checked={filter === "youtube"}
+          onChange={() => setFilter("youtube")}
+        />
+        <input
+          className="btn"
+          type="radio"
+          name="frameworks"
+          aria-label="Podcasts"
+          checked={filter === "podcasts"}
+          onChange={() => setFilter("podcasts")}
+        />
+      </form>
+      {(filter === "" || filter === "books") && (
+        <BookSection title="Books" items={data.books} isLoading={isLoading} />
+      )}
+      {(filter === "" || filter === "youtube") && (
+        <YoutubeSection
+          title="YouTube"
+          items={data.youtubeVideos}
+          isLoading={isLoading}
+        />
+      )}
+      {(filter === "" || filter === "podcasts") && (
+        <PodcastSection
+          title="Podcast"
+          items={data.podcasts}
+          isLoading={isLoading}
+        />
+      )}
     </div>
   );
 };
@@ -39,7 +79,7 @@ const BookSection = ({ title, items, isLoading }) => (
     <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
     {isLoading ? (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {[...Array(6)].map((_, index) => (
+        {[...Array(2)].map((_, index) => (
           <div
             className="card shadow-md" // 移除 w-80 和 mx-auto
             key={`book-skeleton-${index}`}
@@ -88,7 +128,7 @@ const YoutubeSection = ({ title, items, isLoading }) => (
     <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
     {isLoading ? (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {[...Array(4)].map((_, index) => (
+        {[...Array(6)].map((_, index) => (
           <div
             className="card w-80 shadow-md mx-auto"
             key={`youtube-skeleton-${index}`}
