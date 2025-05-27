@@ -51,11 +51,22 @@ const Login = () => {
       setAlert({
         show: true,
         type: "success",
-        message: "註冊成功，請重新登入",
+        message: "註冊成功，正在自動登入...",
       });
-      setTimeout(() => window.location.reload(), 1500);
+      await login(email, password);
+      setTimeout(() => navigate("/member"), 1000);
     } catch (error) {
-      setAlert({ show: true, type: "error", message: error.message });
+      // 針對已註冊的 email 顯示友善訊息
+      if (error.code === "auth/email-already-in-use") {
+        setAlert({
+          show: true,
+          type: "error",
+          message: "此 Email 已註冊，請直接登入。",
+        });
+      } else {
+        setAlert({ show: true, type: "error", message: error.message });
+      }
+      console.log("Register error:", error);
     }
   };
 
@@ -128,10 +139,7 @@ const Login = () => {
           >
             註冊
           </button>
-          <button
-            className="btn"
-            type="submit"
-          >
+          <button className="btn" type="submit">
             <svg
               aria-label="Email icon"
               width="16"
@@ -152,11 +160,7 @@ const Login = () => {
             </svg>
             Login with Email
           </button>
-          <button
-            className="btn"
-            type="button"
-            onClick={handleGoogleLogin}
-          >
+          <button className="btn" type="button" onClick={handleGoogleLogin}>
             <svg
               aria-label="Google logo"
               width="16"

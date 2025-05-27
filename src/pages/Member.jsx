@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, lazy } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { database, auth } from "../firebase";
-import { ref, onValue } from "firebase/database";
+import { ref, onValue, remove } from "firebase/database";
 import { books, podcasts, youtubeVideos } from "../component/data";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -16,6 +16,7 @@ const Member = () => {
   const navigate = useNavigate();
   const [memberPic, setMemberPic] = useState("");
   const [favoritesData, setFavoritesData] = useState({});
+  const [firebaseUid, setFirebaseUid] = useState("");
   const [mainTab, setMainTab] = useState("profile");
   const fileInputRef = useRef(null);
   // 取得會員 Email 與 Google 頭像
@@ -27,7 +28,7 @@ const Member = () => {
     // 先監聽 Firebase Auth 狀態
     const unsubscribeAuth = onAuthStateChanged(auth, (firebaseUser) => {
       if (loading || !firebaseUser) return;
-      console.log("onAuthStateChanged user.uid", firebaseUser.uid);
+      setFirebaseUid(firebaseUser.uid);
 
       // 監聽收藏資料
       const favRef = ref(database, `favorites/${firebaseUser.uid}`);
@@ -42,6 +43,24 @@ const Member = () => {
     // 清理 Auth 監聽
     return () => unsubscribeAuth();
   }, [loading]);
+  const handleRemoveFavorite = async (type, id, noteIdx) => {
+    if (!firebaseUid) {
+      alert("請先登入或稍後再試");
+      return;
+    }
+    let favPath = `favorites/${firebaseUid}/${type}/${id}`;
+    if (Array.isArray(favoritesData[type]?.[id])) {
+      favPath += `/${noteIdx}`;
+    } else if (
+      typeof favoritesData[type]?.[id] === "object" &&
+      favoritesData[type][id][noteIdx]
+    ) {
+      favPath += `/${noteIdx}`;
+    }
+
+    await remove(ref(database, favPath));
+  };
+
   // 收藏內容渲染
   const renderCollectList = () => {
     if (!favoritesData || Object.keys(favoritesData).length === 0) {
@@ -95,8 +114,14 @@ const Member = () => {
                   {notes[noteIdx] || favData.content}
                 </div>
               </div>
-              <div className="mt-2 sm:mt-0 sm:ml-4 flex-shrink-0">
-                <span className="badge badge-info">{type}</span>
+              <div className="m-2 sm:mt-0 sm:ml-4 flex-shrink-0">
+                <span className="badge badge-info m-2">{type}</span>
+                <button
+                  className="btn btn-xs btn-error"
+                  onClick={() => handleRemoveFavorite(type, id, noteIdx)}
+                >
+                  移除收藏
+                </button>
               </div>
             </div>
           );

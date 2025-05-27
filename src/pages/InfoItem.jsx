@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { books, podcasts, youtubeVideos } from "../component/data";
 import FavoriteButton from "../component/FavoriteButton";
@@ -16,8 +16,6 @@ const InfoItem = () => {
   if (!item) {
     return <div className="text-center mt-10">找不到資料</div>;
   }
-  const [userId, setUserId] = useState(null);
-  // 收藏狀態
 
   // 書籍詳細頁
   if (type === "book") {

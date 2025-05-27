@@ -68,7 +68,10 @@ export default function Layout({ currentTheme, onToggleTheme }) {
               <button
                 className="navLink p-0 border-none bg-transparent"
                 style={{ display: "flex", alignItems: "center" }}
-                onClick={() => navigate("/member")}
+                onClick={() => {
+                  navigate("/member");
+                  toggleNav();
+                }}
               >
                 <p className="">會員資料</p>
               </button>
@@ -79,11 +82,15 @@ export default function Layout({ currentTheme, onToggleTheme }) {
             )}
           </li>
           <li>
-            <div className="navLink flex items-center gap-2 tooltip tooltip-bottom" data-tip="switchTheme">
+            <div
+              className="navLink flex items-center gap-2 tooltip tooltip-bottom"
+              data-tip="switchTheme"
+            >
               <span className="text-sm"></span>
               <ThemeToggle
                 currentTheme={currentTheme}
                 onToggle={onToggleTheme}
+                
               />
             </div>
           </li>
@@ -131,7 +138,8 @@ export default function Layout({ currentTheme, onToggleTheme }) {
           <li>
             {user ? (
               <button
-                className="navLink p-0 border-none bg-transparent tooltip tooltip-bottom" data-tip="memberPage"
+                className="navLink p-0 border-none bg-transparent tooltip tooltip-bottom"
+                data-tip="memberPage"
                 style={{ display: "flex", alignItems: "center" }}
                 onClick={() => navigate("/member")}
               >
@@ -149,7 +157,10 @@ export default function Layout({ currentTheme, onToggleTheme }) {
             )}
           </li>
           <li>
-            <div className="flex items-center gap-2 tooltip tooltip-bottom" data-tip="switchTheme">
+            <div
+              className="flex items-center gap-2 tooltip tooltip-bottom"
+              data-tip="switchTheme"
+            >
               <span className="text-sm"></span>
               <ThemeToggle
                 currentTheme={currentTheme}

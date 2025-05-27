@@ -50,9 +50,9 @@ export const AuthProvider = ({ children }) => {
       email,
       password
     );
-    // 註冊後將 email 存入資料庫
-    await set(ref(db, "users/" + userCredential.user.uid), { email });
-    setUser({ email });
+    // // 註冊後將 email 存入資料庫
+    // await set(ref(db, "users/" + userCredential.user.uid), { email });
+    // setUser({ email });
   };
 
   // 使用 email/password 登入
