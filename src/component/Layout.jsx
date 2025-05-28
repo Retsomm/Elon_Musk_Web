@@ -1,22 +1,13 @@
 import { useState } from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
-import {
-  Hamburger,
-  Rocket,
-  BookMarked,
-  Users,
-  Newspaper,
-  ChevronsDown,
-  ChevronsUp,
-} from "lucide-react";
+import { Hamburger, Rocket, ChevronsDown, ChevronsUp } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import ToTop from "./ToTop";
-
 export default function Layout({ currentTheme, onToggleTheme }) {
   const [isPicVisible, setIsPicVisible] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
-
+  const { logout } = useAuth();
   const { user, loginType } = useAuth();
   const navigate = useNavigate();
   //開關馬斯克跟火星
@@ -65,16 +56,25 @@ export default function Layout({ currentTheme, onToggleTheme }) {
 
           <li>
             {user ? (
-              <button
-                className="navLink p-0 border-none bg-transparent"
-                style={{ display: "flex", alignItems: "center" }}
-                onClick={() => {
-                  navigate("/member");
-                  toggleNav();
-                }}
-              >
-                <p className="">會員資料</p>
-              </button>
+              <details className="collapse">
+                <summary className="collapse-title font-semibold flex justify-center">
+                  <img
+                    src={avatarSrc}
+                    alt="會員頭像"
+                    className="w-12 h-12 rounded-full object-cover"
+                    onError={(e) => (e.target.src = "/avatar.webp")}
+                  />
+                </summary>
+                <div
+                  className="collapse-content"
+                  onClick={() => navigate("/member")}
+                >
+                  會員資料
+                </div>
+                <div className="collapse-content" onClick={logout}>
+                  登出
+                </div>
+              </details>
             ) : (
               <Link to="/login" className="navLink" onClick={toggleNav}>
                 登入
@@ -90,7 +90,6 @@ export default function Layout({ currentTheme, onToggleTheme }) {
               <ThemeToggle
                 currentTheme={currentTheme}
                 onToggle={onToggleTheme}
-                
               />
             </div>
           </li>
@@ -137,19 +136,32 @@ export default function Layout({ currentTheme, onToggleTheme }) {
 
           <li>
             {user ? (
-              <button
-                className="navLink p-0 border-none bg-transparent tooltip tooltip-bottom"
-                data-tip="memberPage"
-                style={{ display: "flex", alignItems: "center" }}
-                onClick={() => navigate("/member")}
-              >
-                <img
-                  src={avatarSrc}
-                  alt="會員頭像"
-                  className="w-12 h-12 rounded-full object-cover mr-3"
-                  onError={(e) => (e.target.src = "/avatar.webp")}
-                />
-              </button>
+              <div className="dropdown hover:bg-opacity-100 bg-baase-100">
+                <div
+                  tabIndex={0}
+                  role="button"
+                  className="btn m-1 hover:bg-opacity-100 bg-baase-100"
+                >
+                  <img
+                    src={avatarSrc}
+                    alt="會員頭像"
+                    className="w-12 h-12 rounded-full object-cover"
+                    onError={(e) => (e.target.src = "/avatar.webp")}
+                  />
+                </div>
+                <ul
+                  tabIndex={0}
+                  className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+                >
+                  <li onClick={() => navigate("/member")}>
+                    <a>會員資料</a>
+                  </li>
+
+                  <li onClick={logout}>
+                    <a>登出</a>
+                  </li>
+                </ul>
+              </div>
             ) : (
               <Link to="/login" className="navLink">
                 登入

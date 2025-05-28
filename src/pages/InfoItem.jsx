@@ -26,7 +26,9 @@ const InfoItem = () => {
           alt={item.title}
           className="w-40 h-60 object-cover mx-auto mb-4 rounded"
         />
-        <h2 className="text-2xl font-bold mb-2 text-center">{item.title}</h2>
+        <h2 className="text-2xl font-bold mb-2 text-center leading-loose">
+          {item.title}
+        </h2>
         <Link
           to={item.url}
           target="_blank"
@@ -43,7 +45,9 @@ const InfoItem = () => {
                 key={i}
                 className="list flex p-3 items-center justify-between"
               >
-                <div className="font-semibold opacity-60 text-left">{t}</div>
+                <div className="font-semibold opacity-60 text-left leading-loose">
+                  {t}
+                </div>
 
                 <FavoriteButton
                   type={type}
@@ -89,7 +93,9 @@ const InfoItem = () => {
                 key={i}
                 className="list flex p-3 items-center justify-between"
               >
-                <div className="font-semibold opacity-60 text-left">{t}</div>
+                <div className="font-semibold opacity-60 text-left leading-loose">
+                  {t}
+                </div>
 
                 <FavoriteButton
                   type={type}
@@ -138,7 +144,9 @@ const InfoItem = () => {
             src={embedUrl}
           ></iframe>
         </div>
-        <h2 className="text-2xl font-bold mb-2 text-center">{item.title}</h2>
+        <h2 className="text-2xl font-bold mb-2 text-center leading-loose">
+          {item.title}
+        </h2>
         <div className="mb-4">
           <ul className="list-disc pl-5">
             {item.timestamps?.map((t, i) => (

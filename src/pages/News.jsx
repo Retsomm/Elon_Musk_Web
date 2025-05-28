@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import { functions, httpsCallable } from "../firebase";
-
+// 取得台灣當天日期字串 (yyyy-mm-dd)
+function getTaiwanDateString() {
+  const now = new Date();
+  // 轉換為 UTC+8
+  now.setHours(now.getHours() + 8 - now.getTimezoneOffset() / 60);
+  return now.toISOString().slice(0, 10);
+}
 export default function News() {
   const [news, setNews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -8,10 +14,30 @@ export default function News() {
 
   useEffect(() => {
     async function fetchNews() {
+      const today = getTaiwanDateString();
+      const cacheKey = "newsCache";
+      const cache = localStorage.getItem(cacheKey);
+      if (cache) {
+        try {
+          const { date, articles } = JSON.parse(cache);
+          if (date === today && Array.isArray(articles)) {
+            setNews(articles);
+            setIsLoading(false);
+            return;
+          }
+        } catch (e) {
+          // 快取格式錯誤，忽略
+        }
+      }
       try {
         const getNews = httpsCallable(functions, "newsApi");
         const result = await getNews();
-        setNews(result.data.articles || []);
+        const articles = result.data.articles || [];
+        setNews(articles);
+        localStorage.setItem(
+          cacheKey,
+          JSON.stringify({ date: today, articles })
+        );
         setIsLoading(false);
       } catch (err) {
         console.error("抓取新聞失敗:", err);
@@ -30,7 +56,6 @@ export default function News() {
     <div>
       {isLoading ? (
         <div className="newsContainer flex flex-wrap justify-center">
-          {/* 顯示 3 個骨架屏卡片 */}
           {[...Array(10)].map((_, index) => (
             <div
               className="newsCard p-4 m-4 w-80 bg-base-100 rounded-xl shadow-md"

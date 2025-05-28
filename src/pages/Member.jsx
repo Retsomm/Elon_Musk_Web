@@ -43,6 +43,7 @@ const Member = () => {
     // 清理 Auth 監聽
     return () => unsubscribeAuth();
   }, [loading]);
+  //移除收藏
   const handleRemoveFavorite = async (type, id, noteIdx) => {
     if (!firebaseUid) {
       alert("請先登入或稍後再試");
