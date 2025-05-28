@@ -105,9 +105,9 @@ const Member = () => {
           collectItems.push(
             <div
               key={`${type}-${id}-${noteIdx}`}
-              className="mb-3 p-4 border shadow-sm w-full max-w-xl flex flex-col sm:flex-row sm:items-center"
+              className="mb-3 p-4 border shadow-sm w-full max-w-xl flex flex-col sm:flex-row sm:items-center relative justify-center"
             >
-              <div className="flex-1">
+              <div className="flex-1 m-3">
                 <div className="font-bold text-base sm:text-lg mb-1">
                   {item.title || item.name}
                 </div>
@@ -115,10 +115,12 @@ const Member = () => {
                   {notes[noteIdx] || favData.content}
                 </div>
               </div>
-              <div className="m-2 sm:mt-0 sm:ml-4 flex-shrink-0">
-                <span className="badge badge-info m-2">{type}</span>
+              <div className="sm:mt-0 sm:ml-4 flex-shrink-0">
+                <div className="absolute right-0 top-0 badge badge-info rounded-none">
+                  {type}
+                </div>
                 <button
-                  className="btn btn-xs btn-error"
+                  className="max-sm:ml-3 btn btn-xs btn-error"
                   onClick={() => handleRemoveFavorite(type, id, noteIdx)}
                 >
                   移除收藏

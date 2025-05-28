@@ -7,17 +7,15 @@ import ToTop from "./ToTop";
 export default function Layout({ currentTheme, onToggleTheme }) {
   const [isPicVisible, setIsPicVisible] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isDropOpen, setIsDropOpen] = useState(false);
   const { logout } = useAuth();
   const { user, loginType } = useAuth();
   const navigate = useNavigate();
-  //開關馬斯克跟火星
-  const togglePic = () => {
-    setIsPicVisible((prev) => !prev); // 切換顯示/隱藏狀態
-  };
-  //開關漢堡選單
-  const toggleNav = () => {
-    setIsNavOpen((prev) => !prev);
-  };
+
+  const toggle = (setFn) => () => setFn((prev) => !prev);
+  const togglePic = toggle(setIsPicVisible);
+  const toggleNav = toggle(setIsNavOpen);
+  const toggleDrop = toggle(setIsDropOpen);
   let avatarSrc = "/defaultMemberPic.webp";
   if (user?.photoURL) {
     avatarSrc = user.photoURL;
@@ -67,7 +65,10 @@ export default function Layout({ currentTheme, onToggleTheme }) {
                 </summary>
                 <div
                   className="collapse-content"
-                  onClick={() => navigate("/member")}
+                  onClick={() => {
+                    navigate("/member");
+                    toggleNav();
+                  }}
                 >
                   會員資料
                 </div>
@@ -141,19 +142,29 @@ export default function Layout({ currentTheme, onToggleTheme }) {
                   tabIndex={0}
                   role="button"
                   className="btn m-1 hover:bg-opacity-100 bg-baase-100"
+                  onClick={toggleDrop}
                 >
                   <img
                     src={avatarSrc}
                     alt="會員頭像"
-                    className="w-12 h-12 rounded-full object-cover"
+                    className={`w-12 h-12 rounded-full object-cover ${
+                      isDropOpen ? true : false
+                    }`}
                     onError={(e) => (e.target.src = "/avatar.webp")}
                   />
                 </div>
                 <ul
                   tabIndex={0}
-                  className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+                  className={`dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm ${
+                    isDropOpen ? "max-h-fit" : "hidden"
+                  }`}
                 >
-                  <li onClick={() => navigate("/member")}>
+                  <li
+                    onClick={() => {
+                      navigate("/member");
+                      toggleDrop();
+                    }}
+                  >
                     <a>會員資料</a>
                   </li>
 
