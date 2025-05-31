@@ -1,31 +1,44 @@
-import { useState } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 import { Hamburger, Rocket, ChevronsDown, ChevronsUp } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import ToTop from "./ToTop";
-export default function Layout({ currentTheme, onToggleTheme }) {
+
+interface LayoutProps {
+  currentTheme: string;
+  onToggleTheme: () => void;
+}
+
+export default function Layout({ currentTheme, onToggleTheme }: LayoutProps) {
   const [isPicVisible, setIsPicVisible] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isDropOpen, setIsDropOpen] = useState(false);
   const { logout } = useAuth();
-  const { user, loginType } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
-  const toggle = (setFn) => () => setFn((prev) => !prev);
+  const toggle = (setFn: Dispatch<SetStateAction<boolean>>) => () =>
+    setFn((prev) => !prev);
   const togglePic = toggle(setIsPicVisible);
   const toggleNav = toggle(setIsNavOpen);
   const toggleDrop = toggle(setIsDropOpen);
+
   let avatarSrc = "/defaultMemberPic.webp";
   if (user?.photoURL) {
     avatarSrc = user.photoURL;
   } else if (user?.email?.endsWith("@gmail.com")) {
     avatarSrc = `https://www.google.com/s2/photos/profile/${user.email}`;
   }
+  // 處理 onError 型別
+  const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = "/avatar.webp";
+  };
+
   return (
     <div>
       <div
-        className={`hamLists z-999 mt-15 fixed top-15 left-0 right-0 p-2 px-1 flex align-middle justify-between shadow-2xl bg-base-100
+        className={`hamLists z-999 mt-15 fixed top-15 left-0 right-0 p-2 px-1 flex align-middle justify-between shadow-2xl bg-base-100 md:hidden
       ${isNavOpen ? "max-h-fit" : "hidden"} 
       `}
         style={{ zIndex: 9998 }}
@@ -60,7 +73,7 @@ export default function Layout({ currentTheme, onToggleTheme }) {
                     src={avatarSrc}
                     alt="會員頭像"
                     className="w-12 h-12 rounded-full object-cover"
-                    onError={(e) => (e.target.src = "/avatar.webp")}
+                    onError={handleImgError}
                   />
                 </summary>
                 <div
@@ -150,7 +163,7 @@ export default function Layout({ currentTheme, onToggleTheme }) {
                     className={`w-12 h-12 rounded-full object-cover ${
                       isDropOpen ? true : false
                     }`}
-                    onError={(e) => (e.target.src = "/avatar.webp")}
+                    onError={handleImgError}
                   />
                 </div>
                 <ul

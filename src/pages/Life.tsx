@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-
-const events = [
+type Event = {
+  year: string;
+  desc: string;
+};
+const events: Event[] = [
   { year: "1971/06/28", desc: "出生於南非普利托里亞" },
   {
     year: "1989年",
@@ -99,16 +102,20 @@ const themes = {
     textBg: "rgba(55, 65, 81, 0.85)", // 深色文字背景 (DaisyUI 的 gray-700)
   },
 };
+type ThemeKey = keyof typeof themes;
 
-const Timeline = () => {
-  const canvasRef = useRef(null);
-  const [dimensions, setDimensions] = useState({
+const Timeline: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [dimensions, setDimensions] = useState<{
+    width: number;
+    height: number;
+  }>({
     width: Math.min(window.innerWidth * 0.9, 700),
     height: events.length * 180,
   });
 
   // 獲取當前主題的函數
-  const getCurrentTheme = () => {
+  const getCurrentTheme = (): ThemeKey => {
     const theme = document.documentElement.getAttribute("data-theme");
     return theme === "business" ? "dark" : "light"; // autumn 為 light, business 為 dark
   };
@@ -127,6 +134,89 @@ const Timeline = () => {
 
   // 監聽主題變化
   useEffect(() => {
+    // 繪製時間軸的函數
+    const drawTimeline = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = dimensions.width * dpr;
+      canvas.height = dimensions.height * dpr;
+      canvas.style.width = `${dimensions.width}px`;
+      canvas.style.height = `${dimensions.height}px`;
+      ctx.setTransform(1, 0, 0, 1, 0, 0); // 重置變換矩陣
+      ctx.scale(dpr, dpr);
+
+      // 根據當前主題選擇顏色
+      const currentTheme = getCurrentTheme();
+      ctx.fillStyle = themes[currentTheme].background;
+      ctx.fillRect(0, 0, dimensions.width, dimensions.height);
+
+      ctx.strokeStyle = themes[currentTheme].line;
+      ctx.lineWidth = 2;
+
+      const { width } = dimensions;
+      const baseX = width / 2;
+      const t = Math.min(Math.max((width - 400) / (700 - 400), 0), 1);
+
+      events.forEach((event, i) => {
+        const offsetX = width < 500 ? 0 : (i % 2 === 0 ? -300 : 300) * t;
+        const x = baseX + offsetX;
+        const y = 100 + i * 150;
+
+        // 畫圓點
+        ctx.fillStyle = themes[currentTheme].dot;
+        ctx.beginPath();
+        ctx.arc(x, y, 7, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 畫線連接到下一個點
+        if (i < events.length - 1) {
+          const nextOffsetX =
+            width < 500 ? 0 : ((i + 1) % 2 === 0 ? -300 : 300) * t;
+          const nextX = baseX + nextOffsetX;
+          const nextY = 100 + (i + 1) * 150;
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(nextX, nextY);
+          ctx.stroke();
+        }
+
+        // 畫年份
+        ctx.font = "bold 15px Arial";
+        const textWidth = ctx.measureText(event.year).width;
+        const textHeight = 18;
+        const textX = i % 2 === 0 ? x + 18 : x - textWidth - 18;
+        const textBgX = textX - 4;
+        const textBgY = y - 24;
+        ctx.fillStyle = themes[currentTheme].textBg;
+        ctx.fillRect(textBgX, textBgY, textWidth + 8, textHeight);
+        ctx.fillStyle = themes[currentTheme].text;
+        ctx.fillText(event.year, textX, y - 10);
+
+        // 畫描述
+        ctx.font = "13px Arial";
+        ctx.fillStyle = themes[currentTheme].descText;
+        const descWidth = width * 0.35;
+        const descX = i % 2 === 0 ? x + 18 : x - descWidth - 18;
+        const descY = y + 15;
+        const descLines = wrapText(
+          ctx,
+          event.desc,
+          descX,
+          descY,
+          descWidth,
+          18,
+          true
+        );
+        ctx.fillStyle = themes[currentTheme].textBg;
+        ctx.fillRect(descX - 4, descY - 13, descWidth + 8, descLines * 18 + 8);
+        ctx.fillStyle = themes[currentTheme].descText;
+        wrapText(ctx, event.desc, descX, descY, descWidth, 18);
+      });
+    };
     const observer = new MutationObserver(() => {
       // 當 data-theme 變化時，觸發重新繪製
       drawTimeline();
@@ -143,97 +233,16 @@ const Timeline = () => {
     return () => observer.disconnect();
   }, [dimensions]);
 
-  // 繪製時間軸的函數
-  const drawTimeline = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = dimensions.width * dpr;
-    canvas.height = dimensions.height * dpr;
-    canvas.style.width = `${dimensions.width}px`;
-    canvas.style.height = `${dimensions.height}px`;
-    ctx.scale(dpr, dpr);
-
-    // 根據當前主題選擇顏色
-    const currentTheme = getCurrentTheme();
-    ctx.fillStyle = themes[currentTheme].background;
-    ctx.fillRect(0, 0, dimensions.width, dimensions.height);
-
-    ctx.strokeStyle = themes[currentTheme].line;
-    ctx.lineWidth = 2;
-
-    const { width, height } = dimensions;
-    const baseX = width / 2;
-    const t = Math.min(Math.max((width - 400) / (700 - 400), 0), 1);
-
-    events.forEach((event, i) => {
-      const offsetX = width < 500 ? 0 : (i % 2 === 0 ? -300 : 300) * t;
-      const x = baseX + offsetX;
-      const y = 100 + i * 150;
-
-      // 畫圓點
-      ctx.fillStyle = themes[currentTheme].dot;
-      ctx.beginPath();
-      ctx.arc(x, y, 7, 0, Math.PI * 2);
-      ctx.fill();
-
-      // 畫線連接到下一個點
-      if (i < events.length - 1) {
-        const nextOffsetX =
-          width < 500 ? 0 : ((i + 1) % 2 === 0 ? -300 : 300) * t;
-        const nextX = baseX + nextOffsetX;
-        const nextY = 100 + (i + 1) * 150;
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-        ctx.lineTo(nextX, nextY);
-        ctx.stroke();
-      }
-
-      // 畫年份
-      ctx.font = "bold 15px Arial";
-      const textWidth = ctx.measureText(event.year).width;
-      const textHeight = 18;
-      const textX = i % 2 === 0 ? x + 18 : x - textWidth - 18;
-      const textBgX = textX - 4;
-      const textBgY = y - 24;
-      ctx.fillStyle = themes[currentTheme].textBg;
-      ctx.fillRect(textBgX, textBgY, textWidth + 8, textHeight);
-      ctx.fillStyle = themes[currentTheme].text;
-      ctx.fillText(event.year, textX, y - 10);
-
-      // 畫描述
-      ctx.font = "13px Arial";
-      ctx.fillStyle = themes[currentTheme].descText;
-      const descWidth = width * 0.35;
-      const descX = i % 2 === 0 ? x + 18 : x - descWidth - 18;
-      const descY = y + 15;
-      const descLines = wrapText(
-        ctx,
-        event.desc,
-        descX,
-        descY,
-        descWidth,
-        18,
-        true
-      );
-      ctx.fillStyle = themes[currentTheme].textBg;
-      ctx.fillRect(descX - 4, descY - 13, descWidth + 8, descLines * 18 + 8);
-      ctx.fillStyle = themes[currentTheme].descText;
-      wrapText(ctx, event.desc, descX, descY, descWidth, 18);
-    });
-  };
-
   // 文字自動換行
   function wrapText(
-    ctx,
-    text,
-    x,
-    y,
-    maxWidth,
-    lineHeight,
+    ctx: CanvasRenderingContext2D,
+    text: string,
+    x: number,
+    y: number,
+    maxWidth: number,
+    lineHeight: number,
     measureOnly = false
-  ) {
+  ): number {
     const words = text.split("");
     let line = "";
     let lines = 0;

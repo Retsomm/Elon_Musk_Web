@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 
+type Theme = 'autumn' | 'business';
+
 export const useTheme = () => {
-  const [currentTheme, setCurrentTheme] = useState('autumn');
+  const [currentTheme, setCurrentTheme] = useState<Theme>('autumn');
 
   useEffect(() => {
     // 從 localStorage 載入保存的主題，如果沒有則使用預設值
-    const savedTheme = localStorage.getItem('theme') || 'autumn';
+    const savedTheme = (localStorage.getItem('theme') as Theme) || 'autumn';
     setCurrentTheme(savedTheme);
     document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
@@ -19,3 +21,5 @@ export const useTheme = () => {
 
   return { currentTheme, toggleTheme };
 };
+
+

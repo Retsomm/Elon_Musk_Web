@@ -1,22 +1,49 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { books, podcasts, youtubeVideos } from "../component/data";
-import { Link, useNavigate } from "react-router-dom";
-const Info = () => {
-  const [data, setData] = useState({
+import { Link } from "react-router-dom";
+
+type Book = {
+  id: string;
+  url: string;
+  img: string;
+  alt: string;
+  title: string;
+};
+
+type Youtube = {
+  id: string;
+  url: string;
+  img: string;
+  title: string;
+};
+
+type Podcast = {
+  id: string;
+  url: string;
+  img?: string;
+  title: string;
+};
+
+type DataType = {
+  books: Book[];
+  youtubeVideos: Youtube[];
+  podcasts: Podcast[];
+};
+
+const Info: React.FC = () => {
+  const [data, setData] = useState<DataType>({
     books: [],
     youtubeVideos: [],
     podcasts: [],
   });
-  const [isLoading, setIsLoading] = useState(true);
-  const [filter, setFilter] = useState("");
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [filter, setFilter] = useState<string>("");
 
   useEffect(() => {
-    // 模擬動態抓取資料，實際上可替換為 API 呼叫
     setTimeout(() => {
       setData({ books, youtubeVideos, podcasts });
       setIsLoading(false);
-    }, 1000); // 模擬 1 秒延遲
+    }, 1000); 
   }, []);
 
   return (
@@ -73,15 +100,20 @@ const Info = () => {
     </div>
   );
 };
+type SectionProps<T>={
+  title: string;
+  items: T[];
+  isLoading: boolean;
+};
 
-const BookSection = ({ title, items, isLoading }) => (
+const BookSection:React.FC<SectionProps<Book>> = ({ title, items, isLoading }) => (
   <div>
     <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
     {isLoading ? (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {[...Array(2)].map((_, index) => (
           <div
-            className="card shadow-md" // 移除 w-80 和 mx-auto
+            className="card shadow-md" 
             key={`book-skeleton-${index}`}
           >
             <div className="card-body items-center">
@@ -123,7 +155,7 @@ const BookSection = ({ title, items, isLoading }) => (
   </div>
 );
 
-const YoutubeSection = ({ title, items, isLoading }) => (
+const YoutubeSection:React.FC<SectionProps<Youtube>> = ({ title, items, isLoading }) => (
   <div>
     <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
     {isLoading ? (
@@ -174,7 +206,7 @@ const YoutubeSection = ({ title, items, isLoading }) => (
   </div>
 );
 
-const PodcastSection = ({ title, items, isLoading }) => (
+const PodcastSection:React.FC<SectionProps<Podcast>> = ({ title, items, isLoading }) => (
   <div>
     <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
     {isLoading ? (

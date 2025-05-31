@@ -1,53 +1,82 @@
-import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { books, podcasts, youtubeVideos } from "../component/data";
 import FavoriteButton from "../component/FavoriteButton";
+
+interface Book {
+  id: string;
+  title: string;
+  img: string;
+  url: string;
+  bookNote?: string[];
+}
+interface YouTubeVideo {
+  id: string;
+  title: string;
+  url: string;
+  highlight?: string[];
+}
+interface Podcast {
+  id: string;
+  title: string;
+  url: string;
+  timestamps?: string[];
+}
+type ItemType = Book | YouTubeVideo | Podcast;
+
+interface ParamsType {
+  type?: "book" | "youtube" | "podcast";
+  id?: string;
+}
+
 const InfoItem = () => {
   const { type, id } = useParams();
-  let item;
+  let item: ItemType | undefined;
   if (type === "book") {
-    item = books.find((b) => b.id === id);
+    item = books.find((b:Book) => b.id === id);
   } else if (type === "youtube") {
-    item = youtubeVideos.find((y) => y.id === id);
+    item = youtubeVideos.find((y:YouTubeVideo) => y.id === id);
   } else if (type === "podcast") {
-    item = podcasts.find((p) => p.id === id);
+    item = podcasts.find((p:Podcast) => p.id === id);
   }
-
   if (!item) {
     return <div className="text-center mt-10">找不到資料</div>;
   }
-
-  // 書籍詳細頁
   if (type === "book") {
     return (
       <div className="max-w-xl mx-auto mt-10 card p-6">
         <img
-          src={item.img}
+          src={(item as Book).img}
           alt={item.title}
           className="w-40 h-60 object-cover mx-auto mb-4 rounded"
         />
         <h2 className="text-2xl font-bold mb-2 text-center leading-loose">
           {item.title}
         </h2>
-        <Link
-          to={item.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn btn-primary w-fit mx-auto m-3"
+        <div
+          className="tooltip tooltip-right w-fit mx-auto m-3"
+          data-tip="前往外部網站"
         >
-          書店連結
-        </Link>
+          <Link
+            to={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary"
+          >
+            書店連結
+          </Link>
+        </div>
+
         <h3 className="text-2xl font-bold mb-2 text-center">BookNotes</h3>
         <ul className="list shadow-md">
-          {item.bookNote?.map((t, i) => (
+          {(item as Book).bookNote?.map((t, i) => (
             <div key={i}>
               <li
                 key={i}
                 className="list flex p-3 items-center justify-between"
               >
-                <div className="font-semibold opacity-60 text-left leading-loose">
+                <p className="font-semibold opacity-60 text-left leading-loose">
                   {t}
-                </div>
+                </p>
 
                 <FavoriteButton
                   type={type}
@@ -63,8 +92,6 @@ const InfoItem = () => {
       </div>
     );
   }
-
-  // YouTube 詳細頁
   if (type === "youtube") {
     // 從 url 取出影片 ID
     let youtubeId = "";
@@ -85,9 +112,9 @@ const InfoItem = () => {
           ></iframe>
         </div>
 
-        <h3 className="text-2xl font-bold mb-2 text-center">hightlight</h3>
+        <h3 className="text-2xl font-bold mb-2 text-center">highlight</h3>
         <ul className="list shadow-md">
-          {item.hightlight?.map((t, i) => (
+          {(item as YouTubeVideo).highlight?.map((t, i) => (
             <div key={i}>
               <li
                 key={i}
@@ -111,7 +138,6 @@ const InfoItem = () => {
       </div>
     );
   }
-
   if (type === "podcast") {
     // 動態產生 Apple Podcast embed 連結
     let embedUrl = "";
@@ -149,7 +175,7 @@ const InfoItem = () => {
         </h2>
         <div className="mb-4">
           <ul className="list-disc pl-5">
-            {item.timestamps?.map((t, i) => (
+            {(item as Podcast).timestamps?.map((t, i) => (
               <li key={i}>{t}</li>
             ))}
           </ul>
@@ -157,8 +183,6 @@ const InfoItem = () => {
       </div>
     );
   }
-
   return null;
 };
-
 export default InfoItem;

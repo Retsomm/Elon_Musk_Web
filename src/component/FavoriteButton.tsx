@@ -3,10 +3,25 @@ import { database, auth } from "../firebase";
 import { ref, set, remove, onValue } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 
-const FavoriteButton = ({ type, id, noteIdx, defaultContent = "" }) => {
-  const [userId, setUserId] = useState(null);
-  const [favorite, setFavorite] = useState(null);
-  const [alert, setAlert] = useState({ show: false, message: "" });
+interface FavoriteButtonProps {
+  type:string;
+  id:string|number;
+  noteIdx: string|number;
+  defaultContent?: string;
+}
+interface FavoriteData {
+  status: boolean;
+  content?: string;
+}
+interface AlertState {
+  show: boolean;
+  message: string;  
+}
+
+const FavoriteButton: React.FC<FavoriteButtonProps> = ({ type, id, noteIdx, defaultContent = "" }) => {
+  const [userId, setUserId] = useState<string | null>(null);
+  const [favorite, setFavorite] = useState<FavoriteData | null>(null);
+  const [alert, setAlert] = useState<AlertState>({ show: false, message: "" });
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUserId(user ? user.uid : null);

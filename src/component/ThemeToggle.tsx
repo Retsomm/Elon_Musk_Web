@@ -1,6 +1,10 @@
 import React from "react";
 
-const ThemeToggle = ({ currentTheme, onToggle }) => {
+interface ThemeToggleProps {
+  currentTheme: string;
+  onToggle: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+const ThemeToggle: React.FC<ThemeToggleProps> = ({ currentTheme, onToggle }) => {
   // "business" 視為 dark theme
   const isDark = currentTheme === "business";
   return (
@@ -32,4 +36,4 @@ const ThemeToggle = ({ currentTheme, onToggle }) => {
 };
 
 export default ThemeToggle;
-// ...existing code...
+

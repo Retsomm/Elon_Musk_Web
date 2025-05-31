@@ -1,24 +1,37 @@
-import React, { useState, useRef, useEffect, lazy } from "react";
+import React, { useState, useEffect, lazy } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { database, auth } from "../firebase";
 import { ref, onValue, remove } from "firebase/database";
 import { books, podcasts, youtubeVideos } from "../component/data";
 import { onAuthStateChanged } from "firebase/auth";
 
+type FavoriteNote = {
+  status: boolean;
+  content?: string;
+};
+type FavoriteType = {
+  [id: string]: FavoriteNote[] | { [key: string]: FavoriteNote };
+};
+type FavoritesData = {
+  [type: string]: FavoriteType;
+};
+
 const MessageBoard = lazy(() => import("../component/MessageBoard"));
 // 預設頭像路徑
 const DEFAULT_PIC = "/avatar.webp";
 
-const Member = () => {
+const Member: React.FC = () => {
   // 取得使用者資訊與登出方法
   const { user, logout, loginType, loading } = useAuth();
   const navigate = useNavigate();
-  const [memberPic, setMemberPic] = useState("");
-  const [favoritesData, setFavoritesData] = useState({});
-  const [firebaseUid, setFirebaseUid] = useState("");
-  const [mainTab, setMainTab] = useState("profile");
-  const fileInputRef = useRef(null);
+  const [memberPic, setMemberPic] = useState<string>("");
+  const [favoritesData, setFavoritesData] = useState<FavoritesData>({});
+  const [firebaseUid, setFirebaseUid] = useState<string>("");
+  const [mainTab, setMainTab] = useState<"profile" | "collect" | "message">(
+    "profile"
+  );
+
   // 取得會員 Email 與 Google 頭像
   const memberEmail = user?.email || "";
   const googlePhoto = user?.photoURL;
@@ -44,17 +57,30 @@ const Member = () => {
     return () => unsubscribeAuth();
   }, [loading]);
   //移除收藏
-  const handleRemoveFavorite = async (type, id, noteIdx) => {
+  const handleRemoveFavorite = async (
+    type: string,
+    id: string,
+    noteIdx: string | number
+  ) => {
     if (!firebaseUid) {
       alert("請先登入或稍後再試");
       return;
     }
     let favPath = `favorites/${firebaseUid}/${type}/${id}`;
-    if (Array.isArray(favoritesData[type]?.[id])) {
+    if (Array.isArray((favoritesData[type] as FavoriteType)?.[id])) {
       favPath += `/${noteIdx}`;
     } else if (
-      typeof favoritesData[type]?.[id] === "object" &&
-      favoritesData[type][id][noteIdx]
+      typeof (favoritesData[type] as FavoriteType)?.[id] === "object" &&
+      // 判斷 favoritesData[type][id] 是否為物件（而不是陣列），並且這個物件中有一個 key 為 noteIdx 的屬性。
+      // 第一部分 !Array.isArray((favoritesData[type] as FavoriteType)[id]) 會先確認 favoritesData[type][id] 不是陣列。這是因為收藏資料的結構有可能是陣列（例如多筆筆記），也有可能是物件（例如以 key-value 形式儲存的筆記）。
+      // 第二部分 ((favoritesData[type] as FavoriteType)[id] as { [key: string]: FavoriteNote })[noteIdx as string] 則是假設這個值是物件，並嘗試取出 key 為 noteIdx 的那一筆資料。這裡用 TypeScript 的型別斷言，強制將其視為一個以字串為 key、值為 FavoriteNote 的物件，然後用 noteIdx（轉成字串）來取值。
+      // 整體來說，這個條件式常用於處理資料結構不固定（有時是陣列、有時是物件）的情境，確保只有在資料為物件且有對應 key 時才會進行後續操作。
+      !Array.isArray((favoritesData[type] as FavoriteType)[id]) &&
+      (
+        (favoritesData[type] as FavoriteType)[id] as {
+          [key: string]: FavoriteNote;
+        }
+      )[noteIdx as string]
     ) {
       favPath += `/${noteIdx}`;
     }
@@ -67,13 +93,13 @@ const Member = () => {
     if (!favoritesData || Object.keys(favoritesData).length === 0) {
       return <div>尚未收藏任何內容</div>;
     }
-    const collectItems = [];
+    const collectItems: React.JSX.Element[] = [];
     for (const type of ["book", "youtube", "podcast"]) {
       const typeFav = favoritesData[type];
       if (!typeFav) continue;
       for (const id in typeFav) {
-        let item;
-        let notes = [];
+        let item: any;
+        let notes: any[] = [];
         if (type === "book") {
           item = books.find((b) => b.id === id);
           notes = item?.bookNote || [];
@@ -88,19 +114,19 @@ const Member = () => {
         }
         if (!item) continue;
 
-        let favIdxArr = [];
+        let favIdxArr: (string | number)[] = [];
         if (Array.isArray(typeFav[id])) {
-          favIdxArr = typeFav[id]
+          favIdxArr = (typeFav[id] as FavoriteNote[])
             .map((v, idx) => (v && v.status ? idx : null))
-            .filter((v) => v !== null);
+            .filter((v) => v !== null) as number[];
         } else {
           favIdxArr = Object.keys(typeFav[id]);
         }
 
         favIdxArr.forEach((noteIdx) => {
           let favData = Array.isArray(typeFav[id])
-            ? typeFav[id][noteIdx]
-            : typeFav[id][noteIdx];
+            ? (typeFav[id] as FavoriteNote[])[noteIdx as number]
+            : (typeFav[id] as { [key: string]: FavoriteNote })[noteIdx];
           if (!favData || !favData.status) return;
           collectItems.push(
             <div
@@ -112,7 +138,7 @@ const Member = () => {
                   {item.title || item.name}
                 </div>
                 <div className="text-sm break-words">
-                  {notes[noteIdx] || favData.content}
+                  {notes[noteIdx as number] || favData.content}
                 </div>
               </div>
               <div className="sm:mt-0 sm:ml-4 flex-shrink-0">
@@ -141,7 +167,7 @@ const Member = () => {
   // 自動帶入名稱
   let memberName = "";
   if (isGmail) {
-    memberName = user?.displayName || user?.name || memberEmail.split("@")[0];
+    memberName = user?.name || memberEmail.split("@")[0];
   } else {
     memberName = memberEmail.split("@")[0];
   }
@@ -163,7 +189,7 @@ const Member = () => {
 
   if (loading) return null;
   // 右側主區塊內容
-  let mainContent = null;
+  let mainContent: React.JSX.Element | null = null;
   if (mainTab === "profile") {
     mainContent = (
       <div className="sectionInfo flex flex-col justify-center items-center">
@@ -172,7 +198,7 @@ const Member = () => {
             src={picSrc}
             alt="會員頭像"
             className="w-24 h-24 rounded-full object-cover"
-            onError={(e) => (e.target.src = DEFAULT_PIC)}
+            onError={(e: React.SyntheticEvent<HTMLImageElement>) => ((e.target as HTMLImageElement).src = DEFAULT_PIC)}
             loading="lazy"
           />
         </div>

@@ -1,80 +1,102 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, FormEvent, ChangeEvent } from "react";
 import { database, auth } from "../firebase";
 import { ref, push, onValue } from "firebase/database";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
+
+// 定義訊息的型別
+interface Message {
+  id: string;
+  content: string;
+  timestamp: string;
+  userId: string;
+  email?: string;
+  avatar?: string;
+}
 
 function App() {
   // 狀態管理
-  const [messages, setMessages] = useState([]);
-  const [content, setContent] = useState("");
-  const [user, setUser] = useState(null);
-  const [avatar, setAvatar] = useState("/avatar.webp"); // 預設頭像
-  const [loading, setLoading] = useState(true); // 增加 loading 狀態
-  const messagesEndRef = useRef(null); // 用於自動滑動到最底部
+  const [messages, setMessages] = useState<Message[]>([]); // 儲存所有訊息
+  const [content, setContent] = useState<string>(""); // 輸入框內容
+  const [user, setUser] = useState<FirebaseUser | null>(null); // 當前登入使用者
+  const [avatar, setAvatar] = useState<string>("/avatar.webp"); // 使用者頭像，預設為本地圖片
+  const [loading, setLoading] = useState<boolean>(true); // 是否正在載入
+  const messagesEndRef = useRef<HTMLDivElement | null>(null); // 用於自動滾動到底部
 
   // 監聽登入狀態並取得頭像
   useEffect(() => {
+    // 註冊 Firebase Auth 狀態監聽
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+      setUser(currentUser); // 設定當前使用者
       if (currentUser) {
-        const userAvatar = currentUser.photoURL || "/avatar.webp"; // 優先使用 Gmail 頭像，無效時用預設
-
+        // 如果有登入，優先使用 Google 頭像，否則用預設
+        const userAvatar = currentUser.photoURL || "/avatar.webp";
         setAvatar(userAvatar);
       } else {
+        // 未登入時使用預設頭像
         setAvatar("/avatar.webp");
       }
-      setLoading(false);
+      setLoading(false); // 載入完成
     });
+    // 卸載時移除監聽
     return () => unsubscribe();
   }, []);
 
   // 從 Firebase 即時監聽留言
   useEffect(() => {
-    const messagesRef = ref(database, "messages");
+    const messagesRef = ref(database, "messages"); // 指向資料庫的 messages 路徑
+    // 註冊資料變動監聽
     onValue(
       messagesRef,
       (snapshot) => {
-        const data = snapshot.val();
-
+        const data = snapshot.val(); // 取得所有訊息資料
         if (data) {
-          const messageList = Object.entries(data)
+          // 將物件轉為陣列，並加上 id
+          const messageList: Message[] = Object.entries(data)
             .map(([id, message]) => ({
+              // message 是從 Firebase 取得的單筆訊息資料，型別不明（通常是物件）。
+              // Omit<Message, "id"> 表示「Message 型別，但不包含 id 屬性」。
+              // as Omit<Message, "id"> 是型別斷言，告訴 TypeScript：這個 message 物件的型別就是 Message，但沒有 id 這個屬性。
+              // 這麼做是因為 Firebase 的資料本身沒有 id 欄位，id 是用 Firebase 的 key 來補上的，所以要先展開原本的資料，再額外加上 id。
+              ...(message as Omit<Message, "id">),
               id,
-              ...message,
             }))
+            // 過濾掉不完整的訊息
             .filter(
               (message) =>
                 message.content && message.timestamp && message.userId
             );
+          // 依照時間排序訊息
           setMessages(
             messageList.sort((a, b) => {
               const dateA = new Date(a.timestamp);
               const dateB = new Date(b.timestamp);
-              if (isNaN(dateA) || isNaN(dateB)) {
+              if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
                 console.error("無效的時間格式：", a.timestamp, b.timestamp);
                 return 0;
               }
-              return dateA - dateB;
+              return dateA.getTime() - dateB.getTime();
             })
           );
         } else {
+          // 沒有訊息時設為空陣列
           setMessages([]);
         }
       },
       (error) => {
+        // 監聽錯誤時輸出錯誤訊息
         console.error("監聽錯誤：", error);
       }
     );
   }, []);
 
-  // 自動滑動到最底部
+  // 每當訊息更新時，自動滾動到底部
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // 處理表單提交
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // 處理表單提交（送出訊息）
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // 阻止表單預設行為
     if (loading) {
       alert("正在檢查登入狀態，請稍後再試！");
       return;
@@ -91,26 +113,29 @@ function App() {
 
     try {
       const messagesRef = ref(database, "messages");
+      // 建立新訊息物件
       const newMessage = {
         content: content.trim(),
         timestamp: new Date().toISOString(),
         userId: user.uid,
         email: user.email || "",
-        avatar: avatar || "/avatar.webp", // 確保 avatar 總是有值
+        avatar: avatar || "/avatar.webp", // 確保頭像有值
       };
       console.log("即將寫入的訊息：", newMessage);
-      await push(messagesRef, newMessage);
-      setContent("");
-    } catch (error) {
+      await push(messagesRef, newMessage); // 寫入資料庫
+      setContent(""); // 清空輸入框
+    } catch (error: any) {
       alert("提交留言失敗：" + error.message);
       console.error("寫入錯誤：", error);
     }
   };
 
-  // 處理頭像載入失敗的情況
-  const handleAvatarError = (e) => {
-    console.log("頭像載入失敗，切換到預設頭像：", e.target.src);
-    e.target.src = "/avatar.webp"; // 載入失敗時使用預設頭像
+  // 處理頭像載入失敗，改用預設頭像
+  const handleAvatarError = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>
+  ) => {
+    console.log("頭像載入失敗，切換到預設頭像：", e.currentTarget.src);
+    e.currentTarget.src = "/avatar.webp";
   };
 
   return (
@@ -129,13 +154,13 @@ function App() {
             onError={handleAvatarError}
             loading="lazy"
           />
-          <p className="">歡迎，{user.email}！</p>
+          <p className="">歡迎，{user.email}</p>
         </div>
       ) : null}
 
-      {/* 留言板 */}
+      {/* 留言板主體 */}
       <div className="w-full max-w-md border rounded-lg shadow-md flex flex-col h-[500px]">
-        {/* 訊息區域 */}
+        {/* 訊息顯示區域 */}
         <div className="flex-1 p-4 overflow-y-auto">
           {loading ? (
             <p className="text-center">載入中...</p>
@@ -163,12 +188,14 @@ function App() {
                         loading="lazy"
                       />
                       <div>
+                        {/* 顯示使用者名稱（取 email @ 前段） */}
                         <p className="text-sm">
                           {(message.email || "").split("@")[0] || "未知使用者"}
                         </p>
                         <div className="bg-base-400 p-2 rounded-lg max-w-xs border">
                           <p className="text-base-800">{message.content}</p>
                           <p className="text-xs mt-1">
+                            {/* 顯示時間（只顯示時:分） */}
                             {new Date(message.timestamp).toLocaleString(
                               "zh-TW",
                               {
@@ -202,6 +229,7 @@ function App() {
           ) : (
             <p className="text-center ">請先登入以使用留言板！</p>
           )}
+          {/* 用於自動滾動到底部的參考點 */}
           <div ref={messagesEndRef} />
         </div>
 

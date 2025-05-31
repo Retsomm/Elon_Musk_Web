@@ -9,7 +9,8 @@ import { AuthProvider } from "./contexts/AuthContext";
 const Home = lazy(() => import("./pages/Home"));
 const Life = lazy(() => import("./pages/Life"));
 const Company = lazy(() => import("./pages/Company"));
-const New = lazy(() => import("./pages/News"));
+const CompanyItem = lazy(() => import("./pages/CompanyItem"));
+const News = lazy(() => import("./pages/News"));
 const Info = lazy(() => import("./pages/Info"));
 const Login = lazy(() => import("./pages/Login"));
 const Member = lazy(() => import("./pages/Member"));
@@ -17,7 +18,7 @@ const Error = lazy(() => import("./pages/Error"));
 const Layout = lazy(() => import("./component/Layout"));
 const ScrollToTop = lazy(() => import("./component/ScrollToTop"));
 const ProtectedRoute = lazy(() => import("./component/ProtectedRoute"));
-const InfoItem = lazy(() => import("./pages/infoItem"));
+const InfoItem = lazy(() => import("./pages/InfoItem"));
 const ErrorBoundary = lazy(() => import("./component/ErrorBoundary"));
 
 function App() {
@@ -36,7 +37,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/life" element={<Life />} />
             <Route path="/company" element={<Company />} />
-            <Route path="/news" element={<New />} />
+            <Route path="/company/:name" element={<CompanyItem />} />
+            <Route path="/news" element={<News />} />
             <Route path="/info" element={<Info />} />
             <Route
               path="/info/:type/:id"

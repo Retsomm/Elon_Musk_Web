@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
 import { functions, httpsCallable } from "../firebase";
+
+type Article = {
+  title: string;
+  source: string;
+  pubDate: string;
+  link: string;
+}
 // 取得台灣當天日期字串 (yyyy-mm-dd)
 function getTaiwanDateString() {
   const now = new Date();
@@ -8,9 +15,9 @@ function getTaiwanDateString() {
   return now.toISOString().slice(0, 10);
 }
 export default function News() {
-  const [news, setNews] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [news, setNews] = useState<Article[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string|null>(null);
 
   useEffect(() => {
     async function fetchNews() {
@@ -19,7 +26,7 @@ export default function News() {
       const cache = localStorage.getItem(cacheKey);
       if (cache) {
         try {
-          const { date, articles } = JSON.parse(cache);
+          const { date, articles } = JSON.parse(cache) as { date: string; articles: Article[] };
           if (date === today && Array.isArray(articles)) {
             setNews(articles);
             setIsLoading(false);
@@ -32,7 +39,7 @@ export default function News() {
       try {
         const getNews = httpsCallable(functions, "newsApi");
         const result = await getNews();
-        const articles = result.data.articles || [];
+        const articles = (result.data as {articles:Article[]}).articles || [];
         setNews(articles);
         localStorage.setItem(
           cacheKey,
@@ -74,22 +81,27 @@ export default function News() {
         <div className="newsContainer flex flex-wrap justify-center">
           {news.map((article) => (
             <div
-              className="newsCard p-4 m-4 w-80 rounded-xl shadow-md leading-loose"
+              className="newsCard p-4 m-4 w-80 rounded-xl shadow-md"
               key={article.link}
             >
-              <h3 className="font-bold text-lg mb-2">標題：{article.title}</h3>
-              <h3 className="text-base mb-2">來源：{article.source}</h3>
-              <p className="text-sm mb-3">
+              <h3 className="font-bold text-lg mb-2 leading-loose">標題：{article.title}</h3>
+              <h3 className="text-base mb-2 leading-loose">來源：{article.source}</h3>
+              <p className="text-sm mb-3 leading-loose">
                 發布日期：{new Date(article.pubDate).toLocaleString()}
               </p>
-              <a
-                className="btn btn-primary w-fit mt-3"
-                href={article.link}
-                target="_blank"
-                rel="noopener noreferrer"
+              <div
+                className="tooltip tooltip-right"
+                data-tip="前往外部網站"
               >
-                閱讀更多
-              </a>
+                <a
+                  className="btn btn-primary w-fit mt-3"
+                  href={article.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  閱讀更多
+                </a>
+              </div>
             </div>
           ))}
         </div>

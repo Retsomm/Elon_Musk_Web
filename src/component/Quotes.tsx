@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./Quotes.css";
 
-const muskQuotes = [
+const muskQuotes:string[] = [
   "當某件事足夠重要時，即使勝算不大，你也要去做。",
   "我認為普通人也可以選擇成為不平凡的人。",
   "失敗是一種選項。如果沒有失敗，你就沒有創新。",
@@ -21,10 +21,10 @@ const muskQuotes = [
 
 const Quotes = () => {
   // 使用狀態追蹤每張卡片的翻轉狀態
-  const [flipped, setFlipped] = useState(muskQuotes.map(() => false));
+  const [flipped, setFlipped] = useState<boolean[]>(muskQuotes.map(() => false));
 
   // 處理卡片點擊事件，翻轉指定卡片
-  const handleFlip = (index) => {
+  const handleFlip = (index:number) => {
     setFlipped((prev) =>
       prev.map((state, i) => (i === index ? !state : state))
     );

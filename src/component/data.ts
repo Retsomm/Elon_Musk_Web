@@ -1,4 +1,33 @@
-export const books = [
+interface Book {
+  id: string;
+  url: string;
+  img: string;
+  title: string;
+  alt: string;
+  bookNote: string[];
+}
+
+interface YoutubeVideo {
+  id: string;
+  url: string;
+  img: string;
+  title: string;
+  alt: string;
+  highlight: string[];
+}
+
+interface Podcast {
+  id: string;
+  url: string;
+  img: string;
+  title: string;
+  alt: string;
+}
+
+
+
+
+export const books: Book[] = [
   {
     id: 'book1',url: 'https://search.books.com.tw/redirect/move/key/elon+musk/area/mid/item/0010966592/page/1/idx/1/cat/001/pdf/1/spell/3',
     img: 'https://www.books.com.tw/img/001/096/65/0010966592.jpg',
@@ -156,14 +185,14 @@ export const books = [
 
 ];
 
-export const youtubeVideos = [
+export const youtubeVideos: YoutubeVideo[] = [
   
   {
     id: 'yt2',url: 'https://www.youtube.com/watch?v=IgKWPdJWuBQ',
     img: 'https://i.ytimg.com/vi/IgKWPdJWuBQ/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLCZdoeo3wgAXkDVB4kYp60prtRRIg',
     title: 'The mind behind Tesla, SpaceX, SolarCity ... | Elon Musk',
     alt: 'Elon Musk TED talk thumbnail',
-    hightlight:[
+    highlight:[
      ' (00:00~00:33) Elon Musk 表示他從大學時期開始思考，全球未來最大問題是「可持續運輸」與「可持續能源生產」，認為這是本世紀必須解決的最大挑戰。',
 
 '(00:56~01:43) 電動車即使使用相同的燃料（如天然氣）轉成電力來充電，效率仍遠高於燃油車，因為電力發電廠的熱效率高達60%，而燃油引擎約20%。',
@@ -190,7 +219,7 @@ export const youtubeVideos = [
     img: 'https://i.ytimg.com/vi/tnBQmEqBCY0/hq720.jpg',
     title: 'Elon Musk : How to Build the Future',
     alt: 'Elon Musk How to Build the Future thumbnail',
-    hightlight:[
+    highlight:[
 '      (00:00-01:05) Elon Musk談到年輕時認為最重要的五大問題，包括AI、基因學、腦機介面等，並強調即使是小幅度改善但能幫助大量人群的事情也是有價值的。',
 
 '(01:05-02:28) 他認為人工智慧（AI）是未來對人類影響最大的領域，強調必須確保AI發展正確；基因技術解決遺傳疾病和腦機介面突破也非常重要。',
@@ -215,7 +244,7 @@ export const youtubeVideos = [
     img: 'https://i.ytimg.com/vi/zIwLWfaAg-8/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLD2UyvsNHPTx_-KaoxFuCtFLgYKuA',
     title: "Elon Musk: The future we're building -- and boring | TED",
     alt: 'Elon Musk future TED talk thumbnail',
-    hightlight:[
+    highlight:[
       '無聊公司（The Boring Company）構想：馬斯克提出在洛杉磯地下挖掘隧道，並利用電動滑板車（electric skates）將車輛以每小時 200 公里的速度運送，旨在緩解交通擁堵 。',
 
 
@@ -250,7 +279,7 @@ export const youtubeVideos = [
     img: 'https://i.ytimg.com/vi/YRvf00NooN8/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLCQwV8gcQPLqiBXSiKKlTkbKD5myQ',
     title: 'Elon Musk: A future worth getting excited about | Tesla Texas Gigafactory interview | TED',
     alt: 'Elon Musk TED Texas interview thumbnail',
-    hightlight:[
+    highlight:[
      ' (00:00-01:06) 伊隆馬斯克談到未來展望的重要性，他認為人們不該對未來感到絕望，而是每天起床都應該對未來充滿期待與興奮，生命不只是解決問題，而是要展望更美好的未來。',
 
 '(01:06-03:16) 針對2050年氣候變遷的挑戰，馬斯克不認同末日論，強調只要持續努力推動永續能源經濟，未來仍會很美好。他提到永續能源的三大要素：太陽能與風能發電、電池儲能系統，以及電動交通工具。',
@@ -273,7 +302,7 @@ export const youtubeVideos = [
     img: 'https://i.ytimg.com/vi/QGJysv_Qzkw/hq720.jpg',
     title: 'Tesla All-Hands | Q1 2025',
     alt: 'Tesla All-Hands Q1 2025 thumbnail',
-    hightlight:[
+    highlight:[
      ' (00:02) 使命與願景：重申 Tesla 的核心任務是「加速世界向永續能源的轉型」，強調團隊凝聚力讓 Tesla 能以低成本、大規模打造高效且具吸引力的產品。',
 
 '(00:39) 打造運動：不只是做產品，更在推動永續能源的全球運動，強調從物理學出發的樂觀態度，並聚焦打造能取代化石燃料的一流自動駕駛系統。',
@@ -300,7 +329,7 @@ export const youtubeVideos = [
     img: 'https://i.ytimg.com/vi/ycf4Xw4NpNo/hqdefault.jpg',
     title: 'Elon Musk on Tesla, Starlink, Protests, Politics, AI',
     alt: 'Elon Musk on Tesla, Starlink, Protests, Politics, AI',
-    hightlight:[
+    highlight:[
 '承諾繼續擔任 Tesla 執行長至少五年：Musk 表示，他將繼續領導 Tesla 至少五年，強調自己對公司的承諾，並希望帶領公司度過近期的銷售下滑和公眾形象挑戰。',
 
 '計劃大幅減少政治捐款：他宣布將「大幅減少」對政治活動的捐款，表示自己「已經做得夠多了」，並將重心轉回企業經營。',
@@ -318,7 +347,7 @@ export const youtubeVideos = [
   },
 ];
 
-export const podcasts = [
+export const podcasts: Podcast[] = [
   {
     id: 'podcast1',url: 'https://podcasts.apple.com/tw/podcast/2281-elon-musk/id360084272?i=1000696846801',
     img: 'https://is1-ssl.mzstatic.com/image/thumb/Podcasts211/v4/75/8b/59/758b5952-e76b-7347-26eb-32dbe424a269/mza_13712492228783085687.jpg/300x300bb.webp',

@@ -1,23 +1,31 @@
-import React, { useState } from "react";
+import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
+type AlertType = "success" | "error";
+
+interface AlertState {
+  show: boolean;
+  type: AlertType;
+  message: string;
+}
+
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const { login, register, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
-  const [alert, setAlert] = useState({
+  const [alert, setAlert] = useState<AlertState>({
     show: false,
     type: "success",
     message: "",
   });
 
   // 驗證 email 格式
-  const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
+  const validateEmail = (email: string) => /\S+@\S+\.\S+/.test(email);
 
   // 密碼規範
-  const validatePassword = (password) => {
+  const validatePassword = (password: string) => {
     return (
       password.length >= 8 &&
       /[a-z]/.test(password) &&
@@ -28,7 +36,7 @@ const Login = () => {
   };
 
   // 註冊
-  const handleRegister = async (e) => {
+  const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!validateEmail(email)) {
       setAlert({
@@ -55,7 +63,7 @@ const Login = () => {
       });
       await login(email, password);
       setTimeout(() => navigate("/member"), 1000);
-    } catch (error) {
+    } catch (error: any) {
       // 針對已註冊的 email 顯示友善訊息
       if (error.code === "auth/email-already-in-use") {
         setAlert({
@@ -71,25 +79,25 @@ const Login = () => {
   };
 
   // 一般登入
-  const handleEmailLogin = async (e) => {
+  const handleEmailLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await login(email, password);
       setAlert({ show: true, type: "success", message: "登入成功" });
       setTimeout(() => navigate("/member"), 1000);
-    } catch (error) {
+    } catch (error: any) {
       setAlert({ show: true, type: "error", message: error.message });
     }
   };
 
   // Google 登入
-  const handleGoogleLogin = async (e) => {
+  const handleGoogleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       await loginWithGoogle();
       setAlert({ show: true, type: "success", message: "Google 登入成功" });
       setTimeout(() => navigate("/member"), 1000);
-    } catch (error) {
+    } catch (error: any) {
       setAlert({ show: true, type: "error", message: error.message });
     }
   };
@@ -193,7 +201,7 @@ const Login = () => {
         </div>
       </form>
       {alert.show && (
-        <div role="alert" className={alertClass + " mt-4 max-w-120 mx-auto"}>
+        <div role="alert" className={alertClass + " mt-4 w-fit mx-auto"}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 shrink-0 stroke-current"

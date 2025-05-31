@@ -1,0 +1,310 @@
+{
+  "companies": [
+    {
+      "name": "SpaceX",
+      "timeline": [
+        {
+          "year": 2002,
+          "event": "馬斯克創辦SpaceX，目標降低太空旅行成本並實現火星殖民"
+        },
+        {
+          "year": 2006,
+          "event": "Falcon 1首次發射失敗，開始累積火箭設計經驗"
+        },
+        {
+          "year": 2008,
+          "event": "Falcon 1成為首個私營液體燃料火箭成功進入軌道"
+        },
+        {
+          "year": 2010,
+          "event": "Falcon 9首次發射，開始主導低成本火箭市場"
+        },
+        {
+          "year": 2012,
+          "event": "Dragon太空艙首次與國際太空站對接"
+        },
+        {
+          "year": 2015,
+          "event": "Falcon 9首次成功實現火箭第一級陸地回收"
+        },
+        {
+          "year": 2018,
+          "event": "Falcon Heavy首次發射，成為當時最強大運營火箭"
+        },
+        {
+          "year": 2020,
+          "event": "Crew Dragon首次載人飛往國際太空站"
+        },
+        {
+          "year": 2023,
+          "event": "Starlink衛星數量突破5000顆，覆蓋全球多數地區"
+        },
+        {
+          "year": 2024,
+          "event": "Starship獲准進行下一次試飛，計畫用於NASA Artemis計畫"
+        },
+        {
+          "year": 2025,
+          "event": "Starship完成首次環月飛行測試，推進商業太空旅行計畫"
+        }
+      ],
+      "products": [
+        {
+          "name": "Falcon 9",
+          "description": "可重複使用的軌道級火箭，成本低，廣泛用於衛星發射和太空站補給"
+        },
+        {
+          "name": "Falcon Heavy",
+          "description": "承載能力高達53,000公斤，適用於深空任務"
+        },
+        {
+          "name": "Starship",
+          "description": "全可重複使用運輸系統，用於月球、火星及地球點對點運輸"
+        },
+        {
+          "name": "Starlink",
+          "description": "低軌衛星網路，提供全球高速寬頻網際網路"
+        }
+      ],
+      "url": "https://www.spacex.com/"
+    },
+    {
+      "name": "Tesla",
+      "timeline": [
+        {
+          "year": 2003,
+          "event": "Tesla Motors 成立，馬斯克加入前身團隊，開始電動車研發"
+        },
+        {
+          "year": 2004,
+          "event": "馬斯克投資630萬美元，成為Tesla董事會主席及主要股東"
+        },
+        {
+          "year": 2008,
+          "event": "Roadster電動跑車上市，行駛里程達394公里"
+        },
+        {
+          "year": 2012,
+          "event": "Model S轎車上市，獲《Motor Trend》年度最佳汽車"
+        },
+        {
+          "year": 2015,
+          "event": "Model X豪華SUV上市，首款五星安全評級SUV"
+        },
+        {
+          "year": 2016,
+          "event": "收購SolarCity，成為永續能源公司"
+        },
+        {
+          "year": 2017,
+          "event": "Model 3開始交付，全球銷量超百萬"
+        },
+        {
+          "year": 2019,
+          "event": "上海超級工廠正式投產，Model 3開始在中國生產"
+        },
+        {
+          "year": 2023,
+          "event": "Cybertruck上市，售價約8.2萬美元"
+        },
+        {
+          "year": 2024,
+          "event": "Model Y改款，取消低價Model 2計畫"
+        },
+        {
+          "year": 2025,
+          "event": "計畫於德州奧斯汀推出約10輛全無人駕駛Robotaxi試驗"
+        },
+        {
+          "year": 2025,
+          "event": "Tesla在德國柏林超級工廠擴產，Model Y年產量突破50萬輛"
+        }
+      ],
+      "products": [
+        {
+          "name": "Model S / Model 3 / Model X / Model Y",
+          "description": "高性能電動車，Model 3為全球最暢銷電動車"
+        },
+        {
+          "name": "Cybertruck",
+          "description": "全電動皮卡，具硬朗設計和高性能"
+        },
+        {
+          "name": "Powerwall / Powerpack / Megapack",
+          "description": "家用及商用能源儲存系統，提供穩定電力"
+        },
+        {
+          "name": "Solar Roof",
+          "description": "太陽能屋頂，結合美觀與能源產生功能"
+        },
+        {
+          "name": "Optimus (Tesla Bot)",
+          "timeline": [
+            {
+              "year": 2021,
+              "event": "AI Day宣布Optimus計畫，目標打造通用人形機器人"
+            },
+            {
+              "year": 2022,
+              "event": "展示Optimus半功能原型機，部分任務需遙控操作"
+            },
+            {
+              "year": 2023,
+              "event": "Optimus Gen 2發布，展示更流暢行走和手部動作"
+            },
+            {
+              "year": 2024,
+              "event": "Optimus展示與人群互動和工廠任務，部分仍需遙控"
+            },
+            {
+              "year": 2025,
+              "event": "Optimus實現自主導航，計畫2025年有限量產約5000台"
+            },
+            {
+              "year": 2025,
+              "event": "Optimus開始在Tesla工廠進行簡單重複性任務測試"
+            }
+          ],
+          "description": "通用人形機器人，執行危險/重複任務，應用於工廠、家務及太空探索，預計售價2-3萬美元"
+        }
+      ],
+      "url": "https://www.tesla.com/"
+    },
+    {
+      "name": "X Corp",
+      "timeline": [
+        {
+          "year": 2022,
+          "event": "馬斯克以440億美元收購Twitter，推行藍勾認證付費模式"
+        },
+        {
+          "year": 2023,
+          "event": "Twitter更名為X，目標打造萬能應用程式"
+        },
+        {
+          "year": 2023,
+          "event": "推出X Premium訂閱服務，增加用戶特權功能"
+        },
+        {
+          "year": 2024,
+          "event": "發布首份透明度報告，處理超500萬帳戶及1000萬貼文"
+        },
+        {
+          "year": 2025,
+          "event": "X平台新增視訊通話功能，強化社交與即時互動"
+        }
+      ],
+      "products": [
+        {
+          "name": "X平台",
+          "description": "社交媒體平台，強調言論自由，支援付費認證與廣告業務"
+        }
+      ],
+      "url": "https://x.com/"
+    },
+    {
+      "name": "The Boring Company",
+      "timeline": [
+        {
+          "year": 2016,
+          "event": "馬斯克創辦The Boring Company，解決城市交通擁堵"
+        },
+        {
+          "year": 2017,
+          "event": "開始研發高效能隧道挖掘機，提升施工速度"
+        },
+        {
+          "year": 2018,
+          "event": "完成加州霍桑1.15英里研發隧道"
+        },
+        {
+          "year": 2021,
+          "event": "拉斯維加斯Loop項目開始建設，首個商業應用啟動"
+        },
+        {
+          "year": 2024,
+          "event": "拉斯維加斯會展中心Loop項目運營"
+        },
+        {
+          "year": 2025,
+          "event": "計畫啟動洛杉磯至聖塔莫尼卡的隧道項目試驗"
+        }
+      ],
+      "products": [
+        {
+          "name": "Vegas Loop",
+          "description": "地下交通系統，利用電動車快速運輸乘客"
+        },
+        {
+          "name": "Hyperloop概念",
+          "description": "高速真空管運輸系統（計畫中）"
+        }
+      ],
+      "url": "https://www.boringcompany.com/"
+    },
+    {
+      "name": "Neuralink",
+      "timeline": [
+        {
+          "year": 2016,
+          "event": "馬斯克創辦Neuralink，專注腦機介面技術"
+        },
+        {
+          "year": 2019,
+          "event": "公開首款腦機介面原型，展示動物實驗成果"
+        },
+        {
+          "year": 2021,
+          "event": "展示猴子透過腦機介面玩電子遊戲的技術突破"
+        },
+        {
+          "year": 2024,
+          "event": "完成約50億美元融資，推進腦植入技術"
+        },
+        {
+          "year": 2025,
+          "event": "首個人體試驗成功，患者透過植入物控制外部設備"
+        }
+      ],
+      "products": [
+        {
+          "name": "腦機介面植入物",
+          "description": "與手機/電腦通訊，幫助癱瘓患者，未來實現人腦與AI融合"
+        }
+      ],
+      "url": "https://neuralink.com/"
+    },
+    {
+      "name": "Grok",
+      "timeline": [
+        {
+          "year": 2023,
+          "event": "馬斯克創辦xAI，與OpenAI競爭"
+        },
+        {
+          "year": 2024,
+          "event": "估值達500億美元，推出Grok AI聊天機器人"
+        },
+        {
+          "year": 2024,
+          "event": "Grok整合進X平台，提供即時問答功能"
+        },
+        {
+          "year": 2025,
+          "event": "Grok提供給X高級訂閱者使用"
+        },
+        {
+          "year": 2025,
+          "event": "Grok推出多語言支援，擴展至亞洲及歐洲市場"
+        }
+      ],
+      "products": [
+        {
+          "name": "Grok",
+          "description": "AI聊天機器人，提供真實實用答案，支援科學研究"
+        }
+      ],
+      "url": "https://grok.com/"
+    }
+  ]
+}
