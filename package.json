@@ -12,7 +12,7 @@
     "analyze": "source-map-explorer dist/assets/*.js"
   },
   "dependencies": {
-    "axios": "^1.9.0",
+    "axios": "^1.10.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "firebase": "^11.7.1",
@@ -21,7 +21,8 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-paginate": "^8.3.0",
-    "react-router-dom": "^7.6.0"
+    "react-router-dom": "^7.6.0",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.27.1",
