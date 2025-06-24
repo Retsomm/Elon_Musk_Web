@@ -32,11 +32,11 @@ const InfoItem = () => {
   const { type, id } = useParams();
   let item: ItemType | undefined;
   if (type === "book") {
-    item = books.find((b:Book) => b.id === id);
+    item = books.find((b: Book) => b.id === id);
   } else if (type === "youtube") {
-    item = youtubeVideos.find((y:YouTubeVideo) => y.id === id);
+    item = youtubeVideos.find((y: YouTubeVideo) => y.id === id);
   } else if (type === "podcast") {
-    item = podcasts.find((p:Podcast) => p.id === id);
+    item = podcasts.find((p: Podcast) => p.id === id);
   }
   if (!item) {
     return <div className="text-center mt-10">找不到資料</div>;
@@ -80,7 +80,7 @@ const InfoItem = () => {
 
                 <FavoriteButton
                   type={type}
-                  id={id}
+                  id={id ?? ""}
                   noteIdx={i}
                   defaultContent={t}
                 />
@@ -126,7 +126,7 @@ const InfoItem = () => {
 
                 <FavoriteButton
                   type={type}
-                  id={id}
+                  id={id ?? ""}
                   noteIdx={i}
                   defaultContent={t}
                 />
@@ -174,9 +174,26 @@ const InfoItem = () => {
           {item.title}
         </h2>
         <div className="mb-4">
-          <ul className="list-disc pl-5">
+          <ul className="list shadow-md">
             {(item as Podcast).timestamps?.map((t, i) => (
-              <li key={i}>{t}</li>
+              <div key={i}>
+                <li
+                  key={i}
+                  className="list flex p-3 items-center justify-between"
+                >
+                  <div className="font-semibold opacity-60 text-left leading-loose">
+                    {t}
+                  </div>
+
+                  <FavoriteButton
+                    type={type}
+                    id={id ?? ""}
+                    noteIdx={i}
+                    defaultContent={t}
+                  />
+                </li>
+                <div className="divider m-0"></div>
+              </div>
             ))}
           </ul>
         </div>
