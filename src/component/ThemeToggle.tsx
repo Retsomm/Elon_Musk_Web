@@ -4,7 +4,7 @@ interface ThemeToggleProps {
   currentTheme: string;
   onToggle: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
-const ThemeToggle: React.FC<ThemeToggleProps> = ({ currentTheme, onToggle }) => {
+function ThemeToggle ({ currentTheme, onToggle }:ThemeToggleProps) {
   // "business" 視為 dark theme
   const isDark = currentTheme === "business";
   return (

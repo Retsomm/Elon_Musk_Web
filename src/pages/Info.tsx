@@ -30,7 +30,7 @@ type DataType = {
   podcasts: Podcast[];
 };
 
-const Info: React.FC = () => {
+function Info() {
   const [data, setData] = useState<DataType>({
     books: [],
     youtubeVideos: [],
@@ -43,7 +43,7 @@ const Info: React.FC = () => {
     setTimeout(() => {
       setData({ books, youtubeVideos, podcasts });
       setIsLoading(false);
-    }, 1000); 
+    }, 1000);
   }, []);
 
   return (
@@ -99,162 +99,167 @@ const Info: React.FC = () => {
       )}
     </div>
   );
-};
-type SectionProps<T>={
+}
+type SectionProps<T> = {
   title: string;
   items: T[];
   isLoading: boolean;
 };
 
-const BookSection:React.FC<SectionProps<Book>> = ({ title, items, isLoading }) => (
-  <div>
-    <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
-    {isLoading ? (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {[...Array(2)].map((_, index) => (
-          <div
-            className="card shadow-md" 
-            key={`book-skeleton-${index}`}
-          >
-            <div className="card-body items-center">
-              <div className="skeleton h-48 w-32 mb-2"></div>
-              <div className="skeleton h-6 w-3/4"></div>
+function BookSection({ title, items, isLoading }: SectionProps<Book>) {
+  return (
+    <div>
+      <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
+      {isLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {[...Array(2)].map((_, index) => (
+            <div className="card shadow-md" key={`book-skeleton-${index}`}>
+              <div className="card-body items-center">
+                <div className="skeleton h-48 w-32 mb-2"></div>
+                <div className="skeleton h-6 w-3/4"></div>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-    ) : (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {items.map((item) => (
-          <div
-            key={item.url}
-            className="card w-70 shadow-md hover:shadow-lg mx-auto"
-          >
-            <div className="card-body items-center text-center">
-              <img
-                src={item.img}
-                alt={item.alt}
-                width="128"
-                height="192"
-                className="w-32 h-48 object-cover mb-2 rounded"
-                loading="lazy"
-              />
-              <p className="text-lg font-medium leading-loose">{item.title}</p>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {items.map((item) => (
+            <div
+              key={item.url}
+              className="card w-70 shadow-md hover:shadow-lg mx-auto"
+            >
+              <div className="card-body items-center text-center">
+                <img
+                  src={item.img}
+                  alt={item.alt}
+                  width="128"
+                  height="192"
+                  className="w-32 h-48 object-cover mb-2 rounded"
+                  loading="lazy"
+                />
+                <p className="text-lg font-medium leading-loose">
+                  {item.title}
+                </p>
 
-              <Link
-                to={`/info/book/${item.id}`}
-                className="btn btn-primary w-fit"
-              >
-                查看更多
-              </Link>
+                <Link
+                  to={`/info/book/${item.id}`}
+                  className="btn btn-primary w-fit"
+                >
+                  查看更多
+                </Link>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-    )}
-  </div>
-);
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
-const YoutubeSection:React.FC<SectionProps<Youtube>> = ({ title, items, isLoading }) => (
-  <div>
-    <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
-    {isLoading ? (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {[...Array(6)].map((_, index) => (
-          <div
-            className="card w-80 shadow-md mx-auto"
-            key={`youtube-skeleton-${index}`}
-          >
-            <div className="card-body items-center">
-              <div className="skeleton h-40 w-full mb-2"></div>
-              <div className="skeleton h-6 w-3/4"></div>
+function YoutubeSection({ title, items, isLoading }: SectionProps<Youtube>) {
+  return (
+    <div>
+      <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
+      {isLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[...Array(6)].map((_, index) => (
+            <div
+              className="card w-80 shadow-md mx-auto"
+              key={`youtube-skeleton-${index}`}
+            >
+              <div className="card-body items-center">
+                <div className="skeleton h-40 w-full mb-2"></div>
+                <div className="skeleton h-6 w-3/4"></div>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-    ) : (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {items.map((item) => (
-          <div
-            key={item.url}
-            className="card w-80 shadow-md hover:shadow-lg mx-auto"
-          >
-            <div className="card-body items-center text-center">
-              <img
-                src={item.img}
-                alt={item.title}
-                width="320"
-                height="160"
-                className="w-full h-40 object-cover rounded mb-2"
-                loading="lazy"
-              />
-              <p className="text-lg font-medium mb-2 leading-loose">
-                {item.title}
-              </p>
-
-              <Link
-                to={`/info/youtube/${item.id}`}
-                className="btn btn-primary w-fit"
-              >
-                查看更多
-              </Link>
-            </div>
-          </div>
-        ))}
-      </div>
-    )}
-  </div>
-);
-
-const PodcastSection:React.FC<SectionProps<Podcast>> = ({ title, items, isLoading }) => (
-  <div>
-    <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
-    {isLoading ? (
-      <ul className="space-y-4 max-w-2xl mx-auto">
-        {[...Array(3)].map((_, index) => (
-          <li
-            className="card w-full shadow-md"
-            key={`podcast-skeleton-${index}`}
-          >
-            <div className="card-body flex items-center">
-              <div className="skeleton w-16 h-16 rounded mr-4"></div>
-              <div className="skeleton h-6 w-3/4"></div>
-            </div>
-          </li>
-        ))}
-      </ul>
-    ) : (
-      <ul className="space-y-4 max-w-2xl mx-auto">
-        {items.map((item) => (
-          <li key={item.url} className="card w-full shadow-md">
-            <div className="card-body flex items-center">
-              {item.img && (
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {items.map((item) => (
+            <div
+              key={item.url}
+              className="card w-80 shadow-md hover:shadow-lg mx-auto"
+            >
+              <div className="card-body items-center text-center">
                 <img
                   src={item.img}
                   alt={item.title}
-                  width="64"
-                  height="64"
-                  className="w-16 h-16 object-cover rounded mr-4"
+                  width="320"
+                  height="160"
+                  className="w-full h-40 object-cover rounded mb-2"
                   loading="lazy"
                 />
-              )}
+                <p className="text-lg font-medium mb-2 leading-loose">
+                  {item.title}
+                </p>
 
-              <p className="text-lg font-medium mb-2 leading-loose">
-                {item.title}
-              </p>
-
-              <Link
-                to={`/info/podcast/${item.id}`}
-                className="btn btn-primary w-fit"
-              >
-                查看更多
-              </Link>
+                <Link
+                  to={`/info/youtube/${item.id}`}
+                  className="btn btn-primary w-fit"
+                >
+                  查看更多
+                </Link>
+              </div>
             </div>
-          </li>
-        ))}
-      </ul>
-    )}
-  </div>
-);
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PodcastSection({ title, items, isLoading }: SectionProps<Podcast>) {
+  return (
+    <div>
+      <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
+      {isLoading ? (
+        <ul className="space-y-4 max-w-2xl mx-auto">
+          {[...Array(3)].map((_, index) => (
+            <li
+              className="card w-full shadow-md"
+              key={`podcast-skeleton-${index}`}
+            >
+              <div className="card-body flex items-center">
+                <div className="skeleton w-16 h-16 rounded mr-4"></div>
+                <div className="skeleton h-6 w-3/4"></div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <ul className="space-y-4 max-w-2xl mx-auto">
+          {items.map((item) => (
+            <li key={item.url} className="card w-full shadow-md">
+              <div className="card-body flex items-center">
+                {item.img && (
+                  <img
+                    src={item.img}
+                    alt={item.title}
+                    width="64"
+                    height="64"
+                    className="w-16 h-16 object-cover rounded mr-4"
+                    loading="lazy"
+                  />
+                )}
+
+                <p className="text-lg font-medium mb-2 leading-loose">
+                  {item.title}
+                </p>
+
+                <Link
+                  to={`/info/podcast/${item.id}`}
+                  className="btn btn-primary w-fit"
+                >
+                  查看更多
+                </Link>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
 
 export default Info;

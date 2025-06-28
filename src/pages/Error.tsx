@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import React from "react";
-const Error: React.FC = () => {
+function Error() {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,5 +18,5 @@ const Error: React.FC = () => {
       <p>頁面不存在，3 秒後將自動跳轉到首頁...</p>
     </div>
   );
-};
+}
 export default Error;

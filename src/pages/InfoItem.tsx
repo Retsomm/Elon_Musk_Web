@@ -23,11 +23,6 @@ interface Podcast {
 }
 type ItemType = Book | YouTubeVideo | Podcast;
 
-interface ParamsType {
-  type?: "book" | "youtube" | "podcast";
-  id?: string;
-}
-
 const InfoItem = () => {
   const { type, id } = useParams();
   let item: ItemType | undefined;

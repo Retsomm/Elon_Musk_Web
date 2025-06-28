@@ -1,68 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { database, auth } from "../firebase";
-import { ref, set, remove, onValue } from "firebase/database";
-import { onAuthStateChanged } from "firebase/auth";
+import { useFavoriteItem } from "../hooks/useFavorites";
 
 interface FavoriteButtonProps {
-  type:string;
-  id:string|number;
-  noteIdx: string|number;
+  type: string;
+  id: string | number;
+  noteIdx: string | number;
   defaultContent?: string;
 }
-interface FavoriteData {
-  status: boolean;
-  content?: string;
-}
-interface AlertState {
-  show: boolean;
-  message: string;  
-}
 
-const FavoriteButton: React.FC<FavoriteButtonProps> = ({ type, id, noteIdx, defaultContent = "" }) => {
-  const [userId, setUserId] = useState<string | null>(null);
-  const [favorite, setFavorite] = useState<FavoriteData | null>(null);
-  const [alert, setAlert] = useState<AlertState>({ show: false, message: "" });
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUserId(user ? user.uid : null);
-    });
-    return () => unsubscribe();
-  }, []);
+function FavoriteButton({
+  type,
+  id,
+  noteIdx,
+  defaultContent = "",
+}: FavoriteButtonProps) {
+  const { favorite, alert, toggleFavorite, isFavorited } = useFavoriteItem(
+    type,
+    id,
+    noteIdx,
+    defaultContent
+  );
 
-  useEffect(() => {
-    if (!userId) return;
-    const favRef = ref(
-      database,
-      `favorites/${userId}/${type}/${id}/${noteIdx}`
-    );
-    const unsubscribe = onValue(favRef, (snapshot) => {
-      setFavorite(snapshot.val());
-    });
-    return () => unsubscribe();
-  }, [userId, type, id, noteIdx]);
-
-  const toggleFavorite = () => {
-    if (!userId) {
-      setAlert({ show: true, message: "請先登入才能收藏" });
-      setTimeout(() => setAlert({ show: false, message: "" }), 1500);
-      return;
-    }
-    const favRef = ref(
-      database,
-      `favorites/${userId}/${type}/${id}/${noteIdx}`
-    );
-    if (favorite && favorite.status) {
-      remove(favRef);
-    } else {
-      set(favRef, { status: true, content: defaultContent });
-    }
-  };
-  const alertClass =
-    "alert alert-error absolute z-50 top-2 left-1/2 -translate-x-1/2 w-fit";
   return (
     <>
       <button className="btn btn-square btn-ghost" onClick={toggleFavorite}>
-        {favorite && favorite.status ? (
+        {isFavorited ? (
           <svg
             className="size-[1.2em] text-red-500"
             xmlns="http://www.w3.org/2000/svg"
@@ -122,6 +83,6 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({ type, id, noteIdx, defa
       )}
     </>
   );
-};
+}
 
 export default FavoriteButton;

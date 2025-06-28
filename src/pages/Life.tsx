@@ -1,7 +1,25 @@
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "../hooks/useTheme";
+
 type Event = {
   year: string;
   desc: string;
+};
+
+// 定義主題顏色配置的類型
+interface ThemeColors {
+  background: string;
+  line: string;
+  dot: string;
+  text: string;
+  descText: string;
+  textBg: string;
+}
+
+// 定義主題對象的類型
+type ThemeConfig = {
+  autumn: ThemeColors;
+  business: ThemeColors;
 };
 const events: Event[] = [
   { year: "1971/06/28", desc: "出生於南非普利托里亞" },
@@ -84,8 +102,8 @@ const events: Event[] = [
 ];
 
 // 定義與 DaisyUI 主題匹配的顏色
-const themes = {
-  light: {
+const themes: ThemeConfig = {
+  autumn: {
     background: "#F1F1F1", // 淺色背景
     line: "#000000", // 黑色線條
     dot: "#ef4444", // 紅色圓點 (DaisyUI 的紅色 primary)
@@ -93,7 +111,7 @@ const themes = {
     descText: "#4b5563", // 灰色描述文字 (DaisyUI 的 text-gray-600)
     textBg: "rgba(255, 255, 255, 0.85)", // 淺色文字背景
   },
-  dark: {
+  business: {
     background: "#202020", // 深色背景 (DaisyUI 的 dark 主題背景色)
     line: "#ffffff", // 白色線條
     dot: "#f87171", // 稍亮的紅色圓點 (DaisyUI 的紅色 primary 變體)
@@ -102,9 +120,9 @@ const themes = {
     textBg: "rgba(55, 65, 81, 0.85)", // 深色文字背景 (DaisyUI 的 gray-700)
   },
 };
-type ThemeKey = keyof typeof themes;
 
-const Timeline: React.FC = () => {
+function Timeline() {
+  const { currentTheme } = useTheme();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [dimensions, setDimensions] = useState<{
     width: number;
@@ -113,12 +131,6 @@ const Timeline: React.FC = () => {
     width: Math.min(window.innerWidth * 0.9, 700),
     height: events.length * 180,
   });
-
-  // 獲取當前主題的函數
-  const getCurrentTheme = (): ThemeKey => {
-    const theme = document.documentElement.getAttribute("data-theme");
-    return theme === "business" ? "dark" : "light"; // autumn 為 light, business 為 dark
-  };
 
   // 監聽視窗大小變化
   useEffect(() => {
@@ -132,7 +144,7 @@ const Timeline: React.FC = () => {
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
-  // 監聽主題變化
+  // 監聽主題變化和尺寸變化，重新繪製時間軸
   useEffect(() => {
     // 繪製時間軸的函數
     const drawTimeline = () => {
@@ -150,7 +162,6 @@ const Timeline: React.FC = () => {
       ctx.scale(dpr, dpr);
 
       // 根據當前主題選擇顏色
-      const currentTheme = getCurrentTheme();
       ctx.fillStyle = themes[currentTheme].background;
       ctx.fillRect(0, 0, dimensions.width, dimensions.height);
 
@@ -217,21 +228,10 @@ const Timeline: React.FC = () => {
         wrapText(ctx, event.desc, descX, descY, descWidth, 18);
       });
     };
-    const observer = new MutationObserver(() => {
-      // 當 data-theme 變化時，觸發重新繪製
-      drawTimeline();
-    });
 
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["data-theme"],
-    });
-
-    // 初次繪製
+    // 繪製時間軸
     drawTimeline();
-
-    return () => observer.disconnect();
-  }, [dimensions]);
+  }, [dimensions, currentTheme]);
 
   // 文字自動換行
   function wrapText(
@@ -267,6 +267,6 @@ const Timeline: React.FC = () => {
       />
     </div>
   );
-};
+}
 
 export default Timeline;

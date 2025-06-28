@@ -95,7 +95,7 @@ interface Company {
   products?: Product[];
 }
 
-const CompanyItem: React.FC = () => {
+function CompanyItem() {
   const { name } = useParams<{ name?: string }>();
   const company = companies.find((c) => c.name === name);
   const [currentMedia, setCurrentMedia] = useState<{
@@ -110,7 +110,7 @@ const CompanyItem: React.FC = () => {
       const firstEvent = company.timeline[0];
       if (firstEvent.media && !currentMedia) {
         const convertedUrl = getEmbedUrl(firstEvent.media.url);
-        debugEmbedUrl(firstEvent.media.url, convertedUrl); 
+        debugEmbedUrl(firstEvent.media.url, convertedUrl);
 
         setCurrentMedia({
           type: firstEvent.media.type,
@@ -345,6 +345,6 @@ const CompanyItem: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default CompanyItem;

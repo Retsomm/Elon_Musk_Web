@@ -1,6 +1,11 @@
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuthStore } from "../hooks/useAuthStore";
+import {
+  handleRegister as handleRegisterAction,
+  handleEmailLogin as handleEmailLoginAction,
+  handleGoogleLogin as handleGoogleLoginAction,
+} from "../utils/authHandlers";
 
 type AlertType = "success" | "error";
 
@@ -13,7 +18,7 @@ interface AlertState {
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { login, register, loginWithGoogle } = useAuth();
+  const { login, register, loginWithGoogle } = useAuthStore();
   const navigate = useNavigate();
   const [alert, setAlert] = useState<AlertState>({
     show: false,
@@ -21,85 +26,38 @@ const Login = () => {
     message: "",
   });
 
-  // 驗證 email 格式
-  const validateEmail = (email: string) => /\S+@\S+\.\S+/.test(email);
-
-  // 密碼規範
-  const validatePassword = (password: string) => {
-    return (
-      password.length >= 8 &&
-      /[a-z]/.test(password) &&
-      /[A-Z]/.test(password) &&
-      /[0-9]/.test(password) &&
-      /[^A-Za-z0-9]/.test(password)
-    );
-  };
-
   // 註冊
   const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (!validateEmail(email)) {
-      setAlert({
-        show: true,
-        type: "error",
-        message: "請輸入正確的 Email 格式",
-      });
-      return;
-    }
-    if (!validatePassword(password)) {
-      setAlert({
-        show: true,
-        type: "error",
-        message: "密碼需至少8碼，含大小寫、數字、符號",
-      });
-      return;
-    }
-    try {
-      await register(email, password);
-      setAlert({
-        show: true,
-        type: "success",
-        message: "註冊成功，正在自動登入...",
-      });
-      await login(email, password);
-      setTimeout(() => navigate("/member"), 1000);
-    } catch (error: any) {
-      // 針對已註冊的 email 顯示友善訊息
-      if (error.code === "auth/email-already-in-use") {
-        setAlert({
-          show: true,
-          type: "error",
-          message: "此 Email 已註冊，請直接登入。",
-        });
-      } else {
-        setAlert({ show: true, type: "error", message: error.message });
-      }
-      console.log("Register error:", error);
-    }
+    await handleRegisterAction(
+      email,
+      password,
+      { login, register, loginWithGoogle },
+      setAlert,
+      navigate
+    );
   };
 
   // 一般登入
   const handleEmailLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      await login(email, password);
-      setAlert({ show: true, type: "success", message: "登入成功" });
-      setTimeout(() => navigate("/member"), 1000);
-    } catch (error: any) {
-      setAlert({ show: true, type: "error", message: error.message });
-    }
+    await handleEmailLoginAction(
+      email,
+      password,
+      { login, register, loginWithGoogle },
+      setAlert,
+      navigate
+    );
   };
 
   // Google 登入
   const handleGoogleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    try {
-      await loginWithGoogle();
-      setAlert({ show: true, type: "success", message: "Google 登入成功" });
-      setTimeout(() => navigate("/member"), 1000);
-    } catch (error: any) {
-      setAlert({ show: true, type: "error", message: error.message });
-    }
+    await handleGoogleLoginAction(
+      { login, register, loginWithGoogle },
+      setAlert,
+      navigate
+    );
   };
 
   // alert 樣式
@@ -112,7 +70,6 @@ const Login = () => {
         className="max-w-120 mx-auto border p-5"
         onSubmit={handleEmailLogin}
       >
-        {/* ...existing form code... */}
         <div className="form-control w-full max-w-md mb-4">
           <label className="label" htmlFor="email">
             <span className="label-text">Your email</span>

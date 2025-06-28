@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom";
 
-
 import Quotes from "../component/Quotes";
 type Section = {
   name: string;
   description: string;
   link: string;
-}
-const sections:Section[] = [
+};
+const sections: Section[] = [
   {
     name: "公司介紹",
     description:
@@ -31,7 +30,7 @@ const sections:Section[] = [
   },
 ];
 
-const HomePage:React.FC = () => {
+function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br">
       <div className="relative flex items-center justify-center text-center">
@@ -93,6 +92,6 @@ const HomePage:React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default HomePage;

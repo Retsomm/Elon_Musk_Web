@@ -8,10 +8,10 @@ type Product = {
 type Company = {
   name: string;
   products?: Product[];
-}
-const companies:Company[] = companyData.companies;
+};
+const companies: Company[] = companyData.companies;
 
-const Company: React.FC = () => {
+function Company() {
   return (
     <div className="min-h-screen p-6">
       <div className="container mx-auto">
@@ -56,6 +56,6 @@ const Company: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Company;

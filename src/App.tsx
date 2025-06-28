@@ -1,10 +1,9 @@
 // src/App.jsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy } from "react";
-import { useTheme } from "../hooks/useTheme";
+import { useTheme } from "./hooks/useTheme";
 import "./App.css";
 import "./index.css";
-import { AuthProvider } from "./contexts/AuthContext";
 
 const Home = lazy(() => import("./pages/Home"));
 const Life = lazy(() => import("./pages/Life"));
@@ -24,44 +23,42 @@ const ErrorBoundary = lazy(() => import("./component/ErrorBoundary"));
 function App() {
   const { currentTheme, toggleTheme } = useTheme();
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
+    <BrowserRouter>
+      <ScrollToTop />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Layout currentTheme={currentTheme} onToggleTheme={toggleTheme} />
+          }
+        >
+          <Route path="/" element={<Home />} />
+          <Route path="/life" element={<Life />} />
+          <Route path="/company" element={<Company />} />
+          <Route path="/company/:name" element={<CompanyItem />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/info" element={<Info />} />
           <Route
-            path="/"
+            path="/info/:type/:id"
             element={
-              <Layout currentTheme={currentTheme} onToggleTheme={toggleTheme} />
+              <ErrorBoundary>
+                <InfoItem />
+              </ErrorBoundary>
             }
-          >
-            <Route path="/" element={<Home />} />
-            <Route path="/life" element={<Life />} />
-            <Route path="/company" element={<Company />} />
-            <Route path="/company/:name" element={<CompanyItem />} />
-            <Route path="/news" element={<News />} />
-            <Route path="/info" element={<Info />} />
-            <Route
-              path="/info/:type/:id"
-              element={
-                <ErrorBoundary>
-                  <InfoItem />
-                </ErrorBoundary>
-              }
-            />
-            <Route path="/login" element={<Login />} />
-            <Route
-              path="/member"
-              element={
-                <ProtectedRoute>
-                  <Member />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="*" element={<Error />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+          />
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/member"
+            element={
+              <ProtectedRoute>
+                <Member />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Error />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
