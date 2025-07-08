@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { functions, httpsCallable } from "../firebase";
 
 type Article = {
   title: string;
@@ -58,10 +57,9 @@ export default function News() {
           console.log(`嘗試抓取新聞 (第 ${retryCount + 1} 次)`);
           setIsLoading(cachedArticles.length === 0); // 如果有快取就不顯示載入中
 
-          const getNews = httpsCallable(functions, "newsApi");
-          const result = await getNews();
-          const articles =
-            (result.data as { articles: Article[] }).articles || [];
+          const response = await fetch("https://us-central1-vite-react-elon-5dae6.cloudfunctions.net/getNews");
+          const result = await response.json();
+          const articles = result.articles || [];
 
           if (articles.length > 0) {
             setNews(articles);
@@ -107,9 +105,9 @@ export default function News() {
     setIsLoading(true);
 
     try {
-      const getNews = httpsCallable(functions, "newsApi");
-      const result = await getNews();
-      const articles = (result.data as { articles: Article[] }).articles || [];
+      const response = await fetch("https://us-central1-vite-react-elon-5dae6.cloudfunctions.net/getNews");
+      const result = await response.json();
+      const articles = result.articles || [];
       setNews(articles);
 
       const today = getTaiwanDateString();
