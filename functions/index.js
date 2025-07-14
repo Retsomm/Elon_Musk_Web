@@ -1,67 +1,87 @@
-import { https } from "firebase-functions";
+import { onRequest } from "firebase-functions/v2/https";
+import { defineSecret } from "firebase-functions/params";
 import axios from "axios";
 import cors from "cors";
-import { parseStringPromise } from "xml2js";
 
-const corsHandler = cors({ origin: true }); // 允許所有來源
+const corsHandler = cors({ origin: true });
 
-export const getNews = https.onRequest((req, res) => {
-  corsHandler(req, res, async () => {
-    const searchQueries = ["Elon Musk", "Tesla", "SpaceX"];
-    const userAgents = [
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"
-    ];
+// ✅ 定義 Secret 參數
+const newsApiKey = defineSecret("NEWS_API_KEY");
 
-    for (let queryIndex = 0; queryIndex < searchQueries.length; queryIndex++) {
-      for (let uaIndex = 0; uaIndex < userAgents.length; uaIndex++) {
-        try {
-          console.log(`嘗試搜尋: ${searchQueries[queryIndex]}, UA: ${uaIndex + 1}`);
+// ✅ 搜尋關鍵字
+const searchQueries = ["Elon Musk", "Tesla", "SpaceX", "馬斯克"];
 
-          const response = await axios.get("https://news.google.com/rss/search", {
-            params: {
-              q: searchQueries[queryIndex],
-              hl: "zh-TW",
-              gl: "TW",
-              ceid: "TW:zh-Hant"
-            },
-            headers: {
-              "User-Agent": userAgents[uaIndex],
-              "Accept": "application/rss+xml, application/xml, text/xml, */*",
-              "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
-              "Cache-Control": "no-cache"
-            },
-            timeout: 20000
-          });
+export const getNews = onRequest({
+  region: "asia-east1",
+  memory: "1GiB",
+  timeoutSeconds: 60,
+  maxInstances: 10,
+  secrets: [newsApiKey] // 告訴 Firebase 這個函數需要這個 secret
+}, (req, res) => {
+  return corsHandler(req, res, async () => {
 
-          const result = await parseStringPromise(response.data);
-          const rawItems = result?.rss?.channel?.[0]?.item || [];
+    const fetchNewsFromNewsAPI = async (query) => {
+      try {
+        const response = await axios.get("https://newsapi.org/v2/everything", {
+          params: {
+            q: query,
+            language: "zh", // 優先中文新聞，如果沒有會自動補英文
+            sortBy: "publishedAt",
+            pageSize: 10,
+            apiKey: newsApiKey.value() // 使用 secret 的值
+          },
+          timeout: 10000
+        });
 
-          if (rawItems.length === 0) throw new Error("沒有找到新聞項目");
+        const articles = response.data.articles.map((item) => ({
+          title: item.title || "無標題",
+          source: item.source?.name || "未知來源",
+          link: item.url || "",
+          description: item.description || "",
+          pubDate: item.publishedAt || "未知時間",
+          query
+        }));
 
-          const articles = rawItems.slice(0, 10).map((item) => ({
-            title: item.title?.[0]?.replace(/ - .*$/, "") || "無標題",
-            source: item.description?.[0]?.match(/<font color="#6f6f6f">(.*?)<\/font>/)?.[1] || "未知來源",
-            link: item.link?.[0] || "",
-            description: item.description?.[0]?.replace(/<[^>]*>/g, "") || "",
-            pubDate: item.pubDate?.[0] || "未知日期",
-          }));
-
-          return res.status(200).json({
-            articles,
-            source: searchQueries[queryIndex],
-            timestamp: new Date().toISOString()
-          });
-
-        } catch (error) {
-          console.error(`搜尋 ${searchQueries[queryIndex]} 失敗:`, error.message);
-        }
+        return articles;
+      } catch (error) {
+        console.error(`搜尋 "${query}" 失敗:`, error.message);
+        return [];
       }
-    }
+    };
 
-    return res.status(500).json({
-      error: "目前無法取得新聞資料，請稍後再試"
-    });
+    try {
+      const allResults = [];
+
+      for (const keyword of searchQueries) {
+        const results = await fetchNewsFromNewsAPI(keyword);
+        allResults.push(...results);
+
+        // 加入一點延遲避免 API 過快觸發限制
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+
+      // 整理結果：去除重複、依照時間排序
+      const seenTitles = new Set();
+      const uniqueArticles = allResults.filter(article => {
+        if (seenTitles.has(article.title)) return false;
+        seenTitles.add(article.title);
+        return true;
+      });
+
+      const sorted = uniqueArticles.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
+
+      res.status(200).json({
+        articles: sorted.slice(0, 15), // 限制最多 15 篇
+        timestamp: new Date().toISOString(),
+        totalFound: sorted.length
+      });
+
+    } catch (err) {
+      console.error("獲取新聞失敗:", err);
+      res.status(500).json({
+        error: "伺服器錯誤，請稍後再試",
+        timestamp: new Date().toISOString()
+      });
+    }
   });
 });
