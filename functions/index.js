@@ -8,7 +8,7 @@ const corsHandler = cors({ origin: true });
 const searchQueries = ["Elon Musk", "Tesla", "SpaceX", "馬斯克"];
 
 export const getNews = onRequest({
-  region: "asia-east1",
+  region: "us-central1",
   memory: "1GiB",
   timeoutSeconds: 60,
   maxInstances: 10
