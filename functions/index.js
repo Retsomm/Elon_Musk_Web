@@ -1,12 +1,9 @@
 import { onRequest } from "firebase-functions/v2/https";
-import { defineSecret } from "firebase-functions/params";
+import { config } from "firebase-functions";
 import axios from "axios";
 import cors from "cors";
 
 const corsHandler = cors({ origin: true });
-
-// ✅ 定義 Secret 參數
-const newsApiKey = defineSecret("NEWS_API_KEY");
 
 // ✅ 搜尋關鍵字
 const searchQueries = ["Elon Musk", "Tesla", "SpaceX", "馬斯克"];
@@ -15,8 +12,7 @@ export const getNews = onRequest({
   region: "asia-east1",
   memory: "1GiB",
   timeoutSeconds: 60,
-  maxInstances: 10,
-  secrets: [newsApiKey] // 告訴 Firebase 這個函數需要這個 secret
+  maxInstances: 10
 }, (req, res) => {
   return corsHandler(req, res, async () => {
 
@@ -28,7 +24,7 @@ export const getNews = onRequest({
             language: "zh", // 優先中文新聞，如果沒有會自動補英文
             sortBy: "publishedAt",
             pageSize: 10,
-            apiKey: newsApiKey.value() // 使用 secret 的值
+            apiKey: config().newsapi.key // 使用 Firebase config
           },
           timeout: 10000
         });

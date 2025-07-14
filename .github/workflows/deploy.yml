@@ -68,14 +68,12 @@ jobs:
         if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
         run: cd functions && npm ci
 
-      - name: Set Firebase secret
+      - name: Set Firebase environment variables
         if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
         run: |
-          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" | base64 -d > firebase-service-account.json
-          npx firebase-tools auth:login --token "${{ secrets.FIREBASE_TOKEN }}" || true
-          npx firebase-tools functions:secrets:set NEWS_API_KEY="${{ secrets.NEWS_API_KEY }}" --project=${{ secrets.FIREBASE_PROJECT_ID }}
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: firebase-service-account.json
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > $GITHUB_WORKSPACE/firebase-service-account.json
+          export GOOGLE_APPLICATION_CREDENTIALS=$GITHUB_WORKSPACE/firebase-service-account.json
+          npx firebase-tools functions:config:set newsapi.key="${{ secrets.NEWS_API_KEY }}" --project=${{ secrets.FIREBASE_PROJECT_ID }}
 
       - name: Deploy to Firebase Hosting and Functions (Production)
         if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
@@ -86,4 +84,3 @@ jobs:
           projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
           channelId: live
           entryPoint: ./
-          targets: hosting,functions
