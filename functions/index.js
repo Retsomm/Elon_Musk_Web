@@ -1,5 +1,4 @@
 import { onRequest } from "firebase-functions/v2/https";
-import { config } from "firebase-functions";
 import axios from "axios";
 import cors from "cors";
 
@@ -24,7 +23,7 @@ export const getNews = onRequest({
             language: "zh", // 優先中文新聞，如果沒有會自動補英文
             sortBy: "publishedAt",
             pageSize: 10,
-            apiKey: config().newsapi.key // 使用 Firebase config
+            apiKey: process.env.NEWS_API_KEY // 使用環境變數
           },
           timeout: 10000
         });
