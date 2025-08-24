@@ -3,34 +3,16 @@ import { database, auth } from "../firebase";
 import { ref, set, remove, onValue } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 
-export interface FavoriteData {
-    status: boolean;
-    content?: string;
-}
-
-export interface FavoriteType {
-    [id: string]: FavoriteData[] | { [key: string]: FavoriteData };
-}
-
-export interface FavoritesData {
-    [type: string]: FavoriteType;
-}
-
-interface AlertState {
-    show: boolean;
-    message: string;
-}
-
 // Hook for managing individual favorite item
 export const useFavoriteItem = (
-    type: string,
-    id: string | number,
-    noteIdx: string | number,
-    defaultContent: string = ""
+    type,
+    id,
+    noteIdx,
+    defaultContent = ""
 ) => {
-    const [userId, setUserId] = useState<string | null>(null);
-    const [favorite, setFavorite] = useState<FavoriteData | null>(null);
-    const [alert, setAlert] = useState<AlertState>({ show: false, message: "" });
+    const [userId, setUserId] = useState(null);
+    const [favorite, setFavorite] = useState(null);
+    const [alert, setAlert] = useState({ show: false, message: "" });
 
     // Monitor auth state
     useEffect(() => {
@@ -88,8 +70,8 @@ export const useFavoriteItem = (
 
 // Hook for managing all favorites (for Member page)
 export const useAllFavorites = () => {
-    const [userId, setUserId] = useState<string | null>(null);
-    const [favoritesData, setFavoritesData] = useState<FavoritesData>({});
+    const [userId, setUserId] = useState(null);
+    const [favoritesData, setFavoritesData] = useState({});
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -117,9 +99,9 @@ export const useAllFavorites = () => {
     }, []);
 
     const removeFavorite = async (
-        type: string,
-        id: string,
-        noteIdx: string | number
+        type,
+        id,
+        noteIdx
     ) => {
         if (!userId) {
             alert("請先登入或稍後再試");
@@ -129,14 +111,14 @@ export const useAllFavorites = () => {
         let favPath = `favorites/${userId}/${type}/${id}`;
 
         // Check if the favorite structure is array or object
-        const typeData = favoritesData[type] as FavoriteType;
+        const typeData = favoritesData[type] ;
         if (typeData && typeData[id]) {
             if (Array.isArray(typeData[id])) {
                 favPath += `/${noteIdx}`;
             } else if (
                 typeof typeData[id] === "object" &&
                 !Array.isArray(typeData[id]) &&
-                (typeData[id] as { [key: string]: FavoriteData })[noteIdx as string]
+                (typeData[id] )[noteIdx ]
             ) {
                 favPath += `/${noteIdx}`;
             }

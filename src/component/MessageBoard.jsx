@@ -1,26 +1,16 @@
-import { useState, useEffect, useRef, FormEvent, ChangeEvent } from "react";
+import { useState, useEffect, useRef, FormEvent } from "react";
 import { database, auth } from "../firebase";
 import { ref, push, onValue } from "firebase/database";
-import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
-
-// 定義訊息的型別
-interface Message {
-  id: string;
-  content: string;
-  timestamp: string;
-  userId: string;
-  email?: string;
-  avatar?: string;
-}
+import { onAuthStateChanged } from "firebase/auth";
 
 function App() {
   // 狀態管理
-  const [messages, setMessages] = useState<Message[]>([]); // 儲存所有訊息
-  const [content, setContent] = useState<string>(""); // 輸入框內容
-  const [user, setUser] = useState<FirebaseUser | null>(null); // 當前登入使用者
-  const [avatar, setAvatar] = useState<string>("/avatar.webp"); // 使用者頭像，預設為本地圖片
-  const [loading, setLoading] = useState<boolean>(true); // 是否正在載入
-  const messagesEndRef = useRef<HTMLDivElement | null>(null); // 用於自動滾動到底部
+  const [messages, setMessages] = useState([]); // 儲存所有訊息
+  const [content, setContent] = useState(""); // 輸入框內容
+  const [user, setUser] = useState(null); // 當前登入使用者
+  const [avatar, setAvatar] = useState("/avatar.webp"); // 使用者頭像，預設為本地圖片
+  const [loading, setLoading] = useState(true); // 是否正在載入
+  const messagesEndRef = useRef(null); // 用於自動滾動到底部
 
   // 監聽登入狀態並取得頭像
   useEffect(() => {
@@ -51,13 +41,13 @@ function App() {
         const data = snapshot.val(); // 取得所有訊息資料
         if (data) {
           // 將物件轉為陣列，並加上 id
-          const messageList: Message[] = Object.entries(data)
+          const messageList = Object.entries(data)
             .map(([id, message]) => ({
               // message 是從 Firebase 取得的單筆訊息資料，型別不明（通常是物件）。
               // Omit<Message, "id"> 表示「Message 型別，但不包含 id 屬性」。
               // as Omit<Message, "id"> 是型別斷言，告訴 TypeScript：這個 message 物件的型別就是 Message，但沒有 id 這個屬性。
               // 這麼做是因為 Firebase 的資料本身沒有 id 欄位，id 是用 Firebase 的 key 來補上的，所以要先展開原本的資料，再額外加上 id。
-              ...(message as Omit<Message, "id">),
+              ...message,
               id,
             }))
             // 過濾掉不完整的訊息
@@ -95,7 +85,7 @@ function App() {
   }, [messages]);
 
   // 處理表單提交（送出訊息）
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault(); // 阻止表單預設行為
     if (loading) {
       alert("正在檢查登入狀態，請稍後再試！");
@@ -124,16 +114,14 @@ function App() {
       console.log("即將寫入的訊息：", newMessage);
       await push(messagesRef, newMessage); // 寫入資料庫
       setContent(""); // 清空輸入框
-    } catch (error: any) {
+    } catch (error) {
       alert("提交留言失敗：" + error.message);
       console.error("寫入錯誤：", error);
     }
   };
 
   // 處理頭像載入失敗，改用預設頭像
-  const handleAvatarError = (
-    e: React.SyntheticEvent<HTMLImageElement, Event>
-  ) => {
+  const handleAvatarError = () => {
     console.log("頭像載入失敗，切換到預設頭像：", e.currentTarget.src);
     e.currentTarget.src = "/avatar.webp";
   };

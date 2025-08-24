@@ -1,11 +1,5 @@
 import { useState, useEffect } from "react";
 
-type Article = {
-  title: string;
-  source: string;
-  pubDate: string;
-  link: string;
-};
 // 取得台灣當天日期字串 (yyyy-mm-dd)
 function getTaiwanDateString() {
   const now = new Date();
@@ -14,9 +8,9 @@ function getTaiwanDateString() {
   return now.toISOString().slice(0, 10);
 }
 export default function News() {
-  const [news, setNews] = useState<Article[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [news, setNews] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function fetchNews() {
@@ -25,13 +19,10 @@ export default function News() {
       const cache = localStorage.getItem(cacheKey);
 
       // 先載入快取資料（如果有的話）
-      let cachedArticles: Article[] = [];
+      let cachedArticles = [];
       if (cache) {
         try {
-          const { date, articles } = JSON.parse(cache) as {
-            date: string;
-            articles: Article[];
-          };
+          const { date, articles } = JSON.parse(cache);
           if (date === today && Array.isArray(articles)) {
             setNews(articles);
             setIsLoading(false);

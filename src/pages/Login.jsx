@@ -7,27 +7,20 @@ import {
   handleGoogleLogin as handleGoogleLoginAction,
 } from "../utils/authHandlers";
 
-type AlertType = "success" | "error";
-
-interface AlertState {
-  show: boolean;
-  type: AlertType;
-  message: string;
-}
 
 const Login = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const { login, register, loginWithGoogle } = useAuthStore();
   const navigate = useNavigate();
-  const [alert, setAlert] = useState<AlertState>({
+  const [alert, setAlert] = useState({
     show: false,
     type: "success",
     message: "",
   });
 
   // 註冊
-  const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     await handleRegisterAction(
       email,
@@ -39,7 +32,7 @@ const Login = () => {
   };
 
   // 一般登入
-  const handleEmailLogin = async (e: FormEvent<HTMLFormElement>) => {
+  const handleEmailLogin = async (e) => {
     e.preventDefault();
     await handleEmailLoginAction(
       email,
@@ -51,7 +44,7 @@ const Login = () => {
   };
 
   // Google 登入
-  const handleGoogleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleGoogleLogin = async (e) => {
     e.preventDefault();
     await handleGoogleLoginAction(
       { login, register, loginWithGoogle },

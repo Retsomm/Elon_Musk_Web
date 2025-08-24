@@ -2,17 +2,14 @@
  * 驗證工具函數
  */
 
-export interface ValidationResult {
-    isValid: boolean;
-    message?: string;
-}
+
 
 /**
  * 驗證 email 格式
  * @param email - 要驗證的 email 地址
  * @returns 驗證結果
  */
-export const validateEmail = (email: string): ValidationResult => {
+export const validateEmail = (email) => {
     const emailRegex = /\S+@\S+\.\S+/;
 
     if (!email) {
@@ -40,7 +37,7 @@ export const validateEmail = (email: string): ValidationResult => {
  * @param password - 要驗證的密碼
  * @returns 驗證結果
  */
-export const validatePassword = (password: string): ValidationResult => {
+export const validatePassword = (password) => {
     if (!password) {
         return {
             isValid: false,
@@ -94,7 +91,7 @@ export const validatePassword = (password: string): ValidationResult => {
  * @param password - 密碼
  * @returns 驗證結果
  */
-export const validateLoginForm = (email: string, password: string): ValidationResult => {
+export const validateLoginForm = (email, password) => {
     const emailValidation = validateEmail(email);
     if (!emailValidation.isValid) {
         return emailValidation;
@@ -118,7 +115,7 @@ export const validateLoginForm = (email: string, password: string): ValidationRe
  * @param password - 密碼
  * @returns 驗證結果
  */
-export const validateRegisterForm = (email: string, password: string): ValidationResult => {
+export const validateRegisterForm = (email, password) => {
     const emailValidation = validateEmail(email);
     if (!emailValidation.isValid) {
         return emailValidation;

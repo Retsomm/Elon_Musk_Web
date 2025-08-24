@@ -3,13 +3,7 @@ import ThemeToggle from "./ThemeToggle";
 import { Hamburger } from "lucide-react";
 import { useAuthStore } from "../hooks/useAuthStore";
 
-interface DesktopNavbarProps {
-  toggleNav: () => void;
-  isDropOpen: boolean;
-  toggleDrop: () => void;
-  currentTheme: string;
-  onToggleTheme: () => void;
-}
+
 
 export default function DesktopNavbar({
   toggleNav,
@@ -17,7 +11,7 @@ export default function DesktopNavbar({
   toggleDrop,
   currentTheme,
   onToggleTheme,
-}: DesktopNavbarProps) {
+}) {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
 
@@ -28,7 +22,7 @@ export default function DesktopNavbar({
     avatarSrc = `https://www.google.com/s2/photos/profile/${user.email}`;
   }
 
-  const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+  const handleImgError = () => {
     e.currentTarget.src = "/avatar.webp";
   };
 

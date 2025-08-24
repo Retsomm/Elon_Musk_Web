@@ -1,34 +1,14 @@
 import { validateLoginForm, validateRegisterForm } from './validation';
-
-export interface AuthResult {
-    success: boolean;
-    message: string;
-}
-
-export interface AuthActions {
-    login: (email: string, password: string) => Promise<void>;
-    register: (email: string, password: string) => Promise<void>;
-    loginWithGoogle: () => Promise<void>;
-}
-
-export interface NavigateFunction {
-    (to: string): void;
-}
-
-export interface AlertSetter {
-    (alert: { show: boolean; type: "success" | "error"; message: string }): void;
-}
-
 /**
  * 處理註冊邏輯
  */
 export const handleRegister = async (
-    email: string,
-    password: string,
-    authActions: AuthActions,
-    setAlert: AlertSetter,
-    navigate: NavigateFunction
-): Promise<void> => {
+    email,
+    password,
+    authActions,
+    setAlert,
+    navigate
+) => {
     // 驗證表單
     const validation = validateRegisterForm(email, password);
     if (!validation.isValid) {
@@ -49,7 +29,7 @@ export const handleRegister = async (
         });
         await authActions.login(email, password);
         setTimeout(() => navigate("/member"), 1000);
-    } catch (error: any) {
+    } catch (error) {
         // 針對已註冊的 email 顯示友善訊息
         if (error.code === "auth/email-already-in-use") {
             setAlert({
@@ -72,12 +52,12 @@ export const handleRegister = async (
  * 處理一般登入邏輯
  */
 export const handleEmailLogin = async (
-    email: string,
-    password: string,
-    authActions: AuthActions,
-    setAlert: AlertSetter,
-    navigate: NavigateFunction
-): Promise<void> => {
+    email,
+    password,
+    authActions,
+    setAlert,
+    navigate
+) => {
     // 驗證表單
     const validation = validateLoginForm(email, password);
     if (!validation.isValid) {
@@ -97,7 +77,7 @@ export const handleEmailLogin = async (
             message: "登入成功"
         });
         setTimeout(() => navigate("/member"), 1000);
-    } catch (error: any) {
+    } catch (error) {
         setAlert({
             show: true,
             type: "error",
@@ -110,10 +90,10 @@ export const handleEmailLogin = async (
  * 處理 Google 登入邏輯
  */
 export const handleGoogleLogin = async (
-    authActions: AuthActions,
-    setAlert: AlertSetter,
-    navigate: NavigateFunction
-): Promise<void> => {
+    authActions,
+    setAlert,
+    navigate
+) => {
     try {
         await authActions.loginWithGoogle();
         setAlert({
@@ -122,7 +102,7 @@ export const handleGoogleLogin = async (
             message: "Google 登入成功"
         });
         setTimeout(() => navigate("/member"), 1000);
-    } catch (error: any) {
+    } catch (error) {
         setAlert({
             show: true,
             type: "error",

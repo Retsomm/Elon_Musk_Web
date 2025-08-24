@@ -1,18 +1,12 @@
 import { useFavoriteItem } from "../hooks/useFavorites";
 
-interface FavoriteButtonProps {
-  type: string;
-  id: string | number;
-  noteIdx: string | number;
-  defaultContent?: string;
-}
 
 function FavoriteButton({
   type,
   id,
   noteIdx,
   defaultContent = "",
-}: FavoriteButtonProps) {
+}) {
   const { favorite, alert, toggleFavorite, isFavorited } = useFavoriteItem(
     type,
     id,

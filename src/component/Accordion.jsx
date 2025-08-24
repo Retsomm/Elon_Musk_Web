@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { Rocket, ChevronsDown, ChevronsUp } from "lucide-react";
 
-interface AccordionProps {
-  imageSrc: string;
-  altText: string;
-  showButton?: boolean;
-  buttonText?: string;
-  showRocket?: boolean;
-}
 
 export default function Accordion({
   imageSrc,
@@ -15,7 +8,7 @@ export default function Accordion({
   showButton = false,
   buttonText = "",
   showRocket = false,
-}: AccordionProps) {
+}) {
   const [isPicVisible, setIsPicVisible] = useState(false);
 
   const togglePic = () => setIsPicVisible((prev) => !prev);

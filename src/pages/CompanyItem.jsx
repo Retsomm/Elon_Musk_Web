@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import companies from "../component/companyData"; // 匯入處理後的資料
-const getEmbedUrl = (url: string): string => {
+const getEmbedUrl = (url) => {
   // 檢查是否為 YouTube 網址
   if (url.includes("youtube.com") || url.includes("youtu.be")) {
     let videoId = "";
@@ -50,7 +50,7 @@ const getEmbedUrl = (url: string): string => {
 };
 
 // 更新檢查影片網址的函式
-const isVideoUrl = (url: string): boolean => {
+const isVideoUrl = (url) => {
   return (
     url.includes("youtube.com") ||
     url.includes("youtu.be") ||
@@ -61,48 +61,18 @@ const isVideoUrl = (url: string): boolean => {
     url.includes("youtube-nocookie.com")
   );
 };
-const debugEmbedUrl = (original: string, converted: string) => {
+const debugEmbedUrl = (original, converted) => {
   console.log("原始網址:", original);
   console.log("轉換後網址:", converted);
   console.log("是否為影片網址:", isVideoUrl(original));
 };
 // 型別定義
-interface TimelineItem {
-  year: string;
-  title?: string;
-  event?: string;
-  media?: {
-    type: string;
-    url: string;
-  };
-}
 
-interface ProductTimelineItem {
-  year: string;
-  event: string;
-}
-
-interface Product {
-  name: string;
-  description: string;
-  timeline?: ProductTimelineItem[];
-}
-
-interface Company {
-  name: string;
-  url: string;
-  timeline?: TimelineItem[];
-  products?: Product[];
-}
 
 function CompanyItem() {
-  const { name } = useParams<{ name?: string }>();
+  const { name } = useParams();
   const company = companies.find((c) => c.name === name);
-  const [currentMedia, setCurrentMedia] = useState<{
-    type: string;
-    url: string;
-    event?: string;
-  } | null>(null);
+  const [currentMedia, setCurrentMedia] = useState(null);
 
   // 初始化 currentMedia 為第一個事件的 media
   useEffect(() => {
@@ -122,7 +92,7 @@ function CompanyItem() {
   }, [company]);
 
   // 點擊時間線項目時更新 currentMedia
-  const handleTimelineClick = (item: TimelineItem) => {
+  const handleTimelineClick = (item) => {
     if (item.media) {
       const convertedUrl = getEmbedUrl(item.media.url);
       debugEmbedUrl(item.media.url, convertedUrl);

@@ -2,36 +2,17 @@ import { useParams, Link } from "react-router-dom";
 import { books, podcasts, youtubeVideos } from "../component/data";
 import FavoriteButton from "../component/FavoriteButton";
 
-interface Book {
-  id: string;
-  title: string;
-  img: string;
-  url: string;
-  bookNote?: string[];
-}
-interface YouTubeVideo {
-  id: string;
-  title: string;
-  url: string;
-  highlight?: string[];
-}
-interface Podcast {
-  id: string;
-  title: string;
-  url: string;
-  timestamps?: string[];
-}
-type ItemType = Book | YouTubeVideo | Podcast;
+
 
 const InfoItem = () => {
   const { type, id } = useParams();
-  let item: ItemType | undefined;
+  let item;
   if (type === "book") {
-    item = books.find((b: Book) => b.id === id);
+    item = books.find((b) => b.id === id);
   } else if (type === "youtube") {
-    item = youtubeVideos.find((y: YouTubeVideo) => y.id === id);
+    item = youtubeVideos.find((y) => y.id === id);
   } else if (type === "podcast") {
-    item = podcasts.find((p: Podcast) => p.id === id);
+    item = podcasts.find((pt) => p.id === id);
   }
   if (!item) {
     return <div className="text-center mt-10">找不到資料</div>;
@@ -40,7 +21,7 @@ const InfoItem = () => {
     return (
       <div className="max-w-xl mx-auto mt-10 card p-6">
         <img
-          src={(item as Book).img}
+          src={(item ).img}
           alt={item.title}
           className="w-40 h-60 object-cover mx-auto mb-4 rounded"
         />
@@ -63,7 +44,7 @@ const InfoItem = () => {
 
         <h3 className="text-2xl font-bold mb-2 text-center">BookNotes</h3>
         <ul className="list shadow-md">
-          {(item as Book).bookNote?.map((t, i) => (
+          {(item ).bookNote?.map((t, i) => (
             <div key={i}>
               <li
                 key={i}
@@ -109,7 +90,7 @@ const InfoItem = () => {
 
         <h3 className="text-2xl font-bold mb-2 text-center">highlight</h3>
         <ul className="list shadow-md">
-          {(item as YouTubeVideo).highlight?.map((t, i) => (
+          {(item ).highlight?.map((t, i) => (
             <div key={i}>
               <li
                 key={i}
@@ -170,7 +151,7 @@ const InfoItem = () => {
         </h2>
         <div className="mb-4">
           <ul className="list shadow-md">
-            {(item as Podcast).timestamps?.map((t, i) => (
+            {(item ).timestamps?.map((t, i) => (
               <div key={i}>
                 <li
                   key={i}

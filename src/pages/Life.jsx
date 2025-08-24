@@ -1,27 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "../hooks/useTheme";
 
-type Event = {
-  year: string;
-  desc: string;
-};
 
-// 定義主題顏色配置的類型
-interface ThemeColors {
-  background: string;
-  line: string;
-  dot: string;
-  text: string;
-  descText: string;
-  textBg: string;
-}
-
-// 定義主題對象的類型
-type ThemeConfig = {
-  autumn: ThemeColors;
-  business: ThemeColors;
-};
-const events: Event[] = [
+const events = [
   { year: "1971/06/28", desc: "出生於南非普利托里亞" },
   {
     year: "1989年",
@@ -102,7 +83,7 @@ const events: Event[] = [
 ];
 
 // 定義與 DaisyUI 主題匹配的顏色
-const themes: ThemeConfig = {
+const themes = {
   autumn: {
     background: "#F1F1F1", // 淺色背景
     line: "#000000", // 黑色線條
@@ -123,11 +104,8 @@ const themes: ThemeConfig = {
 
 function Timeline() {
   const { currentTheme } = useTheme();
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [dimensions, setDimensions] = useState<{
-    width: number;
-    height: number;
-  }>({
+  const canvasRef = useRef(null);
+  const [dimensions, setDimensions] = useState({
     width: Math.min(window.innerWidth * 0.9, 700),
     height: events.length * 180,
   });
@@ -235,14 +213,14 @@ function Timeline() {
 
   // 文字自動換行
   function wrapText(
-    ctx: CanvasRenderingContext2D,
-    text: string,
-    x: number,
-    y: number,
-    maxWidth: number,
-    lineHeight: number,
+    ctx,
+    text,
+    x,
+    y,
+    maxWidth,
+    lineHeight,
     measureOnly = false
-  ): number {
+  ) {
     const words = text.split("");
     let line = "";
     let lines = 0;

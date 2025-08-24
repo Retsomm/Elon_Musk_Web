@@ -2,19 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 import { useAuthStore } from "../hooks/useAuthStore";
 
-interface MobileNavbarProps {
-  isNavOpen: boolean;
-  toggleNav: () => void;
-  currentTheme: string;
-  onToggleTheme: () => void;
-}
 
 export default function MobileNavbar({
   isNavOpen,
   toggleNav,
   currentTheme,
   onToggleTheme,
-}: MobileNavbarProps) {
+}) {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
 
@@ -25,7 +19,7 @@ export default function MobileNavbar({
     avatarSrc = `https://www.google.com/s2/photos/profile/${user.email}`;
   }
 
-  const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+  const handleImgError = (e) => {
     e.currentTarget.src = "/avatar.webp";
   };
 

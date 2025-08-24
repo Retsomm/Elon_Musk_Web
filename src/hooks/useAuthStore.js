@@ -5,33 +5,14 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   createUserWithEmailAndPassword,
-  User as FirebaseUser,
 } from "firebase/auth";
 import "../firebase";
 
-type User = {
-  email: string | null;
-  name?: string | null;
-  photoURL?: string | null;
-} | null;
-type LoginType = "google" | "email" | null;
 
-interface AuthState {
-  user: User;
-  loginType: LoginType;
-  loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string) => Promise<void>;
-  loginWithGoogle: () => Promise<void>;
-  logout: () => void;
-  setUser: (user: User) => void;
-  setLoginType: (type: LoginType) => void;
-  setLoading: (loading: boolean) => void;
-}
 
 const auth = getAuth();
 
-export const useAuthStore = create<AuthState>((set, get) => ({
+export const useAuthStore = create((set, get) => ({
   user: null,
   loginType: null,
   loading: true,
@@ -64,7 +45,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 }));
 
 // 監聽 Firebase 認證狀態變化
-auth.onAuthStateChanged((firebaseUser: FirebaseUser | null) => {
+auth.onAuthStateChanged((firebaseUser) => {
   const { setUser, setLoginType, setLoading } = useAuthStore.getState();
   if (firebaseUser) {
     setUser({

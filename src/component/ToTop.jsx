@@ -5,7 +5,7 @@ export default function ToTop() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    const handleScroll = (ev?: Event): void => {
+    const handleScroll = (ev)=> {
       const scrollY = window.scrollY || window.pageYOffset;
       const windowHeight = window.innerHeight;
       const docHeight = document.documentElement.scrollHeight;

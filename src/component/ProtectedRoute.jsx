@@ -2,11 +2,9 @@ import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuthStore } from "../hooks/useAuthStore";
 
-interface ProtectedRouteProps {
-  children: ReactNode;
-}
+
 // 這個元件用來保護需要登入才能訪問的路由
-function ProtectedRoute({ children }: ProtectedRouteProps) {
+function ProtectedRoute({ children }) {
   // 從 AuthContext 取得 user 和 loading 狀態
   const { user, loading } = useAuthStore();
 

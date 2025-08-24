@@ -2,42 +2,15 @@ import { useState, useEffect } from "react";
 import { books, podcasts, youtubeVideos } from "../component/data";
 import { Link } from "react-router-dom";
 
-type Book = {
-  id: string;
-  url: string;
-  img: string;
-  alt: string;
-  title: string;
-};
-
-type Youtube = {
-  id: string;
-  url: string;
-  img: string;
-  title: string;
-};
-
-type Podcast = {
-  id: string;
-  url: string;
-  img?: string;
-  title: string;
-};
-
-type DataType = {
-  books: Book[];
-  youtubeVideos: Youtube[];
-  podcasts: Podcast[];
-};
 
 function Info() {
-  const [data, setData] = useState<DataType>({
+  const [data, setData] = useState({
     books: [],
     youtubeVideos: [],
     podcasts: [],
   });
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [filter, setFilter] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [filter, setFilter] = useState("");
 
   useEffect(() => {
     setTimeout(() => {
@@ -100,13 +73,9 @@ function Info() {
     </div>
   );
 }
-type SectionProps<T> = {
-  title: string;
-  items: T[];
-  isLoading: boolean;
-};
 
-function BookSection({ title, items, isLoading }: SectionProps<Book>) {
+
+function BookSection({ title, items, isLoading }) {
   return (
     <div>
       <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
@@ -156,7 +125,7 @@ function BookSection({ title, items, isLoading }: SectionProps<Book>) {
   );
 }
 
-function YoutubeSection({ title, items, isLoading }: SectionProps<Youtube>) {
+function YoutubeSection({ title, items, isLoading }) {
   return (
     <div>
       <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
@@ -209,7 +178,7 @@ function YoutubeSection({ title, items, isLoading }: SectionProps<Youtube>) {
   );
 }
 
-function PodcastSection({ title, items, isLoading }: SectionProps<Podcast>) {
+function PodcastSection({ title, items, isLoading }) {
   return (
     <div>
       <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>

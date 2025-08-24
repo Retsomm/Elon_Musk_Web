@@ -1,12 +1,8 @@
 import { Link } from "react-router-dom";
 
 import Quotes from "../component/Quotes";
-type Section = {
-  name: string;
-  description: string;
-  link: string;
-};
-const sections: Section[] = [
+
+const sections= [
   {
     name: "公司介紹",
     description:

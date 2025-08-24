@@ -1,4 +1,4 @@
-import { useState, Dispatch, SetStateAction } from "react";
+import { useState} from "react";
 import { Outlet } from "react-router-dom";
 import MobileNavbar from "./MobileNavbar";
 import DesktopNavbar from "./DesktopNavbar";
@@ -6,16 +6,13 @@ import Accordion from "./Accordion";
 import Footer from "./Footer";
 import ToTop from "./ToTop";
 
-interface LayoutProps {
-  currentTheme: string;
-  onToggleTheme: () => void;
-}
 
-export default function Layout({ currentTheme, onToggleTheme }: LayoutProps) {
+
+export default function Layout({ currentTheme, onToggleTheme }) {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isDropOpen, setIsDropOpen] = useState(false);
 
-  const toggle = (setFn: Dispatch<SetStateAction<boolean>>) => () =>
+  const toggle = (setFn) => () =>
     setFn((prev) => !prev);
   const toggleNav = toggle(setIsNavOpen);
   const toggleDrop = toggle(setIsDropOpen);

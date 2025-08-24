@@ -1,10 +1,7 @@
 import React from "react";
 
-interface ThemeToggleProps {
-  currentTheme: string;
-  onToggle: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}
-function ThemeToggle ({ currentTheme, onToggle }:ThemeToggleProps) {
+
+function ThemeToggle ({ currentTheme, onToggle }) {
   // "business" 視為 dark theme
   const isDark = currentTheme === "business";
   return (

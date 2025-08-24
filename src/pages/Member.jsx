@@ -3,14 +3,8 @@ import { useAuthStore } from "../hooks/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import {
   useAllFavorites,
-  FavoritesData,
-  FavoriteType,
-  FavoriteData,
 } from "../hooks/useFavorites";
 import { books, podcasts, youtubeVideos } from "../component/data";
-
-type FavoriteNote = FavoriteData;
-
 const MessageBoard = lazy(() => import("../component/MessageBoard"));
 // 預設頭像路徑
 const DEFAULT_PIC = "/avatar.webp";
@@ -19,9 +13,9 @@ function Member() {
   // 取得使用者資訊與登出方法
   const { user, logout, loading } = useAuthStore();
   const navigate = useNavigate();
-  const [memberPic, setMemberPic] = useState<string>("");
+  const [memberPic, setMemberPic] = useState("");
   const { favoritesData, removeFavorite } = useAllFavorites();
-  const [mainTab, setMainTab] = useState<"profile" | "collect" | "message">(
+  const [mainTab, setMainTab] = useState(
     "profile"
   );
 
@@ -32,9 +26,9 @@ function Member() {
 
   //移除收藏
   const handleRemoveFavorite = async (
-    type: string,
-    id: string,
-    noteIdx: string | number
+    type,
+    id,
+    noteIdx
   ) => {
     await removeFavorite(type, id, noteIdx);
   };
@@ -44,13 +38,13 @@ function Member() {
     if (!favoritesData || Object.keys(favoritesData).length === 0) {
       return <div>尚未收藏任何內容</div>;
     }
-    const collectItems: React.JSX.Element[] = [];
+    const collectItems  = [];
     for (const type of ["book", "youtube", "podcast"]) {
       const typeFav = favoritesData[type];
       if (!typeFav) continue;
       for (const id in typeFav) {
-        let item: any;
-        let notes: any[] = [];
+        let item;
+        let notes = [];
         if (type === "book") {
           item = books.find((b) => b.id === id);
           notes = item?.bookNote || [];
@@ -65,19 +59,19 @@ function Member() {
         }
         if (!item) continue;
 
-        let favIdxArr: (string | number)[] = [];
+        let favIdxArr= [];
         if (Array.isArray(typeFav[id])) {
-          favIdxArr = (typeFav[id] as FavoriteNote[])
+          favIdxArr = (typeFav[id])
             .map((v, idx) => (v && v.status ? idx : null))
-            .filter((v) => v !== null) as number[];
+            .filter((v) => v !== null);
         } else {
           favIdxArr = Object.keys(typeFav[id]);
         }
 
         favIdxArr.forEach((noteIdx) => {
           let favData = Array.isArray(typeFav[id])
-            ? (typeFav[id] as FavoriteNote[])[noteIdx as number]
-            : (typeFav[id] as { [key: string]: FavoriteNote })[noteIdx];
+            ? (typeFav[id] )[noteIdx]
+            : (typeFav[id] )[noteIdx];
           if (!favData || !favData.status) return;
           collectItems.push(
             <div
@@ -89,7 +83,7 @@ function Member() {
                   {item.title || item.name}
                 </div>
                 <div className="text-sm break-words">
-                  {notes[noteIdx as number] || favData.content}
+                  {notes[noteIdx ] || favData.content}
                 </div>
               </div>
               <div className="sm:mt-0 sm:ml-4 flex-shrink-0">
@@ -134,7 +128,7 @@ function Member() {
 
   if (loading) return null;
   // 右側主區塊內容
-  let mainContent: React.JSX.Element | null = null;
+  let mainContent = null;
   if (mainTab === "profile") {
     mainContent = (
       <div className="sectionInfo flex flex-col justify-center items-center">
@@ -143,8 +137,8 @@ function Member() {
             src={picSrc}
             alt="會員頭像"
             className="w-24 h-24 rounded-full object-cover"
-            onError={(e: React.SyntheticEvent<HTMLImageElement>) =>
-              ((e.target as HTMLImageElement).src = DEFAULT_PIC)
+            onError={(e) =>
+              ((e.target ).src = DEFAULT_PIC)
             }
             loading="lazy"
           />

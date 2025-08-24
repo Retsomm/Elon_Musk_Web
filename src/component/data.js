@@ -1,34 +1,5 @@
-interface Book {
-  id: string;
-  url: string;
-  img: string;
-  title: string;
-  alt: string;
-  bookNote: string[];
-}
 
-interface YoutubeVideo {
-  id: string;
-  url: string;
-  img: string;
-  title: string;
-  alt: string;
-  highlight: string[];
-}
-
-interface Podcast {
-  id: string;
-  url: string;
-  img: string;
-  title: string;
-  alt: string;
-  timestamps: string[];
-}
-
-
-
-
-export const books: Book[] = [
+export const books = [
   {
     id: 'book1', url: 'https://search.books.com.tw/redirect/move/key/elon+musk/area/mid/item/0010966592/page/1/idx/1/cat/001/pdf/1/spell/3',
     img: 'https://www.books.com.tw/img/001/096/65/0010966592.jpg',
@@ -186,7 +157,7 @@ export const books: Book[] = [
 
 ];
 
-export const youtubeVideos: YoutubeVideo[] = [
+export const youtubeVideos= [
 
   {
     id: 'yt2', url: 'https://www.youtube.com/watch?v=IgKWPdJWuBQ',
@@ -333,7 +304,7 @@ export const youtubeVideos: YoutubeVideo[] = [
   },
 ];
 
-export const podcasts: Podcast[] = [
+export const podcasts= [
   {
     id: 'podcast1', url: 'https://podcasts.apple.com/tw/podcast/2281-elon-musk/id360084272?i=1000696846801',
     img: 'https://is1-ssl.mzstatic.com/image/thumb/Podcasts211/v4/75/8b/59/758b5952-e76b-7347-26eb-32dbe424a269/mza_13712492228783085687.jpg/300x300bb.webp',

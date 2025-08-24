@@ -1,15 +1,8 @@
 import { Link } from "react-router-dom";
 import companyData from "../component/Company.json";
 
-type Product = {
-  name: string;
-  description: string;
-};
-type Company = {
-  name: string;
-  products?: Product[];
-};
-const companies: Company[] = companyData.companies;
+
+const companies = companyData.companies;
 
 function Company() {
   return (
