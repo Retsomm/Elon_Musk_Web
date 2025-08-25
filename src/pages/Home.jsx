@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import UnityParticleSystem from "../component/UnityParticleSystem";
-import Accordion from "../component/Accordion";
 
 const sections = [
   {
