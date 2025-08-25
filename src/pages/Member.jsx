@@ -1,9 +1,7 @@
 import React, { useState, useEffect, lazy } from "react";
 import { useAuthStore } from "../hooks/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import {
-  useAllFavorites,
-} from "../hooks/useFavorites";
+import { useAllFavorites } from "../hooks/useFavorites";
 import { books, podcasts, youtubeVideos } from "../component/data";
 const MessageBoard = lazy(() => import("../component/MessageBoard"));
 // 預設頭像路徑
@@ -15,9 +13,7 @@ function Member() {
   const navigate = useNavigate();
   const [memberPic, setMemberPic] = useState("");
   const { favoritesData, removeFavorite } = useAllFavorites();
-  const [mainTab, setMainTab] = useState(
-    "profile"
-  );
+  const [mainTab, setMainTab] = useState("profile");
 
   // 取得會員 Email 與 Google 頭像
   const memberEmail = user?.email || "";
@@ -25,11 +21,7 @@ function Member() {
   const isGmail = memberEmail.endsWith("@gmail.com");
 
   //移除收藏
-  const handleRemoveFavorite = async (
-    type,
-    id,
-    noteIdx
-  ) => {
+  const handleRemoveFavorite = async (type, id, noteIdx) => {
     await removeFavorite(type, id, noteIdx);
   };
 
@@ -38,7 +30,7 @@ function Member() {
     if (!favoritesData || Object.keys(favoritesData).length === 0) {
       return <div>尚未收藏任何內容</div>;
     }
-    const collectItems  = [];
+    const collectItems = [];
     for (const type of ["book", "youtube", "podcast"]) {
       const typeFav = favoritesData[type];
       if (!typeFav) continue;
@@ -59,9 +51,9 @@ function Member() {
         }
         if (!item) continue;
 
-        let favIdxArr= [];
+        let favIdxArr = [];
         if (Array.isArray(typeFav[id])) {
-          favIdxArr = (typeFav[id])
+          favIdxArr = typeFav[id]
             .map((v, idx) => (v && v.status ? idx : null))
             .filter((v) => v !== null);
         } else {
@@ -70,8 +62,8 @@ function Member() {
 
         favIdxArr.forEach((noteIdx) => {
           let favData = Array.isArray(typeFav[id])
-            ? (typeFav[id] )[noteIdx]
-            : (typeFav[id] )[noteIdx];
+            ? typeFav[id][noteIdx]
+            : typeFav[id][noteIdx];
           if (!favData || !favData.status) return;
           collectItems.push(
             <div
@@ -83,7 +75,7 @@ function Member() {
                   {item.title || item.name}
                 </div>
                 <div className="text-sm break-words">
-                  {notes[noteIdx ] || favData.content}
+                  {notes[noteIdx] || favData.content}
                 </div>
               </div>
               <div className="sm:mt-0 sm:ml-4 flex-shrink-0">
@@ -120,8 +112,6 @@ function Member() {
   let picSrc = "/defaultMemberPic.webp";
   if (googlePhoto) {
     picSrc = googlePhoto;
-  } else if (isGmail) {
-    picSrc = `https://www.google.com/s2/photos/profile/${memberEmail}`;
   } else if (memberPic) {
     picSrc = memberPic;
   }
@@ -137,9 +127,7 @@ function Member() {
             src={picSrc}
             alt="會員頭像"
             className="w-24 h-24 rounded-full object-cover"
-            onError={(e) =>
-              ((e.target ).src = DEFAULT_PIC)
-            }
+            onError={(e) => (e.target.src = DEFAULT_PIC)}
             loading="lazy"
           />
         </div>

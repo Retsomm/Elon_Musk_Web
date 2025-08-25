@@ -18,10 +18,9 @@ const Layout = lazy(() => import("./component/Layout"));
 const ScrollToTop = lazy(() => import("./component/ScrollToTop"));
 const ProtectedRoute = lazy(() => import("./component/ProtectedRoute"));
 const InfoItem = lazy(() => import("./pages/InfoItem"));
-const ErrorBoundary = lazy(() => import("./component/ErrorBoundary"));
 
 function App() {
-  const { currentTheme, toggleTheme } = useTheme();
+  const { currentTheme } = useTheme();
   return (
     <BrowserRouter>
       <ScrollToTop />
@@ -29,7 +28,7 @@ function App() {
         <Route
           path="/"
           element={
-            <Layout currentTheme={currentTheme} onToggleTheme={toggleTheme} />
+            <Layout currentTheme={currentTheme} />
           }
         >
           <Route path="/" element={<Home />} />
@@ -38,14 +37,7 @@ function App() {
           <Route path="/company/:name" element={<CompanyItem />} />
           <Route path="/news" element={<News />} />
           <Route path="/info" element={<Info />} />
-          <Route
-            path="/info/:type/:id"
-            element={
-              <ErrorBoundary>
-                <InfoItem />
-              </ErrorBoundary>
-            }
-          />
+          <Route path="/info/:type/:id" element={<InfoItem />} />
           <Route path="/login" element={<Login />} />
           <Route
             path="/member"

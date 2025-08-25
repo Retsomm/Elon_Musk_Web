@@ -1,13 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
-import ThemeToggle from "./ThemeToggle";
 import { useAuthStore } from "../hooks/useAuthStore";
-
+import Nebula from "../component/Nebula";
 
 export default function MobileNavbar({
   isNavOpen,
   toggleNav,
-  currentTheme,
-  onToggleTheme,
 }) {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
@@ -15,21 +12,19 @@ export default function MobileNavbar({
   let avatarSrc = "/defaultMemberPic.webp";
   if (user?.photoURL) {
     avatarSrc = user.photoURL;
-  } else if (user?.email?.endsWith("@gmail.com")) {
-    avatarSrc = `https://www.google.com/s2/photos/profile/${user.email}`;
+  } else {
+    avatarSrc = "/avatar.webp";
   }
-
-  const handleImgError = (e) => {
-    e.currentTarget.src = "/avatar.webp";
-  };
 
   return (
     <div
-      className={`hamLists z-999 mt-15 fixed top-15 left-0 right-0 p-2 px-1 flex align-middle justify-between shadow-2xl bg-base-100 md:hidden
+      className={`hamLists z-999 mt-15 p-2 px-1 flex align-middle justify-between shadow-2xl bg-base-100 md:hidden relative
       ${isNavOpen ? "max-h-fit" : "hidden"} 
       `}
-      style={{ zIndex: 9998 }}
     >
+      <div className="absolute inset-0 w-full h-full -z-10 pointer-events-none">
+        <Nebula className="w-full h-full" />
+      </div>
       <ul className={`hamList ${isNavOpen ? true : false}`}>
         <li>
           <Link to="/company" className="navLink" onClick={toggleNav}>
@@ -54,13 +49,13 @@ export default function MobileNavbar({
 
         <li>
           {user ? (
+            //daisyui內建收合功能
             <details className="collapse">
               <summary className="collapse-title font-semibold flex justify-center">
                 <img
                   src={avatarSrc}
                   alt="會員頭像"
                   className="w-12 h-12 rounded-full object-cover"
-                  onError={handleImgError}
                 />
               </summary>
               <div
@@ -82,15 +77,7 @@ export default function MobileNavbar({
             </Link>
           )}
         </li>
-        <li>
-          <div
-            className="navLink flex items-center gap-2 tooltip tooltip-bottom"
-            data-tip="switchTheme"
-          >
-            <span className="text-sm"></span>
-            <ThemeToggle currentTheme={currentTheme} onToggle={onToggleTheme} />
-          </div>
-        </li>
+      
       </ul>
     </div>
   );

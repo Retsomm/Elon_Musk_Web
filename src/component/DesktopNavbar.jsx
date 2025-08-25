@@ -1,36 +1,24 @@
 import { Link, useNavigate } from "react-router-dom";
-import ThemeToggle from "./ThemeToggle";
 import { Hamburger } from "lucide-react";
 import { useAuthStore } from "../hooks/useAuthStore";
+import Nebula from "../component/Nebula";
 
-
-
-export default function DesktopNavbar({
-  toggleNav,
-  isDropOpen,
-  toggleDrop,
-  currentTheme,
-  onToggleTheme,
-}) {
-  const { user, logout } = useAuthStore();
+export default function DesktopNavbar({ toggleNav}) {
+  const { user} = useAuthStore();
   const navigate = useNavigate();
 
   let avatarSrc = "/defaultMemberPic.webp";
   if (user?.photoURL) {
     avatarSrc = user.photoURL;
-  } else if (user?.email?.endsWith("@gmail.com")) {
-    avatarSrc = `https://www.google.com/s2/photos/profile/${user.email}`;
+  } else {
+    avatarSrc = "/avatar.webp";
   }
 
-  const handleImgError = () => {
-    e.currentTarget.src = "/avatar.webp";
-  };
-
   return (
-    <nav
-      className="fixed top-0 left-0 right-0 nav p-2 px-10 flex align-middle sm:justify-between justify-center shadow-2xl z-1000 items-center bg-base-100"
-      style={{ zIndex: 9999 }}
-    >
+    <nav className="nav p-2 px-10 flex align-middle sm:justify-between justify-center shadow-2xl z-[1000] items-center bg-base-100 relative overflow-hidden">
+      <div className="absolute inset-0 w-full h-full -z-10 pointer-events-none">
+        <Nebula className="w-full h-full" />
+      </div>
       <div className="ham md:hidden left-5 absolute rounded-full p-2">
         <Hamburger className="hamburger cursor-pointer" onClick={toggleNav} />
       </div>
@@ -73,51 +61,20 @@ export default function DesktopNavbar({
                 tabIndex={0}
                 role="button"
                 className="btn m-1 hover:bg-opacity-100 bg-baase-100"
-                onClick={toggleDrop}
+                onClick={() => navigate("/member")}
               >
                 <img
                   src={avatarSrc}
                   alt="會員頭像"
-                  className={`w-12 h-12 rounded-full object-cover ${
-                    isDropOpen ? true : false
-                  }`}
-                  onError={handleImgError}
+                  className="w-12 h-12 rounded-full object-cover"
                 />
               </div>
-              <ul
-                tabIndex={0}
-                className={`dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm ${
-                  isDropOpen ? "max-h-fit" : "hidden"
-                }`}
-              >
-                <li
-                  onClick={() => {
-                    navigate("/member");
-                    toggleDrop();
-                  }}
-                >
-                  <a>會員資料</a>
-                </li>
-
-                <li onClick={logout}>
-                  <a>登出</a>
-                </li>
-              </ul>
             </div>
           ) : (
             <Link to="/login" className="navLink">
               登入
             </Link>
           )}
-        </li>
-        <li>
-          <div
-            className="flex items-center gap-2 tooltip tooltip-bottom"
-            data-tip="switchTheme"
-          >
-            <span className="text-sm"></span>
-            <ThemeToggle currentTheme={currentTheme} onToggle={onToggleTheme} />
-          </div>
         </li>
       </ul>
     </nav>

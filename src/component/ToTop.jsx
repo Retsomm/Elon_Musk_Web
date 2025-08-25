@@ -25,7 +25,7 @@ export default function ToTop() {
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className="fixed bottom-8 right-8 z-50 bg-red-600 hover:bg-red-800 text-white rounded-full p-3 shadow-lg transition"
+      className="fixed bottom-8 right-8 z-50 bg-red-900 hover:bg-red-800 text-white rounded-full p-3 shadow-lg transition"
       aria-label="回到頂部"
     >
       <ArrowUpFromLine className="w-6 h-6" />

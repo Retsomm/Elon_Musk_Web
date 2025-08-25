@@ -92,8 +92,8 @@ const themes = {
     descText: "#4b5563", // 灰色描述文字 (DaisyUI 的 text-gray-600)
     textBg: "rgba(255, 255, 255, 0.85)", // 淺色文字背景
   },
-  business: {
-    background: "#202020", // 深色背景 (DaisyUI 的 dark 主題背景色)
+  black: {
+    background: "#000000", // 深色背景 (DaisyUI 的 dark 主題背景色)
     line: "#ffffff", // 白色線條
     dot: "#f87171", // 稍亮的紅色圓點 (DaisyUI 的紅色 primary 變體)
     text: "#ffffff", // 白色年份文字

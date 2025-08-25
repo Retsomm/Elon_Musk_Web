@@ -21,7 +21,7 @@ function Info() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
-      <form className="filter flex justify-center">
+      <form className="filter flex justify-center mt-10">
         <input
           className="btn btn-square"
           type="reset"
