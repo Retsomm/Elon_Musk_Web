@@ -1,8 +1,9 @@
-import React, { useState, useEffect, lazy } from "react";
+import { useState, lazy } from "react";
 import { useAuthStore } from "../hooks/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { useAllFavorites } from "../hooks/useFavorites";
 import { books, podcasts, youtubeVideos } from "../component/data";
+import { useTheme } from "../hooks/useTheme";
 const MessageBoard = lazy(() => import("../component/MessageBoard"));
 // 預設頭像路徑
 const DEFAULT_PIC = "/avatar.webp";
@@ -14,7 +15,7 @@ function Member() {
   const [memberPic, setMemberPic] = useState("");
   const { favoritesData, removeFavorite } = useAllFavorites();
   const [mainTab, setMainTab] = useState("profile");
-
+  const { setTheme } = useTheme();
   // 取得會員 Email 與 Google 頭像
   const memberEmail = user?.email || "";
   const googlePhoto = user?.photoURL;
@@ -151,6 +152,11 @@ function Member() {
       </div>
     );
   }
+  // 新增重置主題功能
+  const handleResetTheme = () => {
+    localStorage.removeItem("theme");
+    setTheme("black");
+  };
   return (
     <div className="memberComtainer flex px-10 max-sm:flex-col sm:justify-evenly">
       <div className="memberSide flex sm:flex-col sm:flex-1/2 justify-center items-end border-b-black sm:pr-50 max-sm:mb-10">
@@ -181,11 +187,15 @@ function Member() {
         <button className="btn btn-warning m-3" onClick={logout}>
           登出
         </button>
+        
       </div>
 
       <div className="memberSection flex sm:flex-col flex-1/2 justify-center items-start border-b-black sm:pl-50">
         {mainContent}
       </div>
+      <button className="btn btn-dark m-3" onClick={handleResetTheme}>
+          重置主題
+        </button>
     </div>
   );
 }
