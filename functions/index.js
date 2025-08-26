@@ -1,11 +1,12 @@
 import { onRequest } from "firebase-functions/v2/https";
 import axios from "axios";
 import cors from "cors";
-
+//負責「抓取、整理、回傳」新聞資料
 const corsHandler = cors({ origin: true });
 
-// ✅ 搜尋關鍵字
-const searchQueries = ["Elon Musk", "Tesla", "SpaceX", "馬斯克"];
+const searchQueries = [
+  '"Elon Musk" OR 馬斯克 OR Tesla OR SpaceX'
+];
 
 export const getNews = onRequest({
   region: "us-central1",
@@ -28,14 +29,19 @@ export const getNews = onRequest({
           timeout: 10000
         });
 
-        const articles = response.data.articles.map((item) => ({
-          title: item.title || "無標題",
-          source: item.source?.name || "未知來源",
-          link: item.url || "",
-          description: item.description || "",
-          pubDate: item.publishedAt || "未知時間",
-          query
-        }));
+         // 只保留標題或描述有 "Elon Musk" 或 "馬斯克"
+    const articles = response.data.articles
+      .filter(item =>
+        /Elon Musk|馬斯克/i.test(item.title + item.description)
+      )
+      .map((item) => ({
+        title: item.title || "無標題",
+        source: item.source?.name || "未知來源",
+        link: item.url || "",
+        description: item.description || "",
+        pubDate: item.publishedAt || "未知時間",
+        query
+      }));
 
         return articles;
       } catch (error) {

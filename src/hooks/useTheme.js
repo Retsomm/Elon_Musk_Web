@@ -4,7 +4,7 @@ import { create } from 'zustand';
 export const useTheme = create((set, get) => ({
   currentTheme: (localStorage.getItem('theme') ) || 'autumn',
   toggleTheme: () => {
-    const newTheme = get().currentTheme === 'autumn' ? 'business' : 'autumn';
+    const newTheme = get().currentTheme === 'autumn' ? 'black' : 'autumn';
     set({ currentTheme: newTheme });
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);

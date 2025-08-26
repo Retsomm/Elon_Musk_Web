@@ -3,8 +3,8 @@ import { Hamburger } from "lucide-react";
 import { useAuthStore } from "../hooks/useAuthStore";
 import Nebula from "../component/Nebula";
 
-export default function DesktopNavbar({ toggleNav}) {
-  const { user} = useAuthStore();
+export default function DesktopNavbar({ toggleNav }) {
+  const { user } = useAuthStore();
   const navigate = useNavigate();
 
   let avatarSrc = "/defaultMemberPic.webp";
@@ -22,7 +22,7 @@ export default function DesktopNavbar({ toggleNav}) {
       <div className="ham md:hidden left-5 absolute rounded-full p-2">
         <Hamburger className="hamburger cursor-pointer" onClick={toggleNav} />
       </div>
-      <div className="logo tooltip tooltip-bottom" data-tip="homePage">
+      <div className="logo">
         <Link to="/" className="navLink flex text-center">
           <img
             src="/logo.webp"
@@ -56,11 +56,11 @@ export default function DesktopNavbar({ toggleNav}) {
 
         <li>
           {user ? (
-            <div className="dropdown hover:bg-opacity-100 bg-baase-100">
+            <div className="dropdown bg-opacity-100">
               <div
                 tabIndex={0}
                 role="button"
-                className="btn m-1 hover:bg-opacity-100 bg-baase-100"
+                className="btn m-1 bg-opacity-100"
                 onClick={() => navigate("/member")}
               >
                 <img

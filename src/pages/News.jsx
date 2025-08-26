@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+//負責「顯示、快取、重試」新聞資料
 // 取得台灣當天日期字串 (yyyy-mm-dd)
 function getTaiwanDateString() {
   const now = new Date();

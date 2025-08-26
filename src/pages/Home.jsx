@@ -4,22 +4,26 @@ import UnityParticleSystem from "../component/UnityParticleSystem";
 const sections = [
   {
     name: "公司介紹",
+    url:"/spaceX.jpg",
     description:
       "深入了解馬斯克旗下的六大科技公司，探索每一間公司的創新理念與未來願景。",
     link: "/company",
   },
   {
     name: "生平故事",
+    url:"/1995.webp",
     description: "馬斯克人生中的重要時刻與成就，從南非到矽谷的旅程。",
     link: "/life",
   },
   {
     name: "最新新聞",
+    url:"/tesla.webp",
     description: "與馬斯克有關的最新新聞，讓你隨時掌握最新動態。",
     link: "/news",
   },
   {
     name: "更多消息",
+    url:"/OrigamiCybertruck.webp",
     description: "與馬斯克有關書籍、影片以及podcast。",
     link: "/info",
   },
@@ -31,29 +35,24 @@ function HomePage() {
       <img src="/banner.webp" className="w-full object-cover" />
       <UnityParticleSystem />
 
-      <div className="container mx-auto p-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {sections.map((section, index) => (
-            <div
-              key={index}
-              className="
-                rounded-xl 
-                shadow-lg 
-                p-6 
-                text-center 
-                transform 
-                transition 
-                duration-300 
-                hover:scale-105 
-                hover:shadow-xl
-                flex
-                flex-col
-                justify-around
-              "
-            >
-              <h2 className="text-2xl font-semibold mb-4 ">{section.name}</h2>
-              <p className="mb-6 leading-loose">{section.description}</p>
-              <Link
+      
+      {sections.map((section, index) => (
+      <div
+        className="hero min-h-screen"
+        key={index}
+        style={{
+          backgroundImage:
+            `url(${section.url})`,
+        }}
+      >
+        <div className="hero-overlay bg-opacity-60"></div>
+        <div className="hero-content text-neutral-content text-center">
+          <div className="max-w-md">
+            <h1 className="mb-5 text-5xl font-bold">{section.name}</h1>
+            <p className="mb-5">
+              {section.description}
+            </p>
+            <Link
                 to={section.link}
                 className="
                   inline-block 
@@ -70,10 +69,9 @@ function HomePage() {
               >
                 探索更多
               </Link>
-            </div>
-          ))}
+          </div>
         </div>
-      </div>
+      </div>))}
     </div>
   );
 }

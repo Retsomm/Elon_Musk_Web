@@ -11,7 +11,7 @@ function App() {
   const [avatar, setAvatar] = useState("/avatar.webp"); // 使用者頭像，預設為本地圖片
   const [loading, setLoading] = useState(true); // 是否正在載入
   const messagesEndRef = useRef(null); // 用於自動滾動到底部
-
+  const messagesContainerRef = useRef(null); // 新增：訊息區塊的ref
   // 監聽登入狀態並取得頭像
   useEffect(() => {
     // 註冊 Firebase Auth 狀態監聽
@@ -79,9 +79,13 @@ function App() {
     );
   }, []);
 
-  // 每當訊息更新時，自動滾動到底部
+  // 每當訊息更新時，只讓留言板訊息區自動滾動到底部
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesContainerRef.current && messagesEndRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesEndRef.current.offsetTop -
+        messagesContainerRef.current.offsetTop;
+    }
   }, [messages]);
 
   // 處理表單提交（送出訊息）
@@ -149,7 +153,7 @@ function App() {
       {/* 留言板主體 */}
       <div className="w-full max-w-md border rounded-lg shadow-md flex flex-col h-[500px]">
         {/* 訊息顯示區域 */}
-        <div className="flex-1 p-4 overflow-y-auto">
+        <div className="flex-1 p-4 overflow-y-auto" ref={messagesContainerRef}>
           {loading ? (
             <p className="text-center">載入中...</p>
           ) : user ? (

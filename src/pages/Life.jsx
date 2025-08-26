@@ -1,12 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { useTheme } from "../hooks/useTheme";
-
-
 const events = [
-  { year: "1971/06/28", desc: "出生於南非普利托里亞" },
+  { year: "1971/06/28", desc: "出生於南非普利托里亞", img: "/kid-elon.jpg" },
   {
     year: "1989年",
     desc: "移民至加拿大，進入安大略省女王大學學習，開始對科技與創業產生興趣",
+    img: "/1898.jpg",
   },
   {
     year: "1990年",
@@ -19,10 +16,12 @@ const events = [
   {
     year: "1995年",
     desc: "與弟弟金博爾·馬斯克共同創辦Zip2，一家提供線上城市指南的軟體公司",
+    img: "/1999-zip2.jpg",
   },
   {
     year: "1999年",
     desc: "以3.07億美元將Zip2賣給康柏電腦公司，個人獲利約2200萬美元，開啟創業家之路",
+    img: "/1995.webp",
   },
   {
     year: "2000年",
@@ -35,10 +34,12 @@ const events = [
   {
     year: "2002年",
     desc: "創辦SpaceX，並擔任董事長、執行長、技術長，該公司主要負責太空運輸、航太製造，目標是實現人類移居火星",
+    img: "/2002-spaceX.jpg",
   },
   {
     year: "2004年",
     desc: "加入電動車製造商特斯拉，並擔任董事長與產品設計師，推動電動車產業革命",
+    img: "/特斯拉共同創辦人.jpg",
   },
   {
     year: "2006年",
@@ -67,10 +68,12 @@ const events = [
   {
     year: "2020年",
     desc: "SpaceX成功執行首次載人任務Crew Dragon，將NASA太空人送往國際太空站，實現民營太空載人飛行里程碑",
+    img: "/2020.jpg",
   },
   {
     year: "2022年10月27日",
     desc: "以440億美元收購社交平台Twitter，並將其改名為X，推動言論自由與資訊透明的願景",
+    img: "/twitter.jpg",
   },
   {
     year: "2023年",
@@ -82,167 +85,46 @@ const events = [
   },
 ];
 
-// 定義與 DaisyUI 主題匹配的顏色
-const themes = {
-  autumn: {
-    background: "#F1F1F1", // 淺色背景
-    line: "#000000", // 黑色線條
-    dot: "#ef4444", // 紅色圓點 (DaisyUI 的紅色 primary)
-    text: "#000000", // 黑色年份文字
-    descText: "#4b5563", // 灰色描述文字 (DaisyUI 的 text-gray-600)
-    textBg: "rgba(255, 255, 255, 0.85)", // 淺色文字背景
-  },
-  black: {
-    background: "#000000", // 深色背景 (DaisyUI 的 dark 主題背景色)
-    line: "#ffffff", // 白色線條
-    dot: "#f87171", // 稍亮的紅色圓點 (DaisyUI 的紅色 primary 變體)
-    text: "#ffffff", // 白色年份文字
-    descText: "#d1d5db", // 淺灰色描述文字 (DaisyUI 的 text-gray-300)
-    textBg: "rgba(55, 65, 81, 0.85)", // 深色文字背景 (DaisyUI 的 gray-700)
-  },
-};
-
 function Timeline() {
-  const { currentTheme } = useTheme();
-  const canvasRef = useRef(null);
-  const [dimensions, setDimensions] = useState({
-    width: Math.min(window.innerWidth * 0.9, 700),
-    height: events.length * 180,
-  });
-
-  // 監聽視窗大小變化
-  useEffect(() => {
-    const updateSize = () => {
-      setDimensions({
-        width: Math.min(window.innerWidth * 0.9, 700),
-        height: events.length * 180,
-      });
-    };
-    window.addEventListener("resize", updateSize);
-    return () => window.removeEventListener("resize", updateSize);
-  }, []);
-
-  // 監聽主題變化和尺寸變化，重新繪製時間軸
-  useEffect(() => {
-    // 繪製時間軸的函數
-    const drawTimeline = () => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = dimensions.width * dpr;
-      canvas.height = dimensions.height * dpr;
-      canvas.style.width = `${dimensions.width}px`;
-      canvas.style.height = `${dimensions.height}px`;
-      ctx.setTransform(1, 0, 0, 1, 0, 0); // 重置變換矩陣
-      ctx.scale(dpr, dpr);
-
-      // 根據當前主題選擇顏色
-      ctx.fillStyle = themes[currentTheme].background;
-      ctx.fillRect(0, 0, dimensions.width, dimensions.height);
-
-      ctx.strokeStyle = themes[currentTheme].line;
-      ctx.lineWidth = 2;
-
-      const { width } = dimensions;
-      const baseX = width / 2;
-      const t = Math.min(Math.max((width - 400) / (700 - 400), 0), 1);
-
-      events.forEach((event, i) => {
-        const offsetX = width < 500 ? 0 : (i % 2 === 0 ? -300 : 300) * t;
-        const x = baseX + offsetX;
-        const y = 100 + i * 150;
-
-        // 畫圓點
-        ctx.fillStyle = themes[currentTheme].dot;
-        ctx.beginPath();
-        ctx.arc(x, y, 7, 0, Math.PI * 2);
-        ctx.fill();
-
-        // 畫線連接到下一個點
-        if (i < events.length - 1) {
-          const nextOffsetX =
-            width < 500 ? 0 : ((i + 1) % 2 === 0 ? -300 : 300) * t;
-          const nextX = baseX + nextOffsetX;
-          const nextY = 100 + (i + 1) * 150;
-          ctx.beginPath();
-          ctx.moveTo(x, y);
-          ctx.lineTo(nextX, nextY);
-          ctx.stroke();
-        }
-
-        // 畫年份
-        ctx.font = "bold 15px Arial";
-        const textWidth = ctx.measureText(event.year).width;
-        const textHeight = 18;
-        const textX = i % 2 === 0 ? x + 18 : x - textWidth - 18;
-        const textBgX = textX - 4;
-        const textBgY = y - 24;
-        ctx.fillStyle = themes[currentTheme].textBg;
-        ctx.fillRect(textBgX, textBgY, textWidth + 8, textHeight);
-        ctx.fillStyle = themes[currentTheme].text;
-        ctx.fillText(event.year, textX, y - 10);
-
-        // 畫描述
-        ctx.font = "13px Arial";
-        ctx.fillStyle = themes[currentTheme].descText;
-        const descWidth = width * 0.35;
-        const descX = i % 2 === 0 ? x + 18 : x - descWidth - 18;
-        const descY = y + 15;
-        const descLines = wrapText(
-          ctx,
-          event.desc,
-          descX,
-          descY,
-          descWidth,
-          18,
-          true
-        );
-        ctx.fillStyle = themes[currentTheme].textBg;
-        ctx.fillRect(descX - 4, descY - 13, descWidth + 8, descLines * 18 + 8);
-        ctx.fillStyle = themes[currentTheme].descText;
-        wrapText(ctx, event.desc, descX, descY, descWidth, 18);
-      });
-    };
-
-    // 繪製時間軸
-    drawTimeline();
-  }, [dimensions, currentTheme]);
-
-  // 文字自動換行
-  function wrapText(
-    ctx,
-    text,
-    x,
-    y,
-    maxWidth,
-    lineHeight,
-    measureOnly = false
-  ) {
-    const words = text.split("");
-    let line = "";
-    let lines = 0;
-    for (let n = 0; n < words.length; n++) {
-      line += words[n];
-      if (ctx.measureText(line).width > maxWidth || n === words.length - 1) {
-        if (!measureOnly) ctx.fillText(line, x, y);
-        y += lineHeight;
-        line = "";
-        lines++;
-      }
-    }
-    return lines;
-  }
-
   return (
-    <div className="w-full flex justify-center mt-8">
-      <canvas
-        ref={canvasRef}
-        width={dimensions.width}
-        height={dimensions.height}
-      />
+    <div className="w-full flex justify-center p-8">
+      <ul className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical w-full max-w-2xl">
+        {events.map((event, idx) => (
+          <li key={event.year + idx}>
+            {idx !== 0 && <hr />}
+            <div className="timeline-middle">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                className="h-5 w-5"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            <div
+              className={`timeline-${
+                idx % 2 === 0 ? "start mb-10 md:text-end" : "end md:mb-10"
+              }`}
+            >
+              <time className="font-mono italic">{event.year}</time>
+              {event.img && (
+                <img
+                  src={event.img}
+                  alt={event.desc}
+                  className="w-full h-32 object-cover my-2"
+                />
+              )}
+              <div className="text-lg font-black">{event.desc}</div>
+            </div>
+            {idx !== events.length - 1 && <hr />}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

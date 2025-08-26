@@ -110,20 +110,6 @@ export const useAllFavorites = () => {
 
         let favPath = `favorites/${userId}/${type}/${id}`;
 
-        // Check if the favorite structure is array or object
-        const typeData = favoritesData[type] ;
-        if (typeData && typeData[id]) {
-            if (Array.isArray(typeData[id])) {
-                favPath += `/${noteIdx}`;
-            } else if (
-                typeof typeData[id] === "object" &&
-                !Array.isArray(typeData[id]) &&
-                (typeData[id] )[noteIdx ]
-            ) {
-                favPath += `/${noteIdx}`;
-            }
-        }
-
         await remove(ref(database, favPath));
     };
 
