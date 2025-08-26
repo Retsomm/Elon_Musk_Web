@@ -2,10 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../hooks/useAuthStore";
 import Nebula from "../component/Nebula";
 
-export default function MobileNavbar({
-  isNavOpen,
-  toggleNav,
-}) {
+export default function MobileNavbar({ isNavOpen,toggleNav }) {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
 
@@ -25,7 +22,7 @@ export default function MobileNavbar({
       <div className="absolute inset-0 w-full h-full -z-10 pointer-events-none">
         <Nebula className="w-full h-full" />
       </div>
-      <ul className={`hamList ${isNavOpen ? true : false}`}>
+      <ul className="flex flex-col justify-evenly items-left w-full">
         <li>
           <Link to="/company" className="navLink" onClick={toggleNav}>
             公司
@@ -77,7 +74,6 @@ export default function MobileNavbar({
             </Link>
           )}
         </li>
-      
       </ul>
     </div>
   );

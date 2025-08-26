@@ -8,21 +8,15 @@ import ToTop from "./ToTop";
 
 export default function Layout({ currentTheme }) {
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const [isDropOpen, setIsDropOpen] = useState(false);
 
-  const toggle = (setFn) => () => setFn((prev) => !prev);
-  const toggleNav = toggle(setIsNavOpen);
-  const toggleDrop = toggle(setIsDropOpen);
+  function toggleNav() {
+    setIsNavOpen((prev) => !prev);
+  }
 
   return (
     <div>
-      <DesktopNavbar
-        toggleNav={toggleNav}
-        isDropOpen={isDropOpen}
-        toggleDrop={toggleDrop}
-        currentTheme={currentTheme}
-      />
-      <MobileNavbar isNavOpen={isNavOpen} />
+      <DesktopNavbar toggleNav={toggleNav} currentTheme={currentTheme} />
+      <MobileNavbar isNavOpen={isNavOpen} toggleNav={toggleNav} />
 
       <main className="min-h-screen flex flex-col justify-center z-0">
         <Outlet />
