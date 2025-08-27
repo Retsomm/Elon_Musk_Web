@@ -22,7 +22,10 @@ export default function DesktopNavbar({ toggleNav }) {
       <div className="ham md:hidden left-5 absolute rounded-full p-2">
         <Hamburger className="hamburger cursor-pointer" onClick={toggleNav} />
       </div>
-      <div className="logo">
+      <div
+        className="logo"
+        onClick={window.innerWidth < 768 ? toggleNav : undefined}
+      >
         <Link to="/" className="navLink flex text-center">
           <img
             src="/logo.webp"

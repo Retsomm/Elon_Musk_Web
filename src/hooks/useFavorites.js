@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { database, auth } from "../firebase";
 import { ref, set, remove, onValue } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
-
+import { useToastStore } from "../store/toastStore"; 
 // Hook for managing individual favorite item
 export const useFavoriteItem = (
     type,
@@ -12,7 +12,7 @@ export const useFavoriteItem = (
 ) => {
     const [userId, setUserId] = useState(null);
     const [favorite, setFavorite] = useState(null);
-    const [alert, setAlert] = useState({ show: false, message: "" });
+    const { addToast } = useToastStore(); 
 
     // Monitor auth state
     useEffect(() => {
@@ -21,7 +21,6 @@ export const useFavoriteItem = (
         });
         return () => unsubscribe();
     }, []);
-
     // Monitor favorite status
     useEffect(() => {
         if (!userId) {
@@ -41,8 +40,7 @@ export const useFavoriteItem = (
 
     const toggleFavorite = () => {
         if (!userId) {
-            setAlert({ show: true, message: "請先登入才能收藏" });
-            setTimeout(() => setAlert({ show: false, message: "" }), 1500);
+            addToast("請先登入才能收藏"); 
             return;
         }
 
@@ -60,8 +58,7 @@ export const useFavoriteItem = (
 
     return {
         favorite,
-        alert,
-        setAlert,
+        // alert, setAlert, // 移除
         toggleFavorite,
         userId,
         isFavorited: favorite && favorite.status
@@ -73,7 +70,7 @@ export const useAllFavorites = () => {
     const [userId, setUserId] = useState(null);
     const [favoritesData, setFavoritesData] = useState({});
     const [loading, setLoading] = useState(true);
-
+const { addToast } = useToastStore();
     useEffect(() => {
         const unsubscribeAuth = onAuthStateChanged(auth, (firebaseUser) => {
             if (!firebaseUser) {
@@ -104,7 +101,7 @@ export const useAllFavorites = () => {
         noteIdx
     ) => {
         if (!userId) {
-            alert("請先登入或稍後再試");
+            addToast("請先登入或稍後再試");
             return;
         }
 

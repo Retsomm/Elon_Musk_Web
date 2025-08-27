@@ -1,17 +1,18 @@
-import { useState, useEffect, useRef, FormEvent } from "react";
+import { useState, useEffect, useRef } from "react";
 import { database, auth } from "../firebase";
 import { ref, push, onValue } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
-
-function App() {
+import { useToastStore } from "../store/toastStore";
+import Toast from "./Toast";
+function MessageBoard() {
   // 狀態管理
   const [messages, setMessages] = useState([]); // 儲存所有訊息
   const [content, setContent] = useState(""); // 輸入框內容
   const [user, setUser] = useState(null); // 當前登入使用者
   const [avatar, setAvatar] = useState("/avatar.webp"); // 使用者頭像，預設為本地圖片
   const [loading, setLoading] = useState(true); // 是否正在載入
-  const messagesEndRef = useRef(null); // 用於自動滾動到底部
   const messagesContainerRef = useRef(null); // 新增：訊息區塊的ref
+  const addToast = useToastStore((state) => state.addToast);
   // 監聽登入狀態並取得頭像
   useEffect(() => {
     // 註冊 Firebase Auth 狀態監聽
@@ -81,10 +82,9 @@ function App() {
 
   // 每當訊息更新時，只讓留言板訊息區自動滾動到底部
   useEffect(() => {
-    if (messagesContainerRef.current && messagesEndRef.current) {
+    if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
-        messagesEndRef.current.offsetTop -
-        messagesContainerRef.current.offsetTop;
+        messagesContainerRef.current.scrollHeight;
     }
   }, [messages]);
 
@@ -92,16 +92,15 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // 阻止表單預設行為
     if (loading) {
-      alert("正在檢查登入狀態，請稍後再試！");
+      addToast({ message: "請先登入！" });
       return;
     }
     if (!user) {
-      alert("請先登入！");
-      console.log("未登入，使用者為：", user);
+      addToast({ message: "請先登入！" });
       return;
     }
     if (!content.trim()) {
-      alert("請輸入留言內容！");
+      addToast({ message: "請輸入留言內容！" });
       return;
     }
 
@@ -119,8 +118,7 @@ function App() {
       await push(messagesRef, newMessage); // 寫入資料庫
       setContent(""); // 清空輸入框
     } catch (error) {
-      alert("提交留言失敗：" + error.message);
-      console.error("寫入錯誤：", error);
+      addToast({ message: "提交留言失敗：" + error.message });
     }
   };
 
@@ -132,6 +130,7 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col items-center py-8">
+      <Toast />
       <h1 className="text-3xl font-bold mb-6">留言板</h1>
 
       {/* 顯示使用者資訊（包含頭像） */}
@@ -221,8 +220,6 @@ function App() {
           ) : (
             <p className="text-center ">請先登入以使用留言板！</p>
           )}
-          {/* 用於自動滾動到底部的參考點 */}
-          <div ref={messagesEndRef} />
         </div>
 
         {/* 輸入框（僅登入時顯示） */}
@@ -251,4 +248,4 @@ function App() {
   );
 }
 
-export default App;
+export default MessageBoard;

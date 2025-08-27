@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import companies from "../component/companyData"; // 匯入處理後的資料
 const getEmbedUrl = (url) => {
@@ -68,7 +68,6 @@ const debugEmbedUrl = (original, converted) => {
 };
 // 型別定義
 
-
 function CompanyItem() {
   const { name } = useParams();
   const company = companies.find((c) => c.name === name);
@@ -102,6 +101,8 @@ function CompanyItem() {
         url: convertedUrl,
         event: item.event,
       });
+      // 觸發 modal
+      document.getElementById("my_modal_7").checked = true;
     }
   };
 
@@ -155,7 +156,7 @@ function CompanyItem() {
               {idx % 2 === 1 ? (
                 <>
                   <label
-                    htmlFor="my_modal_7"
+                    htmlFor={item.media ? "my_modal_7" : undefined}
                     className="m-1 timeline-start mb-10 md:text-end max-sm:text-left hover:cursor-pointer transform 
                 transition 
                 duration-300 

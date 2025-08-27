@@ -1,18 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../hooks/useAuthStore";
+import { useToastStore } from "../store/toastStore";
 import {
   handleRegister as handleRegisterAction,
   handleEmailLogin as handleEmailLoginAction,
   handleGoogleLogin as handleGoogleLoginAction,
 } from "../utils/authHandlers";
 
-
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login, register, loginWithGoogle } = useAuthStore();
   const navigate = useNavigate();
+  const { addToast } = useToastStore();
   const [alert, setAlert] = useState({
     show: false,
     type: "success",
@@ -26,7 +27,7 @@ const Login = () => {
       email,
       password,
       { login, register, loginWithGoogle },
-      setAlert,
+      addToast,
       navigate
     );
   };
@@ -38,7 +39,7 @@ const Login = () => {
       email,
       password,
       { login, register, loginWithGoogle },
-      setAlert,
+      addToast,
       navigate
     );
   };
@@ -48,14 +49,10 @@ const Login = () => {
     e.preventDefault();
     await handleGoogleLoginAction(
       { login, register, loginWithGoogle },
-      setAlert,
+      addToast,
       navigate
     );
   };
-
-  // alert 樣式
-  const alertClass =
-    alert.type === "success" ? "alert alert-success" : "alert alert-error";
 
   return (
     <>
@@ -150,25 +147,6 @@ const Login = () => {
           </button>
         </div>
       </form>
-      {alert.show && (
-        <div role="alert" className={alertClass + " mt-4 w-fit mx-auto"}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 shrink-0 stroke-current"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <span>{alert.message}</span>
-        </div>
-      )}
-      
     </>
   );
 };

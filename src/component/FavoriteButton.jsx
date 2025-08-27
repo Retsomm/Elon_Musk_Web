@@ -5,7 +5,7 @@ function FavoriteButton({
   noteIdx,
   defaultContent = "",
 }) {
-  const { favorite, alert, toggleFavorite, isFavorited } = useFavoriteItem(
+  const { favorite, toggleFavorite, isFavorited } = useFavoriteItem(
     type,
     id,
     noteIdx,
@@ -49,7 +49,6 @@ function FavoriteButton({
           </svg>
         )}
       </button>
-
     </>
   );
 }
