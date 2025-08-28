@@ -3,6 +3,7 @@ import { database, auth } from "../firebase";
 import { ref, set, remove, onValue } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 import { useToastStore } from "../store/toastStore"; 
+
 // Hook for managing individual favorite item
 export const useFavoriteItem = (
     type,
@@ -40,10 +41,10 @@ export const useFavoriteItem = (
 
     const toggleFavorite = () => {
         if (!userId) {
-            addToast("請先登入才能收藏"); 
+            addToast({ message: "請先登入才能收藏" }); 
             return;
         }
-
+        
         const favRef = ref(
             database,
             `favorites/${userId}/${type}/${id}/${noteIdx}`
@@ -51,14 +52,15 @@ export const useFavoriteItem = (
 
         if (favorite && favorite.status) {
             remove(favRef);
+            addToast({ message: "已移除收藏" });
         } else {
             set(favRef, { status: true, content: defaultContent });
+            addToast({ message: "已加入收藏" });
         }
     };
 
     return {
         favorite,
-        // alert, setAlert, // 移除
         toggleFavorite,
         userId,
         isFavorited: favorite && favorite.status
@@ -101,13 +103,14 @@ const { addToast } = useToastStore();
         noteIdx
     ) => {
         if (!userId) {
-            addToast("請先登入或稍後再試");
+            addToast({ message: "請先登入或稍後再試" });
             return;
         }
 
-        let favPath = `favorites/${userId}/${type}/${id}`;
+        let favPath = `favorites/${userId}/${type}/${id}/${noteIdx}`;
 
         await remove(ref(database, favPath));
+        addToast({ message: "已移除收藏" });
     };
 
     return {

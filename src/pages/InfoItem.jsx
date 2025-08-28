@@ -2,17 +2,17 @@ import { useParams, Link } from "react-router-dom";
 import { books, podcasts, youtubeVideos } from "../component/data";
 import FavoriteButton from "../component/FavoriteButton";
 
-
-
 const InfoItem = () => {
   const { type, id } = useParams();
+
   let item;
   if (type === "book") {
     item = books.find((b) => b.id === id);
   } else if (type === "youtube") {
     item = youtubeVideos.find((y) => y.id === id);
   } else if (type === "podcast") {
-    item = podcasts.find((pt) => p.id === id);
+    item = podcasts.find((pt) => pt.id === id);
+    
   }
   if (!item) {
     return <div className="text-center mt-10">找不到資料</div>;
@@ -21,7 +21,7 @@ const InfoItem = () => {
     return (
       <div className="max-w-xl mx-auto mt-10 card p-6">
         <img
-          src={(item ).img}
+          src={item.img}
           alt={item.title}
           className="w-40 h-60 object-cover mx-auto mb-4 rounded"
         />
@@ -44,7 +44,7 @@ const InfoItem = () => {
 
         <h3 className="text-2xl font-bold mb-2 text-center">BookNotes</h3>
         <ul className="list shadow-md">
-          {(item ).bookNote?.map((t, i) => (
+          {item.bookNote?.map((t, i) => (
             <div key={i}>
               <li
                 key={i}
@@ -90,7 +90,7 @@ const InfoItem = () => {
 
         <h3 className="text-2xl font-bold mb-2 text-center">highlight</h3>
         <ul className="list shadow-md">
-          {(item ).highlight?.map((t, i) => (
+          {item.highlight?.map((t, i) => (
             <div key={i}>
               <li
                 key={i}
@@ -151,7 +151,7 @@ const InfoItem = () => {
         </h2>
         <div className="mb-4">
           <ul className="list shadow-md">
-            {(item ).timestamps?.map((t, i) => (
+            {item.timestamps?.map((t, i) => (
               <div key={i}>
                 <li
                   key={i}

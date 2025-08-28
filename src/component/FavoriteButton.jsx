@@ -1,17 +1,18 @@
 import { useFavoriteItem } from "../hooks/useFavorites";
+
 function FavoriteButton({
   type,
   id,
   noteIdx,
   defaultContent = "",
 }) {
-  const { favorite, toggleFavorite, isFavorited } = useFavoriteItem(
+  const {toggleFavorite, isFavorited } = useFavoriteItem(
     type,
     id,
     noteIdx,
     defaultContent
   );
-
+  
   return (
     <>
       <button className="btn btn-square btn-ghost" onClick={toggleFavorite}>

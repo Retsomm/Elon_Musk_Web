@@ -1,108 +1,98 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import companies from "../component/companyData"; // 匯入處理後的資料
+import companies from "../component/companyData";
+import MediaModal from "../component/MediaModal";
+
 const getEmbedUrl = (url) => {
-  // 檢查是否為 YouTube 網址
-  if (url.includes("youtube.com") || url.includes("youtu.be")) {
-    let videoId = "";
+  if (!url || typeof url !== "string") return "";
 
-    // 處理 youtube.com/watch?v= 格式
-    if (url.includes("youtube.com/watch?v=")) {
-      videoId = url.split("v=")[1]?.split("&")[0];
-    }
-    // 處理 youtu.be/ 格式
-    else if (url.includes("youtu.be/")) {
-      videoId = url.split("youtu.be/")[1]?.split("?")[0];
-    }
-    // 處理 youtube.com/embed/ 格式 - 需要轉換為 youtube-nocookie
-    else if (url.includes("youtube.com/embed/")) {
-      videoId = url.split("embed/")[1]?.split("?")[0];
-    }
-    // 處理 youtube.com/v/ 格式
-    else if (url.includes("youtube.com/v/")) {
-      videoId = url.split("v/")[1]?.split("?")[0];
-    }
+  const videoPatterns = {
+    youtube: {
+      domains: ["youtube.com", "youtu.be", "youtube-nocookie.com"],
+      getId: (url) => {
+        const patterns = [
+          /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([^&\n?#]+)/,
+          /youtube\.com\/watch\?.*v=([^&\n?#]+)/,
+        ];
+        for (const pattern of patterns) {
+          const match = url.match(pattern);
+          if (match) return match[1];
+        }
+        return null;
+      },
+      getEmbed: (id) =>
+        `https://www.youtube-nocookie.com/embed/${id}?enablejsapi=1&rel=0&modestbranding=1&fs=1&origin=${window.location.origin}`,
+    },
+    vimeo: {
+      domains: ["vimeo.com"],
+      getId: (url) => {
+        const match = url.match(/vimeo\.com\/(\d+)/);
+        return match ? match[1] : null;
+      },
+      getEmbed: (id) =>
+        `https://player.vimeo.com/video/${id}?title=0&byline=0&portrait=0`,
+    },
+    dailymotion: {
+      domains: ["dailymotion.com"],
+      getId: (url) => {
+        const match = url.match(/dailymotion\.com\/video\/([^?]+)/);
+        return match ? match[1] : null;
+      },
+      getEmbed: (id) => `https://www.dailymotion.com/embed/video/${id}`,
+    },
+  };
 
-    if (videoId) {
-      // 使用 youtube-nocookie.com 來避免 X-Frame-Options 問題
-      return `https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&rel=0&modestbranding=1&fs=1&origin=${window.location.origin}`;
+  for (const [platform, config] of Object.entries(videoPatterns)) {
+    if (config.domains.some((domain) => url.includes(domain))) {
+      const videoId = config.getId(url);
+      if (videoId) {
+        return config.getEmbed(videoId);
+      }
     }
   }
 
-  // 處理 Vimeo 網址
-  if (url.includes("vimeo.com/")) {
-    const videoId = url.split("vimeo.com/")[1]?.split("/")[0]?.split("?")[0];
-    if (videoId) {
-      return `https://player.vimeo.com/video/${videoId}?title=0&byline=0&portrait=0`;
-    }
-  }
-
-  // 處理 Dailymotion 網址
-  if (url.includes("dailymotion.com")) {
-    const videoId = url.split("video/")[1]?.split("?")[0];
-    if (videoId) {
-      return `https://www.dailymotion.com/embed/video/${videoId}`;
-    }
-  }
-
-  // 如果都不符合，回傳原網址
   return url;
 };
 
-// 更新檢查影片網址的函式
-const isVideoUrl = (url) => {
-  return (
-    url.includes("youtube.com") ||
-    url.includes("youtu.be") ||
-    url.includes("vimeo.com") ||
-    url.includes("dailymotion.com") ||
-    url.includes("embed") ||
-    url.includes("player.vimeo.com") ||
-    url.includes("youtube-nocookie.com")
-  );
-};
-const debugEmbedUrl = (original, converted) => {
-  console.log("原始網址:", original);
-  console.log("轉換後網址:", converted);
-  console.log("是否為影片網址:", isVideoUrl(original));
-};
-// 型別定義
+
 
 function CompanyItem() {
   const { name } = useParams();
   const company = companies.find((c) => c.name === name);
   const [currentMedia, setCurrentMedia] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  // 初始化 currentMedia 為第一個事件的 media
   useEffect(() => {
     if (company && company.timeline && company.timeline.length > 0) {
       const firstEvent = company.timeline[0];
-      if (firstEvent.media && !currentMedia) {
-        const convertedUrl = getEmbedUrl(firstEvent.media.url);
-        debugEmbedUrl(firstEvent.media.url, convertedUrl);
-
-        setCurrentMedia({
-          type: firstEvent.media.type,
-          url: convertedUrl,
-          event: firstEvent.event,
-        });
+      if (firstEvent.media && firstEvent.media.url && !currentMedia) {
+        try {
+          const convertedUrl = getEmbedUrl(firstEvent.media.url);
+          setCurrentMedia({
+            type: firstEvent.media.type || "image",
+            url: convertedUrl,
+            event: firstEvent.event || "",
+          });
+        } catch (error) {
+          console.error("URL 處理錯誤:", error);
+        }
       }
     }
-  }, [company]);
+  }, [company, currentMedia]);
 
-  // 點擊時間線項目時更新 currentMedia
   const handleTimelineClick = (item) => {
-    if (item.media) {
-      const convertedUrl = getEmbedUrl(item.media.url);
-      debugEmbedUrl(item.media.url, convertedUrl);
-
-      setCurrentMedia({
-        type: item.media.type,
-        url: convertedUrl,
-        event: item.event,
-      });
-      // 觸發 modal
-      document.getElementById("my_modal_7").checked = true;
+    if (item && item.media && item.media.url) {
+      try {
+        const convertedUrl = getEmbedUrl(item.media.url);
+        setCurrentMedia({
+          type: item.media.type || "image",
+          url: convertedUrl,
+          event: item.event || "",
+        });
+        setModalOpen(true);
+      } catch (error) {
+        console.error("點擊事件處理錯誤:", error);
+      }
     }
   };
 
@@ -111,42 +101,15 @@ function CompanyItem() {
   return (
     <div className="min-h-screen p-6">
       <div className="container mx-auto text-center">
-        {/* Modal 結構 */}
-        <input type="checkbox" id="my_modal_7" className="modal-toggle" />
-        <div className="modal" role="dialog">
-          <div className="modal-box flex justify-center items-center rounded">
-            {currentMedia ? (
-              currentMedia.type === "image" ? (
-                <img
-                  src={getEmbedUrl(currentMedia.url)}
-                  alt={currentMedia.event || "media"}
-                  className="w-fit sm:h-fit "
-                  loading="lazy"
-                />
-              ) : (
-                <div className="sm:h-full">
-                  <iframe
-                    src={getEmbedUrl(currentMedia.url)}
-                    title={currentMedia.event || "media"}
-                    allowFullScreen
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    frameBorder="0"
-                    className="sm:h-full w-full rounded"
-                  ></iframe>
-                </div>
-              )
-            ) : (
-              <p>無媒體內容</p>
-            )}
-          </div>
-          <label
-            className="modal-backdrop"
-            htmlFor="my_modal_7"
-            onClick={() => setCurrentMedia(null)}
-          >
-            Close
-          </label>
-        </div>
+        <MediaModal
+          id="company_modal"
+          open={modalOpen}
+          onClose={() => {
+            setModalOpen(false);
+            setCurrentMedia(null);
+          }}
+          media={currentMedia}
+        />
         <h1 className="text-3xl font-bold mb-4">{company.name}</h1>
         {/* 時間軸 */}
         <ul className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
@@ -155,20 +118,19 @@ function CompanyItem() {
               {idx !== 0 && <hr />}
               {idx % 2 === 1 ? (
                 <>
-                  <label
-                    htmlFor={item.media ? "my_modal_7" : undefined}
+                  <div
                     className="m-1 timeline-start mb-10 md:text-end max-sm:text-left hover:cursor-pointer transform 
                 transition 
                 duration-300 
                 hover:scale-95 
                 hover:shadow-xl"
-                    onClick={() => handleTimelineClick(item)}
+                    onClick={() => item.media?.url && handleTimelineClick(item)}
                   >
                     <time className="font-mono italic">{item.year}</time>
                     <p className="text-lg font-black leading-loose">
                       {item.event}
                     </p>
-                  </label>
+                  </div>
                   <div className="timeline-middle">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -206,14 +168,12 @@ function CompanyItem() {
                 duration-300 
                 hover:scale-95 
                 hover:shadow-xl"
-                    onClick={() => handleTimelineClick(item)}
+                    onClick={() => item.media?.url && handleTimelineClick(item)}
                   >
-                    <label htmlFor="my_modal_7">
-                      <time className="font-mono italic">{item.year}</time>
-                      <p className="text-lg font-black leading-loose">
-                        {item.event}
-                      </p>
-                    </label>
+                    <time className="font-mono italic">{item.year}</time>
+                    <p className="text-lg font-black leading-loose">
+                      {item.event}
+                    </p>
                   </div>
                 </>
               )}
@@ -221,7 +181,7 @@ function CompanyItem() {
             </li>
           ))}
         </ul>
-        {/* 公司產品 */}
+
         <h2 className="text-xl font-semibold mt-6 mb-2">主要產品</h2>
         <ul className="list">
           {company.products?.map((product, idx) => (
@@ -296,7 +256,6 @@ function CompanyItem() {
             </li>
           ))}
         </ul>
-
         <Link to="/company" className="btn btn-primary w-fit m-3">
           上一頁
         </Link>

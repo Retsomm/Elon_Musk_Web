@@ -9,7 +9,7 @@ function MessageBoard() {
   const [messages, setMessages] = useState([]); // 儲存所有訊息
   const [content, setContent] = useState(""); // 輸入框內容
   const [user, setUser] = useState(null); // 當前登入使用者
-  const [avatar, setAvatar] = useState("/avatar.webp"); // 使用者頭像，預設為本地圖片
+  const [avatar, setAvatar] = useState("/"); // 使用者頭像，預設為本地圖片
   const [loading, setLoading] = useState(true); // 是否正在載入
   const messagesContainerRef = useRef(null); // 新增：訊息區塊的ref
   const addToast = useToastStore((state) => state.addToast);

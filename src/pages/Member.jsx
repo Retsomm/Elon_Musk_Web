@@ -1,5 +1,6 @@
 import { useState, lazy } from "react";
 import { useAuthStore } from "../hooks/useAuthStore";
+import { useToastStore } from "../store/toastStore";
 import { useNavigate } from "react-router-dom";
 const MessageBoard = lazy(() => import("../component/MessageBoard"));
 const CollectList = lazy(() => import("../component/CollectList"));
@@ -13,7 +14,7 @@ function Member() {
   const [memberPic, setMemberPic] = useState("");
 
   const [mainTab, setMainTab] = useState("profile");
-
+  const addToast = useToastStore((state) => state.addToast);
   // 取得會員 Email 與 Google 頭像
   const memberEmail = user?.email || "";
   const googlePhoto = user?.photoURL;
@@ -96,7 +97,13 @@ function Member() {
         >
           留言板
         </button>
-        <button className="btn btn-warning m-3" onClick={logout}>
+        <button
+          className="btn btn-warning m-3"
+          onClick={() => {
+            logout();
+            addToast({ message: "登出成功", type: "success" });
+          }}
+        >
           登出
         </button>
       </div>

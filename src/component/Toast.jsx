@@ -7,17 +7,22 @@ export default function Toast() {
   useEffect(() => {
     if (toasts.length === 0) return;
     const timers = toasts.map((toast) =>
-      setTimeout(() => removeToast(toast.id), 3000)
+      setTimeout(() => removeToast(toast.id), 1500)
     );
     return () => timers.forEach((timer) => clearTimeout(timer));
   }, [toasts, removeToast]);
 
   return (
-    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 z-9999 flex flex-col gap-2">
+    <div className="fixed top-6 right-6 z-50 flex flex-col gap-2">
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className="bg-blue-600 text-white px-4 py-2 rounded shadow-lg animate-fade-in"
+          className={`px-4 py-2 rounded shadow-lg animate-fade-in font-bold cursor-pointer ${
+            toast.type === "success"
+              ? "bg-green-500 text-white"
+              : "bg-blue-600 text-white"
+          }`}
+          onClick={() => removeToast(toast.id)}
         >
           {toast.message}
         </div>

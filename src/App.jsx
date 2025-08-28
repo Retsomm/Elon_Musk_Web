@@ -5,6 +5,7 @@ import { useTheme } from "./hooks/useTheme";
 import "./App.css";
 import "./index.css";
 import ErrorBoundary from "./component/ErrorBoundary";
+import Toast from "./component/Toast";
 const Home = lazy(() => import("./pages/Home"));
 const Life = lazy(() => import("./pages/Life"));
 const Company = lazy(() => import("./pages/Company"));
@@ -46,6 +47,7 @@ function App() {
             <Route path="*" element={<Error />} />
           </Route>
         </Routes>
+        <Toast />
       </BrowserRouter>
     </ErrorBoundary>
   );

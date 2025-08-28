@@ -90,6 +90,22 @@
             "type": "image",
             "url": "https://www.spacex.com/static/images/starship_moon_mission.jpg"
           }
+        },
+        {
+          "year": 2025,
+          "event": "Starship 第 10 次測試飛行成功，結束連續失敗並部署首個模擬衛星，潑水在印度洋",
+          "media": {
+            "type": "video",
+            "url": "https://www.youtube.com/watch?v=TdHXdQrxzr0"
+          }
+        },
+        {
+          "year": 2025,
+          "event": "Falcon 9 完成第 400 次發射，創紀錄 30 次重複使用助推器發射 Starlink 衛星",
+          "media": {
+            "type": "image",
+            "url": ""
+          }
         }
       ],
       "products": [
@@ -210,6 +226,30 @@
             "type": "image",
             "url": "https://today-obs.line-scdn.net/0hesEd11ndOlx4HSvCqtRFC0BLNi1LeyBVWnlwP1RPYWpcMXkPF3JpP1gbbHAFen1YWCt8aFgUZmRXf39aRA/w1200"
           }
+        },
+        {
+          "year": 2025,
+          "event": "董事會獎勵 Elon Musk 300 億美元股份，綁定市值和股東回報目標",
+          "media": {
+            "type": "image",
+            "url": ""
+          }
+        },
+        {
+          "year": 2025,
+          "event": "品牌忠誠度因 Musk 支持 Trump 崩潰，美國銷售下降 8%",
+          "media": {
+            "type": "image",
+            "url": ""
+          }
+        },
+        {
+          "year": 2025,
+          "event": "整合 Deepseek 和 Doubao AI 語音控制在中國車款",
+          "media": {
+            "type": "image",
+            "url": ""
+          }
         }
       ],
       "products": [
@@ -304,6 +344,22 @@
             "type": "image",
             "url": "https://about.x.com/content/dam/about-x/video_call_feature.jpg"
           }
+        },
+        {
+          "year": 2025,
+          "event": "與前 Twitter 員工達成暫定和解，支付 5 億美元遣散費給約 6000 名員工",
+          "media": {
+            "type": "image",
+            "url": ""
+          }
+        },
+        {
+          "year": 2025,
+          "event": "發布 2025 年行銷事件行事曆，幫助行銷人員規劃關鍵日期",
+          "media": {
+            "type": "image",
+            "url": ""
+          }
         }
       ],
       "products": [
@@ -364,6 +420,22 @@
             "type": "image",
             "url": "https://www.boringcompany.com/static/images/la_santa_monica_plan.jpg"
           }
+        },
+        {
+          "year": 2025,
+          "event": "宣布 Music City Loop 項目，在田納西州納什維爾建造 10 英里隧道，預計 2026 年運營",
+          "media": {
+            "type": "image",
+            "url": ""
+          }
+        },
+        {
+          "year": 2025,
+          "event": "在拉斯維加斯 Loop 隧道開始測試 Tesla 全自動駕駛車輛",
+          "media": {
+            "type": "image",
+            "url": ""
+          }
         }
       ],
       "products": [
@@ -420,6 +492,22 @@
             "type": "image",
             "url": "https://neuralink.com/static/images/human_trial_2025.jpg"
           }
+        },
+        {
+          "year": 2025,
+          "event": "完成 E 輪融資 6.5 億美元，擴大腦晶片技術患者存取",
+          "media": {
+            "type": "image",
+            "url": ""
+          }
+        },
+        {
+          "year": 2025,
+          "event": "完成一天內兩次腦植入，第 8 和 9 位患者成功",
+          "media": {
+            "type": "video",
+            "url": "https://www.youtube.com/watch?v=FASMejN_5gs"
+          }
         }
       ],
       "products": [
@@ -472,12 +560,48 @@
             "type": "image",
             "url": "https://grok.com/static/images/grok_multilingual_2025.jpg"
           }
+        },
+        {
+          "year": 2025,
+          "event": "發布 Grok 3 Beta 早期預覽，結合優越推理和廣泛預訓練知識",
+          "media": {
+            "type": "image",
+            "url": ""
+          }
+        },
+        {
+          "year": 2025,
+          "event": "發布 Grok 4，最智能模型，支援原生工具使用和即時搜尋",
+          "media": {
+            "type": "image",
+            "url": ""
+          }
+        },
+        {
+          "year": 2025,
+          "event": "宣布 Grok for Government，為美國政府客戶提供 AI 產品套件",
+          "media": {
+            "type": "image",
+            "url": ""
+          }
+        },
+        {
+          "year": 2025,
+          "event": "開源 Grok 2.5 模型，並計畫開源 Grok 3",
+          "media": {
+            "type": "image",
+            "url": ""
+          }
         }
       ],
       "products": [
         {
           "name": "Grok",
           "description": "AI聊天機器人，提供真實實用答案，支援科學研究"
+        },
+        {
+          "name": "Grok 4 Heavy",
+          "description": "Grok 4 的最強大版本，提供更高階 AI 功能，限付費訂閱者使用"
         }
       ],
       "url": "https://grok.com/"

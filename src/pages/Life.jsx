@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import MediaModal from "../component/MediaModal";
 const events = [
   { year: "1971/06/28", desc: "出生於南非普利托里亞", img: "/kid-elon.jpg" },
   {
@@ -89,61 +89,79 @@ const events = [
 
 function Timeline() {
   const [modalImg, setModalImg] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleTimelineClick = (event) => {
     if (event.img) {
-      setModalImg(event.img);
-      document.getElementById("life_modal").checked = true;
+      setModalImg({ type: "image", url: event.img });
+      setModalOpen(true);
     }
   };
 
   return (
     <div className="w-full flex justify-center p-8">
-      {/* Modal 結構 */}
-      <input type="checkbox" id="life_modal" className="modal-toggle" />
-      <div className="modal" role="dialog">
-        <div className="modal-box flex justify-center items-center rounded">
-          {modalImg ? (
-            <img
-              src={modalImg}
-              alt="event"
-              className="w-fit sm:h-fit"
-              loading="lazy"
-            />
-          ) : (
-            <p>無圖片內容</p>
-          )}
-        </div>
-        <label
-          className="modal-backdrop"
-          htmlFor="life_modal"
-          onClick={() => setModalImg(null)}
-        >
-          Close
-        </label>
-      </div>
+      <MediaModal
+        id="life_modal"
+        open={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          setModalImg(null);
+        }}
+        media={modalImg}
+      />
       <ul className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical w-full max-w-2xl">
-  {events.map((event, idx) => (
-    <li key={event.year + idx}>
-      {idx !== 0 && <hr />}
-      <div className="timeline-middle">
-        {/* ...svg... */}
-      </div>
-      <div
-        className={`timeline-${idx % 2 === 0 ? "start mb-10 md:text-end" : "end md:mb-10"}
-          text-left hover:cursor-pointer transform transition duration-300 hover:scale-95 hover:shadow-xl`}
-        // 只有有圖片時才觸發 modal
-        onClick={() => event.img && handleTimelineClick(event)}
-      >
-        <label htmlFor={event.img ? "life_modal" : undefined}>
-          <time className="font-mono italic">{event.year}</time>
-          <div className="text-lg font-black">{event.desc}</div>
-        </label>
-      </div>
-      {idx !== events.length - 1 && <hr />}
-    </li>
-  ))}
-</ul>
+        {events.map((event, idx) => (
+          <li key={event.year + idx}>
+            {idx !== 0 && <hr />}
+            {idx % 2 === 0 ? (
+              <>
+                <div
+                  className="timeline-start mb-10 md:text-end max-sm:text-left hover:cursor-pointer transform transition duration-300 hover:scale-95 hover:shadow-xl"
+                  onClick={() => event.img && handleTimelineClick(event)}
+                >
+                  <label htmlFor={event.img ? "life_modal" : undefined}>
+                    <time className="font-mono italic">{event.year}</time>
+                    <div className="text-lg font-black">{event.desc}</div>
+                  </label>
+                </div>
+                <div className="timeline-middle">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="h-5 w-5 text-primary"
+                  >
+                    <circle cx="10" cy="10" r="8" />
+                  </svg>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="timeline-middle">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="h-5 w-5 text-primary"
+                  >
+                    <circle cx="10" cy="10" r="8" />
+                  </svg>
+                </div>
+                <div
+                  className="timeline-end md:mb-10 text-left hover:cursor-pointer transform transition duration-300 hover:scale-95 hover:shadow-xl"
+                  onClick={() => event.img && handleTimelineClick(event)}
+                >
+                  <label htmlFor={event.img ? "life_modal" : undefined}>
+                    <time className="font-mono italic">{event.year}</time>
+                    <div className="text-lg font-black">{event.desc}</div>
+                  </label>
+                </div>
+              </>
+            )}
+            {idx !== events.length - 1 && <hr />}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

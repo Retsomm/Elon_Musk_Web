@@ -14,11 +14,7 @@ const Login = () => {
   const { login, register, loginWithGoogle } = useAuthStore();
   const navigate = useNavigate();
   const { addToast } = useToastStore();
-  const [alert, setAlert] = useState({
-    show: false,
-    type: "success",
-    message: "",
-  });
+  
 
   // 註冊
   const handleRegister = async (e) => {

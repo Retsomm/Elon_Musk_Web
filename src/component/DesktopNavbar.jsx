@@ -7,7 +7,7 @@ export default function DesktopNavbar({ toggleNav }) {
   const { user } = useAuthStore();
   const navigate = useNavigate();
 
-  let avatarSrc = "/defaultMemberPic.webp";
+  let avatarSrc = "/avatar.webp";
   if (user?.photoURL) {
     avatarSrc = user.photoURL;
   } else {

@@ -1,8 +1,25 @@
 import { books, podcasts, youtubeVideos } from "./data";
 import { useAllFavorites } from "../hooks/useFavorites";
+
+const getItemAndNotes = (type, id) => {
+  if (type === "book") {
+    const item = books.find((b) => b.id === id);
+    return { item, notes: item?.bookNote || [] };
+  }
+  if (type === "youtube") {
+    const item = youtubeVideos.find((y) => y.id === id);
+    return { item, notes: item?.hightlight || [] };
+  }
+  if (type === "podcast") {
+    const item = podcasts.find((p) => p.id === id);
+    return { item, notes: item?.timestamps || [] };
+  }
+  return { item: null, notes: [] };
+};
+
 export default function CollectList() {
   const { favoritesData, removeFavorite } = useAllFavorites();
-  //移除收藏
+
   const handleRemoveFavorite = async (type, id, noteIdx) => {
     await removeFavorite(type, id, noteIdx);
   };
@@ -10,42 +27,18 @@ export default function CollectList() {
   if (!favoritesData || Object.keys(favoritesData).length === 0) {
     return <div>尚未收藏任何內容</div>;
   }
-  const collectItems = [];
-  for (const type of ["book", "youtube", "podcast"]) {
+
+  const collectItems = ["book", "youtube", "podcast"].flatMap((type) => {
     const typeFav = favoritesData[type];
-    if (!typeFav) continue;
-    for (const id in typeFav) {
-      let item;
-      let notes = [];
-      if (type === "book") {
-        item = books.find((b) => b.id === id);
-        notes = item?.bookNote || [];
-      }
-      if (type === "youtube") {
-        item = youtubeVideos.find((y) => y.id === id);
-        notes = item?.hightlight || [];
-      }
-      if (type === "podcast") {
-        item = podcasts.find((p) => p.id === id);
-        notes = item?.timestamps || [];
-      }
-      if (!item) continue;
+    if (!typeFav) return [];
 
-      let favIdxArr = [];
-      if (Array.isArray(typeFav[id])) {
-        favIdxArr = typeFav[id]
-          .map((v, idx) => (v && v.status ? idx : null))
-          .filter((v) => v !== null);
-      } else {
-        favIdxArr = Object.keys(typeFav[id]);
-      }
+    return Object.entries(typeFav).flatMap(([id, notesObj]) => {
+      const { item, notes } = getItemAndNotes(type, id);
+      if (!item) return [];
 
-      favIdxArr.forEach((noteIdx) => {
-        let favData = Array.isArray(typeFav[id])
-          ? typeFav[id][noteIdx]
-          : typeFav[id][noteIdx];
-        if (!favData || !favData.status) return;
-        collectItems.push(
+      return Object.entries(notesObj)
+        .filter(([noteIdx, favData]) => favData && favData.status)
+        .map(([noteIdx, favData]) => (
           <div
             key={`${type}-${id}-${noteIdx}`}
             className="mb-3 p-4 border shadow-sm w-full max-w-xl flex flex-col sm:flex-row sm:items-center relative justify-center"
@@ -70,10 +63,9 @@ export default function CollectList() {
               </button>
             </div>
           </div>
-        );
-      });
-    }
-  }
+        ));
+    });
+  });
 
   return (
     <div className="flex flex-col items-center w-full px-2">{collectItems}</div>
