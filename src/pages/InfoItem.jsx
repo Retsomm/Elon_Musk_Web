@@ -1,5 +1,7 @@
 import { useParams, Link } from "react-router-dom";
-import { books, podcasts, youtubeVideos } from "../component/data";
+import { books } from "../data/book";
+import { podcasts } from "../data/podcasts";
+import { youtubeVideos } from "../data/youtube";
 import FavoriteButton from "../component/FavoriteButton";
 
 const InfoItem = () => {
@@ -12,7 +14,6 @@ const InfoItem = () => {
     item = youtubeVideos.find((y) => y.id === id);
   } else if (type === "podcast") {
     item = podcasts.find((pt) => pt.id === id);
-    
   }
   if (!item) {
     return <div className="text-center mt-10">找不到資料</div>;
@@ -20,6 +21,11 @@ const InfoItem = () => {
   if (type === "book") {
     return (
       <div className="max-w-xl mx-auto mt-10 card p-6">
+        <title>{item.title} - Elon Musk 資訊站</title>
+        <meta name="description" content={item.description} />
+        <meta property="og:title" content={item.title} />
+        <meta property="og:image" content={item.img} />
+
         <img
           src={item.img}
           alt={item.title}
@@ -79,6 +85,11 @@ const InfoItem = () => {
     }
     return (
       <div className="max-w-2xl mx-auto mt-10 card ">
+        <title>{item.title} - Elon Musk 資訊站</title>
+        <meta name="description" content={item.description} />
+        <meta property="og:title" content={item.title} />
+        <meta property="og:image" content={item.img} />
+
         <div className="aspect-w-16 aspect-h-9 mb-4">
           <iframe
             src={`https://www.youtube.com/embed/${youtubeId}`}
@@ -131,6 +142,11 @@ const InfoItem = () => {
     }
     return (
       <div className="max-w-2xl mx-auto mt-10 card">
+        <title>{item.title} - Elon Musk 資訊站</title>
+        <meta name="description" content={item.description} />
+        <meta property="og:title" content={item.title} />
+        <meta property="og:image" content={item.img} />
+
         <div className="w-full mb-4">
           <iframe
             allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"

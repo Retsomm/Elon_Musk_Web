@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import { books, podcasts, youtubeVideos } from "../component/data";
+import { books } from "../data/book";
+import { podcasts } from "../data/podcasts";
+import {  youtubeVideos } from "../data/youtube";
 import { Link } from "react-router-dom";
 
 

@@ -32,7 +32,7 @@ const sections = [
 function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br overflow-x-hidden">
-      <img src="/banner.webp" className="w-full object-cover" />
+      <img src="/banner.webp" className="w-full object-cover" loading="lazy"/>
       <UnityParticleSystem />
 
       

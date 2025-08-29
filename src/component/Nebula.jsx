@@ -1,23 +1,34 @@
-import React, { useRef, useEffect } from "react";
-const VibrантUniverse = () => {
+import React, { useRef, useEffect, useCallback } from "react";
+
+const Nebula = () => {
   const canvasRef = useRef(null);
   const animationIdRef = useRef(null);
+
+  const resizeCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext("2d");
+    const container = canvas.parentNode;
+    
+    if (canvas && container) {
+      const { width, height } = container.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+
+      ctx.scale(dpr, dpr);
+    }
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const ctx = canvas.getContext("2d");
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      // 手機模式下高度為原來的1/4
-      if (window.innerWidth < 768) {
-        canvas.height = window.innerHeight / 2;
-      } else {
-        canvas.height = window.innerHeight;
-      }
-    };
     resizeCanvas();
 
     // 星雲波浪效果
@@ -133,7 +144,7 @@ const VibrантUniverse = () => {
         cancelAnimationFrame(animationIdRef.current);
       }
     };
-  }, []);
+  }, [resizeCanvas]);
 
   return (
     <div className="w-full h-48   bg-black relative overflow-hidden">
@@ -142,10 +153,8 @@ const VibrантUniverse = () => {
         className="absolute inset-0 w-full h-full h-48"
         style={{ background: "linear-gradient(45deg, #0a0a0a, #1a0a2a)" }}
       />
-
-     
     </div>
   );
 };
 
-export default VibrантUniverse;
+export default Nebula;

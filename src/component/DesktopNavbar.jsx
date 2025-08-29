@@ -70,6 +70,7 @@ export default function DesktopNavbar({ toggleNav }) {
                   src={avatarSrc}
                   alt="會員頭像"
                   className="w-12 h-12 rounded-full object-cover"
+                  loading="lazy"
                 />
               </div>
             </div>

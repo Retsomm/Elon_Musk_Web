@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import companyData from "../component/Company.json";
+import companyData from "../data/Company.json";
 
 
 const companies = companyData.companies;

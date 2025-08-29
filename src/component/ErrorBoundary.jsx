@@ -1,4 +1,22 @@
 import React from "react";
+import { useToastStore } from "../store/toastStore"; // 請根據實際路徑修改
+
+export const useErrorHandler = () => {
+  const { addToast } = useToastStore();
+
+  const handleError = React.useCallback(
+    (error, context) => {
+      console.error(`${context}:`, error);
+      addToast({
+        message: `${context} 發生錯誤: ${error.message}`,
+        type: "error",
+      });
+    },
+    [addToast]
+  );
+
+  return { handleError };
+};
 
 class ErrorBoundary extends React.Component {
   constructor(props) {

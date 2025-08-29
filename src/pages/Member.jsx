@@ -2,6 +2,7 @@ import { useState, lazy } from "react";
 import { useAuthStore } from "../hooks/useAuthStore";
 import { useToastStore } from "../store/toastStore";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../hooks/useTheme";
 const MessageBoard = lazy(() => import("../component/MessageBoard"));
 const CollectList = lazy(() => import("../component/CollectList"));
 // 預設頭像路徑
@@ -12,7 +13,7 @@ function Member() {
   const { user, logout, loading } = useAuthStore();
   const navigate = useNavigate();
   const [memberPic, setMemberPic] = useState("");
-
+  const { resetTheme } = useTheme();
   const [mainTab, setMainTab] = useState("profile");
   const addToast = useToastStore((state) => state.addToast);
   // 取得會員 Email 與 Google 頭像
@@ -70,6 +71,10 @@ function Member() {
       </div>
     );
   }
+  const handleResetTheme = () => {
+    resetTheme();
+    addToast({ message: "主題已重置為預設", type: "success" });
+  };
   return (
     <div className="memberComtainer flex px-10 max-sm:flex-col sm:justify-evenly">
       <div className="memberSide flex sm:flex-col sm:flex-1/2 justify-center items-end border-b-black sm:pr-50 max-sm:mb-10">
@@ -96,6 +101,12 @@ function Member() {
           onClick={() => setMainTab("message")}
         >
           留言板
+        </button>
+        <button
+          className="btn btn-outline m-3"
+          onClick={handleResetTheme}
+        >
+          重置主題
         </button>
         <button
           className="btn btn-warning m-3"

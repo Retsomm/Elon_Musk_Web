@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../hooks/useAuthStore";
 import { useToastStore } from "../store/toastStore";
+import { useTheme } from "../hooks/useTheme";
 import {
   handleRegister as handleRegisterAction,
   handleEmailLogin as handleEmailLoginAction,
@@ -14,7 +15,7 @@ const Login = () => {
   const { login, register, loginWithGoogle } = useAuthStore();
   const navigate = useNavigate();
   const { addToast } = useToastStore();
-  
+  const { resetTheme } = useTheme();
 
   // 註冊
   const handleRegister = async (e) => {
@@ -49,7 +50,10 @@ const Login = () => {
       navigate
     );
   };
-
+  const handleResetTheme = () => {
+    resetTheme();
+    addToast({ message: "主題已重置為預設", type: "success" });
+  };
   return (
     <>
       <form
@@ -143,6 +147,15 @@ const Login = () => {
           </button>
         </div>
       </form>
+      <div className="flex justify-center m-4">
+        <button
+          type="button"
+          className="btn"
+          onClick={handleResetTheme}
+        >
+          重置主題
+        </button>
+      </div>
     </>
   );
 };

@@ -1,4 +1,4 @@
-import rawCompanyData from './Company.json';
+import rawCompanyData from '../data/Company.json';
 
 
 // 處理 companyData，確保 year 為 string
