@@ -1,9 +1,6 @@
 /**
  * 驗證工具函數
  */
-
-
-
 /**
  * 驗證 email 格式
  * @param email - 要驗證的 email 地址

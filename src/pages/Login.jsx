@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../hooks/useAuthStore";
+import { authStore } from "../store/authStore";
 import { useToastStore } from "../store/toastStore";
-import { useTheme } from "../hooks/useTheme";
+import { themeStore } from "../store/themeStore";
 import {
   handleRegister as handleRegisterAction,
   handleEmailLogin as handleEmailLoginAction,
@@ -10,49 +10,66 @@ import {
 } from "../utils/authHandlers";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { login, register, loginWithGoogle } = useAuthStore();
-  const navigate = useNavigate();
-  const { addToast } = useToastStore();
-  const { resetTheme } = useTheme();
+  // [Hook] 使用 useState 管理表單輸入值
+  const [email, setEmail] = useState(""); // 管理電子郵件輸入值的狀態
+  const [password, setPassword] = useState(""); // 管理密碼輸入值的狀態
 
-  // 註冊
+  // [Hook] 使用自定義 store hooks 獲取狀態和操作方法
+  const { login, register, loginWithGoogle } = authStore(); // 從 authStore 解構認證相關方法
+  const navigate = useNavigate(); // React Router 導航控制 hook
+  const { addToast } = useToastStore(); // 從 toastStore 解構通知方法
+  const { resetTheme } = themeStore(); // 從 themeStore 解構重置主題方法
+
+  // 註冊處理函數
   const handleRegister = async (e) => {
     e.preventDefault();
+    // [物件處理] 將 auth 方法打包成物件傳遞給處理函數
     await handleRegisterAction(
       email,
       password,
-      { login, register, loginWithGoogle },
-      addToast,
-      navigate
+      { login, register, loginWithGoogle }, // 將認證方法作為物件傳遞
+      addToast, // 通知函數，用於顯示操作結果
+      navigate // 導航函數，用於成功後跳轉
     );
+    // 註: handleRegisterAction 內部可能涉及資料庫操作，如創建用戶記錄
   };
 
-  // 一般登入
+  // 一般登入處理函數
   const handleEmailLogin = async (e) => {
     e.preventDefault();
+    // [物件處理] 將 auth 方法打包成物件傳遞給處理函數
     await handleEmailLoginAction(
       email,
       password,
-      { login, register, loginWithGoogle },
-      addToast,
-      navigate
+      { login, register, loginWithGoogle }, // 將認證方法作為物件傳遞
+      addToast, // 通知函數
+      navigate // 導航函數
     );
+    // 註: handleEmailLoginAction 內部涉及與身份驗證系統的交互，可能讀取資料庫中的用戶資料進行比對
   };
 
-  // Google 登入
+  // Google 登入處理函數
   const handleGoogleLogin = async (e) => {
     e.preventDefault();
+    // [物件處理] 將 auth 方法打包成物件傳遞給處理函數
     await handleGoogleLoginAction(
-      { login, register, loginWithGoogle },
-      addToast,
-      navigate
+      { login, register, loginWithGoogle }, // 將認證方法作為物件傳遞
+      addToast, // 通知函數
+      navigate // 導航函數
     );
+    // 註: handleGoogleLoginAction 內部使用 OAuth 流程與 Google 身份驗證系統交互
+    // 可能將 Google 返回的用戶資料存入或比對資料庫
   };
+
+  // 重置主題處理函數
   const handleResetTheme = () => {
-    resetTheme();
-    addToast({ message: "主題已重置為預設", type: "success" });
+    resetTheme(); // 調用 themeStore 中的方法重置主題
+    // [物件處理] 創建 toast 通知物件並傳入 addToast
+    addToast({
+      message: "主題已重置為預設", // toast 消息內容
+      type: "success", // toast 類型，用於樣式區分
+    });
+    // 這是一個將物件直接作為參數傳遞的模式，避免了多個單獨參數
   };
   return (
     <>
@@ -148,11 +165,7 @@ const Login = () => {
         </div>
       </form>
       <div className="flex justify-center m-4">
-        <button
-          type="button"
-          className="btn"
-          onClick={handleResetTheme}
-        >
+        <button type="button" className="btn" onClick={handleResetTheme}>
           重置主題
         </button>
       </div>

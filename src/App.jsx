@@ -1,11 +1,9 @@
 // src/App.jsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy } from "react";
-import { useTheme } from "./hooks/useTheme";
+import { themeStore } from "./store/themeStore";
 import "./App.css";
 import "./index.css";
-import ErrorBoundary from "./component/ErrorBoundary";
-import Toast from "./component/Toast";
 const Home = lazy(() => import("./pages/Home"));
 const Life = lazy(() => import("./pages/Life"));
 const Company = lazy(() => import("./pages/Company"));
@@ -14,14 +12,14 @@ const News = lazy(() => import("./pages/News"));
 const Info = lazy(() => import("./pages/Info"));
 const Login = lazy(() => import("./pages/Login"));
 const Member = lazy(() => import("./pages/Member"));
-const Error = lazy(() => import("./pages/Error"));
 const Layout = lazy(() => import("./component/Layout"));
 const ScrollToTop = lazy(() => import("./component/ScrollToTop"));
 const ProtectedRoute = lazy(() => import("./component/ProtectedRoute"));
 const InfoItem = lazy(() => import("./pages/InfoItem"));
-
+const ErrorBoundary = lazy(() => import("./component/ErrorBoundary"));
+const Toast = lazy(() => import("./component/Toast"));
 function App() {
-  const { currentTheme } = useTheme();
+  const { currentTheme } = themeStore();
   return (
     <ErrorBoundary>
       <BrowserRouter>
@@ -44,7 +42,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="*" element={<Error />} />
           </Route>
         </Routes>
         <Toast />

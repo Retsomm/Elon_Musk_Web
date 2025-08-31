@@ -1,169 +1,65 @@
 import { useState } from "react";
 import MediaModal from "../component/MediaModal";
-const events = [
-  { year: "1971/06/28", desc: "出生於南非普利托里亞", img: "/kid-elon.jpg" },
-  {
-    year: "1989年",
-    desc: "移民至加拿大，進入安大略省女王大學學習，開始對科技與創業產生興趣",
-    img: "/1898.jpg",
-  },
-  {
-    year: "1990年",
-    desc: "進入女王大學學習，並於兩年後轉學至賓夕法尼亞大學。1995年畢業，並獲得了經濟學文學士和物理學理學士學位",
-  },
-  {
-    year: "1995年",
-    desc: "進入史丹佛大學攻讀應用物理學博士學位，但僅兩天後輟學，開始創業生涯",
-  },
-  {
-    year: "1995年",
-    desc: "與弟弟金博爾·馬斯克共同創辦Zip2，一家提供線上城市指南的軟體公司",
-    img: "/1999-zip2.jpg",
-  },
-  {
-    year: "1999年",
-    desc: "以3.07億美元將Zip2賣給康柏電腦公司，個人獲利約2200萬美元，開啟創業家之路",
-    img: "/1995.webp",
-  },
-  {
-    year: "2000年",
-    desc: "創辦X.com，一家線上支付公司，後與Confinity合併成為PayPal",
-  },
-  {
-    year: "2002年",
-    desc: "以15億美元將PayPal賣給eBay，個人獲利約1.8億美元，為後續創業提供資金",
-  },
-  {
-    year: "2002年",
-    desc: "創辦SpaceX，並擔任董事長、執行長、技術長，該公司主要負責太空運輸、航太製造，目標是實現人類移居火星",
-    img: "/2002-spaceX.jpg",
-  },
-  {
-    year: "2004年",
-    desc: "加入電動車製造商特斯拉，並擔任董事長與產品設計師，推動電動車產業革命",
-    img: "/特斯拉共同創辦人.jpg",
-  },
-  {
-    year: "2006年",
-    desc: "投資並聯合創辦SolarCity，專注於太陽能發電系統，後於2016年被特斯拉收購",
-  },
-  {
-    year: "2008年",
-    desc: "帶領特斯拉推出首款電動車Roadster，開啟大眾對電動車的關注",
-  },
-  {
-    year: "2015年",
-    desc: "聯合創辦了非營利公司OpenAI，用於研究和推動友善人工智慧，目標是確保AI對人類有益",
-  },
-  {
-    year: "2016年",
-    desc: "聯合創辦了神經科技公司Neuralink，該公司專注於開發人機介面，探索人腦與AI的融合",
-  },
-  {
-    year: "2016年",
-    desc: "成立了無聊隧道施工公司（The Boring Company），用於研發超迴路列車及地下交通系統",
-  },
-  {
-    year: "2018年",
-    desc: "公開展示SpaceX的星艦（Starship）原型，該火箭設計用於火星移民與星際旅行",
-  },
-  {
-    year: "2020年",
-    desc: "SpaceX成功執行首次載人任務Crew Dragon，將NASA太空人送往國際太空站，實現民營太空載人飛行里程碑",
-    img: "/2020.jpg",
-  },
-  {
-    year: "2022年10月27日",
-    desc: "以440億美元收購社交平台Twitter，並將其改名為X，推動言論自由與資訊透明的願景",
-    img: "/twitter.jpg",
-  },
-  {
-    year: "2023年",
-    desc: "創辦xAI，專注於開發人工智慧以加速人類科學發現，推出Grok作為AI助手",
-  },
-  {
-    year: "2024年11月",
-    desc: "美國總統當選人唐納·川普宣布委任馬斯克為總統高級顧問，領導新創立的政府效率部",
-  },
-];
+import Timeline from "../component/Timeline";
+import eventsData from "../data/LifeEvent.json";
 
-function Timeline() {
+function Life() {
+  // useState Hook: 創建並管理本地狀態
+  // modalImg 狀態用於儲存當前被選中顯示的媒體對象(包含類型和URL)
+  // 初始值為 null，表示沒有選中任何媒體
   const [modalImg, setModalImg] = useState(null);
+
+  // modalOpen 狀態用於控制模態框的顯示與隱藏
+  // 布林值，true表示開啟，false表示關閉
   const [modalOpen, setModalOpen] = useState(false);
 
-  const handleTimelineClick = (event) => {
-    if (event.img) {
-      setModalImg({ type: "image", url: event.img });
+  // 資料轉換處理：使用陣列的 map 方法將原始 JSON 資料轉換成 Timeline 元件可用的格式
+  // 1. 遍歷 eventsData.events 陣列中的每個事件對象
+  // 2. 為每個事件創建新的對象結構，保留需要的屬性並重命名/重組某些屬性
+  const timelineItems = eventsData.events.map((event) => ({
+    year: event.year, // 直接映射年份屬性
+    event: event.desc, // 將原始資料中的 desc 屬性映射到新對象的 event 屬性
+    media: event.img
+      ? { url: event.img, type: "image" } // 如果存在圖片，創建包含 url 和 type 的媒體對象
+      : null, // 如果沒有圖片，則設為 null
+  }));
+
+  // 事件處理函數：處理時間軸項目點擊事件
+  // 當用戶點擊時間軸上的項目時觸發
+  const handleTimelineClick = (item) => {
+    // 條件判斷：檢查點擊的項目是否有相關聯的媒體資源
+    if (item.media?.url) {
+      // 使用可選鏈運算符(?)，安全地訪問可能不存在的屬性
+      // 更新狀態：設置要在模態框中顯示的媒體對象
+      setModalImg({ type: "image", url: item.media.url });
+      // 更新狀態：打開模態框
       setModalOpen(true);
     }
   };
 
   return (
     <div className="w-full flex justify-center p-8">
+      {/* 媒體顯示彈出視窗 */}
       <MediaModal
         id="life_modal"
         open={modalOpen}
         onClose={() => {
-          setModalOpen(false);
-          setModalImg(null);
+          // 內聯事件處理函數：當模態框關閉時
+          setModalOpen(false); // 更新模態框狀態為關閉
+          setModalImg(null); // 清空當前顯示的媒體
         }}
         media={modalImg}
       />
-      <ul className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical w-full max-w-2xl">
-        {events.map((event, idx) => (
-          <li key={event.year + idx}>
-            {idx !== 0 && <hr />}
-            {idx % 2 === 0 ? (
-              <>
-                <div
-                  className="timeline-start mb-10 md:text-end max-sm:text-left hover:cursor-pointer transform transition duration-300 hover:scale-95 hover:shadow-xl"
-                  onClick={() => event.img && handleTimelineClick(event)}
-                >
-                  <label htmlFor={event.img ? "life_modal" : undefined}>
-                    <time className="font-mono italic">{event.year}</time>
-                    <div className="text-lg font-black">{event.desc}</div>
-                  </label>
-                </div>
-                <div className="timeline-middle">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    className="h-5 w-5 text-primary"
-                  >
-                    <circle cx="10" cy="10" r="8" />
-                  </svg>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="timeline-middle">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    className="h-5 w-5 text-primary"
-                  >
-                    <circle cx="10" cy="10" r="8" />
-                  </svg>
-                </div>
-                <div
-                  className="timeline-end md:mb-10 text-left hover:cursor-pointer transform transition duration-300 hover:scale-95 hover:shadow-xl"
-                  onClick={() => event.img && handleTimelineClick(event)}
-                >
-                  <label htmlFor={event.img ? "life_modal" : undefined}>
-                    <time className="font-mono italic">{event.year}</time>
-                    <div className="text-lg font-black">{event.desc}</div>
-                  </label>
-                </div>
-              </>
-            )}
-            {idx !== events.length - 1 && <hr />}
-          </li>
-        ))}
-      </ul>
+
+      {/* Timeline 元件接收轉換後的資料和點擊事件處理函數 */}
+      <div className="w-full max-w-2xl">
+        <Timeline
+          timelineData={timelineItems} // 傳入轉換後的時間軸資料
+          onItemClick={handleTimelineClick} // 傳入點擊事件處理函數
+        />
+      </div>
     </div>
   );
 }
 
-export default Timeline;
+export default Life;

@@ -2,110 +2,61 @@
   "companies": [
     {
       "name": "SpaceX",
+      "description": "致力於降低太空旅行成本並實現火星殖民。",
+      "img": "/spaceX.webp",
+      "logo": "/spaceXLogo.webp",
       "timeline": [
         {
           "year": 2002,
-          "event": "馬斯克創辦SpaceX，目標降低太空旅行成本並實現火星殖民",
-          "media": {
-            "type": "image",
-            "url": "https://cdn.arstechnica.net/wp-content/uploads/2025/04/fh_goesu1.jpg"
-          }
+          "event": "馬斯克創辦SpaceX，目標降低太空旅行成本並實現火星殖民"
         },
         {
           "year": 2006,
-          "event": "Falcon 1首次發射失敗，開始累積火箭設計經驗",
-          "media": {
-            "type": "video",
-            "url": ""
-          }
+          "event": "Falcon 1首次發射失敗，開始累積火箭設計經驗"
         },
         {
           "year": 2008,
-          "event": "Falcon 1成為首個私營液體燃料火箭成功進入軌道",
-          "media": {
-            "type": "video",
-            "url": "https://www.youtube.com/watch?v=dLQ2tZEH6G0"
-          }
+          "event": "Falcon 1成為首個私營液體燃料火箭成功進入軌道"
         },
         {
           "year": 2010,
-          "event": "Falcon 9首次發射，開始主導低成本火箭市場",
-          "media": {
-            "type": "video",
-            "url": "https://www.youtube.com/watch?v=H6hYEqrP56I&ab_channel=SpaceX"
-          }
+          "event": "Falcon 9首次發射，開始主導低成本火箭市場"
         },
         {
           "year": 2012,
-          "event": "Dragon太空艙首次與國際太空站對接",
-          "media": {
-            "type": "video",
-            "url": "https://youtu.be/07umAHbXYyk?si=GajQcEM3cuHVoDgO"
-          }
+          "event": "Dragon太空艙首次與國際太空站對接"
         },
         {
           "year": 2015,
-          "event": "Falcon 9首次成功實現火箭第一級陸地回收",
-          "media": {
-            "type": "video",
-            "url": "http://youtube.com/watch?v=ANv5UfZsvZQ"
-          }
+          "event": "Falcon 9首次成功實現火箭第一級陸地回收"
         },
         {
           "year": 2018,
-          "event": "Falcon Heavy首次發射，成為當時最強大運營火箭",
-          "media": {
-            "type": "video",
-            "url": "https://www.youtube.com/live/wbSwFU6tY1c"
-          }
+          "event": "Falcon Heavy首次發射，成為當時最強大運營火箭"
         },
         {
           "year": 2020,
-          "event": "Crew Dragon首次載人飛往國際太空站",
-          "media": {
-            "type": "video",
-            "url": "https://www.youtube.com/live/bnChQbxLkkI"
-          }
+          "event": "Crew Dragon首次載人飛往國際太空站"
         },
         {
           "year": 2023,
-          "event": "Starlink衛星數量突破5000顆，覆蓋全球多數地區",
-          "media": {
-            "type": "image",
-            "url": "https://nextbigfuture.s3.amazonaws.com/uploads/2023/08/Screen-Shot-2023-08-29-at-12.42.50-PM-1024x671.jpg"
-          }
+          "event": "Starlink衛星數量突破5000顆，覆蓋全球多數地區"
         },
         {
           "year": 2024,
-          "event": "Starship獲准進行下一次試飛，計畫用於NASA Artemis計畫",
-          "media": {
-            "type": "image",
-            "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5zL-lyG9ll0C3iOesnq_F_IbsqUfXy79L4Q&s"
-          }
+          "event": "Starship獲准進行下一次試飛，計畫用於NASA Artemis計畫"
         },
         {
           "year": 2025,
-          "event": "Starship完成首次環月飛行測試，推進商業太空旅行計畫",
-          "media": {
-            "type": "image",
-            "url": "https://www.spacex.com/static/images/starship_moon_mission.jpg"
-          }
+          "event": "Starship完成首次環月飛行測試，推進商業太空旅行計畫"
         },
         {
           "year": 2025,
-          "event": "Starship 第 10 次測試飛行成功，結束連續失敗並部署首個模擬衛星，潑水在印度洋",
-          "media": {
-            "type": "video",
-            "url": "https://www.youtube.com/watch?v=TdHXdQrxzr0"
-          }
+          "event": "Starship 第 10 次測試飛行成功，結束連續失敗並部署首個模擬衛星，潑水在印度洋"
         },
         {
           "year": 2025,
-          "event": "Falcon 9 完成第 400 次發射，創紀錄 30 次重複使用助推器發射 Starlink 衛星",
-          "media": {
-            "type": "image",
-            "url": ""
-          }
+          "event": "Falcon 9 完成第 400 次發射，創紀錄 30 次重複使用助推器發射 Starlink 衛星"
         }
       ],
       "products": [
@@ -130,126 +81,69 @@
     },
     {
       "name": "Tesla",
+      "description": "專注於電動車和可再生能源的公司，致力於加速全球向可持續能源的轉型。",
+      "img": "/tesla.webp",
+      "logo": "/teslaLogo.webp",
       "timeline": [
         {
           "year": 2003,
-          "event": "Tesla Motors 成立，馬斯克加入前身團隊，開始電動車研發",
-          "media": {
-            "type": "image",
-            "url": "https://hips.hearstapps.com/autoweek/assets/s3fs-public/521009995-1.jpg"
-          }
+          "event": "Tesla Motors 成立，馬斯克加入前身團隊，開始電動車研發"
         },
         {
           "year": 2004,
-          "event": "馬斯克投資630萬美元，成為Tesla董事會主席及主要股東",
-          "media": {
-            "type": "image",
-            "url": "https://scontent.frmq3-4.fna.fbcdn.net/v/t39.30808-6/496696481_1226328732183122_5454853844207338075_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_ohc=4eNt5V3jPfQQ7kNvwFyMwIA&_nc_oc=Adl6GjPaeGKuRzqLO8GM2oloJ_dLF0vnJ04Lz-edcs79s6pGA7GfJiFnB21pK2Lb9BzGB7PZq9ntrxc61oFz_EVb&_nc_zt=23&_nc_ht=scontent.frmq3-4.fna&_nc_gid=ln31iwXT5qJ3x7wHKQQVRw&oh=00_AfOHslKc5bXzrSKYfqda20VBhcHCl-q3ZQruXNu8n6PN5A&oe=684F2F27"
-          }
+          "event": "馬斯克投資630萬美元，成為Tesla董事會主席及主要股東"
         },
         {
           "year": 2008,
-          "event": "Roadster電動跑車上市，行駛里程達394公里",
-          "media": {
-            "type": "video",
-            "url": "https://www.youtube.com/watch?v=tw4jkyfY4HE"
-          }
+          "event": "Roadster電動跑車上市，行駛里程達394公里"
         },
         {
           "year": 2012,
-          "event": "Model S轎車上市，獲《Motor Trend》年度最佳汽車",
-          "media": {
-            "type": "image",
-            "url": "https://file.kelleybluebookimages.com/kbb/base/house/2012/2012-Tesla-Model%20S-Front_TEMODS1204_640x480.jpg"
-          }
+          "event": "Model S轎車上市，獲《Motor Trend》年度最佳汽車"
         },
         {
           "year": 2015,
-          "event": "Model X豪華SUV上市，首款五星安全評級SUV",
-          "media": {
-            "type": "image",
-            "url": "https://image.cache.u-car.com.tw/articleimage_547963.jpg"
-          }
+          "event": "Model X豪華SUV上市，首款五星安全評級SUV"
         },
         {
           "year": 2016,
-          "event": "收購SolarCity，成為永續能源公司",
-          "media": {
-            "type": "image",
-            "url": "https://image.businessfocus.io/wp-content/uploads/2021/07/a731dfe9.jpeg?auto=format&w=1053"
-          }
+          "event": "收購SolarCity，成為永續能源公司"
         },
         {
           "year": 2017,
-          "event": "Model 3開始交付，全球銷量超百萬",
-          "media": {
-            "type": "image",
-            "url": "https://s.yimg.com/ny/api/res/1.2/W3Y8KtrSGAna1x9Taga47A--/YXBwaWQ9aGlnaGxhbmRlcjt3PTY0MDtoPTM4OQ--/https://media.zenfs.com/en/ddcar_com_tw_219/e5ae73f6c1e6b1ad082c59d04423a222"
-          }
+          "event": "Model 3開始交付，全球銷量超百萬"
         },
         {
           "year": 2019,
-          "event": "上海超級工廠正式投產，Model 3開始在中國生產",
-          "media": {
-            "type": "image",
-            "url": "https://image-cdn.learnin.tw/bnextmedia/image/album/2019-10/img-1571892807-90308.jpg?w=900&output=webp"
-          }
+          "event": "上海超級工廠正式投產，Model 3開始在中國生產"
         },
         {
           "year": 2023,
-          "event": "Cybertruck上市，售價約8.2萬美元",
-          "media": {
-            "type": "video",
-            "url": "https://www.youtube.com/watch?v=FjS2LzrHEO8&ab_channel=Tesla"
-          }
+          "event": "Cybertruck上市，售價約8.2萬美元"
         },
         {
           "year": 2024,
-          "event": "Model Y改款，取消低價Model 2計畫",
-          "media": {
-            "type": "video",
-            "url": "https://youtu.be/TIz4dZLDxeY"
-          }
+          "event": "Model Y改款，取消低價Model 2計畫"
         },
         {
           "year": 2025,
-          "event": "計畫於德州奧斯汀推出約10輛全無人駕駛Robotaxi試驗",
-          "media": {
-            "type": "image",
-            "url": "https://www.technice.com.tw/wp-content/uploads/2024/10/Robotaxi-1-1024x535.jpg"
-          }
+          "event": "計畫於德州奧斯汀推出約10輛全無人駕駛Robotaxi試驗"
         },
         {
           "year": 2025,
-          "event": "Tesla在德國柏林超級工廠擴產，Model Y年產量突破50萬輛",
-          "media": {
-            "type": "image",
-            "url": "https://today-obs.line-scdn.net/0hesEd11ndOlx4HSvCqtRFC0BLNi1LeyBVWnlwP1RPYWpcMXkPF3JpP1gbbHAFen1YWCt8aFgUZmRXf39aRA/w1200"
-          }
+          "event": "Tesla在德國柏林超級工廠擴產，Model Y年產量突破50萬輛"
         },
         {
           "year": 2025,
-          "event": "董事會獎勵 Elon Musk 300 億美元股份，綁定市值和股東回報目標",
-          "media": {
-            "type": "image",
-            "url": ""
-          }
+          "event": "董事會獎勵 Elon Musk 300 億美元股份，綁定市值和股東回報目標"
         },
         {
           "year": 2025,
-          "event": "品牌忠誠度因 Musk 支持 Trump 崩潰，美國銷售下降 8%",
-          "media": {
-            "type": "image",
-            "url": ""
-          }
+          "event": "品牌忠誠度因 Musk 支持 Trump 崩潰，美國銷售下降 8%"
         },
         {
           "year": 2025,
-          "event": "整合 Deepseek 和 Doubao AI 語音控制在中國車款",
-          "media": {
-            "type": "image",
-            "url": ""
-          }
+          "event": "整合 Deepseek 和 Doubao AI 語音控制在中國車款"
         }
       ],
       "products": [
@@ -304,62 +198,37 @@
     },
     {
       "name": "X Corp",
+      "description": "專注於社交媒體和數位平台的公司，致力於推動言論自由和資訊透明。",
+      "img": "/X.webp",
+      "logo": "/XLogo.webp",
       "timeline": [
         {
           "year": 2022,
-          "event": "馬斯克以440億美元收購Twitter，推行藍勾認證付費模式",
-          "media": {
-            "type": "image",
-            "url": "https://about.x.com/content/dam/about-x/history/twitter_acquisition.jpg"
-          }
+          "event": "馬斯克以440億美元收購Twitter，推行藍勾認證付費模式"
         },
         {
           "year": 2023,
-          "event": "Twitter更名為X，目標打造萬能應用程式",
-          "media": {
-            "type": "image",
-            "url": "https://about.x.com/content/dam/about-x/branding/x_logo.jpg"
-          }
+          "event": "Twitter更名為X，目標打造萬能應用程式"
         },
         {
           "year": 2023,
-          "event": "推出X Premium訂閱服務，增加用戶特權功能",
-          "media": {
-            "type": "image",
-            "url": "https://about.x.com/content/dam/about-x/premium_subscription.jpg"
-          }
+          "event": "推出X Premium訂閱服務，增加用戶特權功能"
         },
         {
           "year": 2024,
-          "event": "發布首份透明度報告，處理超500萬帳戶及1000萬貼文",
-          "media": {
-            "type": "image",
-            "url": "https://about.x.com/content/dam/about-x/transparency_report_2024.jpg"
-          }
+          "event": "發布首份透明度報告，處理超500萬帳戶及1000萬貼文"
         },
         {
           "year": 2025,
-          "event": "X平台新增視訊通話功能，強化社交與即時互動",
-          "media": {
-            "type": "image",
-            "url": "https://about.x.com/content/dam/about-x/video_call_feature.jpg"
-          }
+          "event": "X平台新增視訊通話功能，強化社交與即時互動"
         },
         {
           "year": 2025,
-          "event": "與前 Twitter 員工達成暫定和解，支付 5 億美元遣散費給約 6000 名員工",
-          "media": {
-            "type": "image",
-            "url": ""
-          }
+          "event": "與前 Twitter 員工達成暫定和解，支付 5 億美元遣散費給約 6000 名員工"
         },
         {
           "year": 2025,
-          "event": "發布 2025 年行銷事件行事曆，幫助行銷人員規劃關鍵日期",
-          "media": {
-            "type": "image",
-            "url": ""
-          }
+          "event": "發布 2025 年行銷事件行事曆，幫助行銷人員規劃關鍵日期"
         }
       ],
       "products": [
@@ -372,70 +241,41 @@
     },
     {
       "name": "The Boring Company",
+      "description": "專注於隧道建設和地下交通系統，旨在減輕城市交通擁堵。",
+      "img": "/TBC.webp",
+      "logo": "/TBCLogo.svg",
       "timeline": [
         {
           "year": 2016,
-          "event": "馬斯克創辦The Boring Company，解決城市交通擁堵",
-          "media": {
-            "type": "image",
-            "url": "https://www.boringcompany.com/static/images/boring_company_founding.jpg"
-          }
+          "event": "馬斯克創辦The Boring Company，解決城市交通擁堵"
         },
         {
           "year": 2017,
-          "event": "開始研發高效能隧道挖掘機，提升施工速度",
-          "media": {
-            "type": "video",
-            "url": "https://www.youtube.com/watch?v=u5V_VzRrSBI"
-          }
+          "event": "開始研發高效能隧道挖掘機，提升施工速度"
         },
         {
           "year": 2018,
-          "event": "完成加州霍桑1.15英里研發隧道",
-          "media": {
-            "type": "image",
-            "url": "https://www.boringcompany.com/static/images/hawthorne_tunnel_2018.jpg"
-          }
+          "event": "完成加州霍桑1.15英里研發隧道"
         },
         {
           "year": 2021,
-          "event": "拉斯維加斯Loop項目開始建設，首個商業應用啟動",
-          "media": {
-            "type": "video",
-            "url": "https://www.youtube.com/watch?v=1x3D4vM8tNo"
-          }
+          "event": "拉斯維加斯Loop項目開始建設，首個商業應用啟動"
         },
         {
           "year": 2024,
-          "event": "拉斯維加斯會展中心Loop項目運營",
-          "media": {
-            "type": "image",
-            "url": "https://www.boringcompany.com/static/images/vegas_loop_2024.jpg"
-          }
+          "event": "拉斯維加斯會展中心Loop項目運營"
         },
         {
           "year": 2025,
-          "event": "計畫啟動洛杉磯至聖塔莫尼卡的隧道項目試驗",
-          "media": {
-            "type": "image",
-            "url": "https://www.boringcompany.com/static/images/la_santa_monica_plan.jpg"
-          }
+          "event": "計畫啟動洛杉磯至聖塔莫尼卡的隧道項目試驗"
         },
         {
           "year": 2025,
-          "event": "宣布 Music City Loop 項目，在田納西州納什維爾建造 10 英里隧道，預計 2026 年運營",
-          "media": {
-            "type": "image",
-            "url": ""
-          }
+          "event": "宣布 Music City Loop 項目，在田納西州納什維爾建造 10 英里隧道，預計 2026 年運營"
         },
         {
           "year": 2025,
-          "event": "在拉斯維加斯 Loop 隧道開始測試 Tesla 全自動駕駛車輛",
-          "media": {
-            "type": "image",
-            "url": ""
-          }
+          "event": "在拉斯維加斯 Loop 隧道開始測試 Tesla 全自動駕駛車輛"
         }
       ],
       "products": [
@@ -452,62 +292,37 @@
     },
     {
       "name": "Neuralink",
+      "description": "專注於腦機介面技術的公司，旨在實現人腦與計算機之間的直接通訊。",
+      "img": "/Neuralink.webp",
+      "logo": "/Neuralink_Logo",
       "timeline": [
         {
           "year": 2016,
-          "event": "馬斯克創辦Neuralink，專注腦機介面技術",
-          "media": {
-            "type": "image",
-            "url": "https://neuralink.com/static/images/neuralink_founding.jpg"
-          }
+          "event": "馬斯克創辦Neuralink，專注腦機介面技術"
         },
         {
           "year": 2019,
-          "event": "公開首款腦機介面原型，展示動物實驗成果",
-          "media": {
-            "type": "video",
-            "url": "https://www.youtube.com/watch?v=r-vbh3t7WVI"
-          }
+          "event": "公開首款腦機介面原型，展示動物實驗成果"
         },
         {
           "year": 2021,
-          "event": "展示猴子透過腦機介面玩電子遊戲的技術突破",
-          "media": {
-            "type": "video",
-            "url": "https://www.youtube.com/watch?v=rsCul1sp4hQ"
-          }
+          "event": "展示猴子透過腦機介面玩電子遊戲的技術突破"
         },
         {
           "year": 2024,
-          "event": "完成約50億美元融資，推進腦植入技術",
-          "media": {
-            "type": "image",
-            "url": "https://neuralink.com/static/images/funding_2024.jpg"
-          }
+          "event": "完成約50億美元融資，推進腦植入技術"
         },
         {
           "year": 2025,
-          "event": "首個人體試驗成功，患者透過植入物控制外部設備",
-          "media": {
-            "type": "image",
-            "url": "https://neuralink.com/static/images/human_trial_2025.jpg"
-          }
+          "event": "首個人體試驗成功，患者透過植入物控制外部設備"
         },
         {
           "year": 2025,
-          "event": "完成 E 輪融資 6.5 億美元，擴大腦晶片技術患者存取",
-          "media": {
-            "type": "image",
-            "url": ""
-          }
+          "event": "完成 E 輪融資 6.5 億美元，擴大腦晶片技術患者存取"
         },
         {
           "year": 2025,
-          "event": "完成一天內兩次腦植入，第 8 和 9 位患者成功",
-          "media": {
-            "type": "video",
-            "url": "https://www.youtube.com/watch?v=FASMejN_5gs"
-          }
+          "event": "完成一天內兩次腦植入，第 8 和 9 位患者成功"
         }
       ],
       "products": [
@@ -520,78 +335,45 @@
     },
     {
       "name": "Grok",
+      "description": "專注於AI聊天機器人的開發，旨在提供更自然的對話體驗。",
+      "img": "/grok.webp",
+      "logo": "/GrokLogo.webp",
       "timeline": [
         {
           "year": 2023,
-          "event": "馬斯克創辦xAI，與OpenAI競爭",
-          "media": {
-            "type": "image",
-            "url": "https://x.ai/static/images/xai_founding.jpg"
-          }
+          "event": "馬斯克創辦xAI，與OpenAI競爭"
         },
         {
           "year": 2024,
-          "event": "估值達500億美元，推出Grok AI聊天機器人",
-          "media": {
-            "type": "image",
-            "url": "https://grok.com/static/images/grok_launch_2024.jpg"
-          }
+          "event": "估值達500億美元，推出Grok AI聊天機器人"
         },
         {
           "year": 2024,
-          "event": "Grok整合進X平台，提供即時問答功能",
-          "media": {
-            "type": "image",
-            "url": "https://grok.com/static/images/grok_x_integration.jpg"
-          }
+          "event": "Grok整合進X平台，提供即時問答功能"
         },
         {
           "year": 2025,
-          "event": "Grok提供給X高級訂閱者使用",
-          "media": {
-            "type": "image",
-            "url": "https://grok.com/static/images/grok_premium_2025.jpg"
-          }
+          "event": "Grok提供給X高級訂閱者使用"
         },
         {
           "year": 2025,
-          "event": "Grok推出多語言支援，擴展至亞洲及歐洲市場",
-          "media": {
-            "type": "image",
-            "url": "https://grok.com/static/images/grok_multilingual_2025.jpg"
-          }
+          "event": "Grok推出多語言支援，擴展至亞洲及歐洲市場"
         },
         {
           "year": 2025,
-          "event": "發布 Grok 3 Beta 早期預覽，結合優越推理和廣泛預訓練知識",
-          "media": {
-            "type": "image",
-            "url": ""
-          }
+          "event": "發布 Grok 3 Beta 早期預覽，結合優越推理和廣泛預訓練知識"
         },
         {
           "year": 2025,
-          "event": "發布 Grok 4，最智能模型，支援原生工具使用和即時搜尋",
-          "media": {
-            "type": "image",
-            "url": ""
-          }
+          "event": "發布 Grok 4，最智能模型，支援原生工具使用和即時搜尋"
         },
         {
           "year": 2025,
-          "event": "宣布 Grok for Government，為美國政府客戶提供 AI 產品套件",
-          "media": {
-            "type": "image",
-            "url": ""
-          }
+          "event": "宣布 Grok for Government，為美國政府客戶提供 AI 產品套件"
         },
         {
           "year": 2025,
-          "event": "開源 Grok 2.5 模型，並計畫開源 Grok 3",
-          "media": {
-            "type": "image",
-            "url": ""
-          }
+          "event": "開源 Grok 2.5 模型，並計畫開源 Grok 3"
         }
       ],
       "products": [

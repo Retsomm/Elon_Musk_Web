@@ -1,14 +1,24 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Hamburger } from "lucide-react";
-import { useAuthStore } from "../hooks/useAuthStore";
+import { authStore } from "../store/authStore";
 import Nebula from "../component/Nebula";
 
 export default function DesktopNavbar({ toggleNav }) {
-  const { user } = useAuthStore();
+  // 從 authStore 中解構出 user 物件，使用 Zustand store 來管理認證狀態
+  // user 物件包含使用者登入資訊，如 photoURL 等屬性
+  const { user } = authStore();
+  
+  // React Router v6 hook，用於程式化導航
+  // 可通過 navigate('/path') 進行頁面跳轉
   const navigate = useNavigate();
 
+  // 使用者頭像來源的條件處理
+  // 1. 若 user 物件存在且有 photoURL 屬性，則使用用戶的頭像
+  // 2. 否則使用預設頭像
   let avatarSrc = "/avatar.webp";
   if (user?.photoURL) {
+    // 可選鏈運算符(?)，安全地訪問 user 物件的 photoURL 屬性
+    // 避免當 user 為 null 或 undefined 時出現錯誤
     avatarSrc = user.photoURL;
   } else {
     avatarSrc = "/avatar.webp";
@@ -20,10 +30,13 @@ export default function DesktopNavbar({ toggleNav }) {
         <Nebula className="w-full h-full" />
       </div>
       <div className="ham md:hidden left-5 absolute rounded-full p-2">
+        {/* 點擊漢堡選單觸發 toggleNav 函數，控制行動版選單的顯示/隱藏 */}
         <Hamburger className="hamburger cursor-pointer" onClick={toggleNav} />
       </div>
       <div
         className="logo"
+        // 條件式事件處理：僅在行動裝置時執行 toggleNav
+        // 使用 window.innerWidth 檢測螢幕寬度，若小於 768px 則啟用 toggleNav 功能
         onClick={window.innerWidth < 768 ? toggleNav : undefined}
       >
         <Link to="/" className="navLink flex text-center">
@@ -58,12 +71,15 @@ export default function DesktopNavbar({ toggleNav }) {
         </li>
 
         <li>
+          {/* 條件式渲染：根據 user 物件是否存在決定顯示用戶頭像或登入連結 */}
           {user ? (
-            <div className="dropdown bg-opacity-100">
+            // 若 user 存在，顯示用戶頭像並設置下拉選單
+            <div className="dropdown">
               <div
                 tabIndex={0}
                 role="button"
-                className="btn m-1 bg-opacity-100"
+                className="btn m-1 bg-transparent border-none hover:bg-transparent"
+                // 點擊頭像時導航到會員頁面
                 onClick={() => navigate("/member")}
               >
                 <img
@@ -75,6 +91,7 @@ export default function DesktopNavbar({ toggleNav }) {
               </div>
             </div>
           ) : (
+            // 若 user 不存在，顯示登入連結
             <Link to="/login" className="navLink">
               登入
             </Link>

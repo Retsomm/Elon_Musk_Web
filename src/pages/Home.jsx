@@ -6,19 +6,19 @@ const sections = [
     name: "公司介紹",
     url:"/spaceX.jpg",
     description:
-      "深入了解馬斯克旗下的六大科技公司，探索每一間公司的創新理念與未來願景。",
+      "馬斯克旗下的六大科技公司，探索每一間公司的創新理念與未來願景。",
     link: "/company",
   },
   {
-    name: "生平故事",
+    name: "生平事蹟",
     url:"/1995.webp",
-    description: "馬斯克人生中的重要時刻與成就，從南非到矽谷的旅程。",
+    description: "馬斯克的生平事蹟。",
     link: "/life",
   },
   {
     name: "最新新聞",
     url:"/tesla.webp",
-    description: "與馬斯克有關的最新新聞，讓你隨時掌握最新動態。",
+    description: "與馬斯克有關的最新新聞。",
     link: "/news",
   },
   {
@@ -34,8 +34,6 @@ function HomePage() {
     <div className="min-h-screen bg-gradient-to-br overflow-x-hidden">
       <img src="/banner.webp" className="w-full object-cover" loading="lazy"/>
       <UnityParticleSystem />
-
-      
       {sections.map((section, index) => (
       <div
         className="hero min-h-screen"
