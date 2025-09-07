@@ -61,16 +61,7 @@ const Login = () => {
     // 可能將 Google 返回的用戶資料存入或比對資料庫
   };
 
-  // 重置主題處理函數
-  const handleResetTheme = () => {
-    resetTheme(); // 調用 themeStore 中的方法重置主題
-    // [物件處理] 創建 toast 通知物件並傳入 addToast
-    addToast({
-      message: "主題已重置為預設", // toast 消息內容
-      type: "success", // toast 類型，用於樣式區分
-    });
-    // 這是一個將物件直接作為參數傳遞的模式，避免了多個單獨參數
-  };
+
   return (
     <>
       <form
@@ -164,11 +155,7 @@ const Login = () => {
           </button>
         </div>
       </form>
-      <div className="flex justify-center m-4">
-        <button type="button" className="btn" onClick={handleResetTheme}>
-          重置主題
-        </button>
-      </div>
+      
     </>
   );
 };

@@ -1,17 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
 import { authStore } from "../store/authStore";
-import Nebula from "../component/Nebula";
 
 export default function MobileNavbar({ isNavOpen, toggleNav }) {
   // 從Zustand store中獲取用戶信息和登出方法
-  const { user, logout } = authStore();
+  const { user, logout, loading } = authStore();
   // React Router導航hook，用於程序化頁面跳轉
   const navigate = useNavigate();
 
-  // 使用者頭像處理邏輯 - 條件運算符(conditional operator)處理不同情況
-  let avatarSrc = "/defaultMemberPic.webp";
+  let avatarSrc = "/avatar.webp";
   if (user?.photoURL) {
-    // 使用可選鏈運算符(?.)安全訪問用戶物件屬性
+    // 可選鏈運算符(?)，安全地訪問 user 物件的 photoURL 屬性
+    // 避免當 user 為 null 或 undefined 時出現錯誤
     avatarSrc = user.photoURL;
   } else {
     avatarSrc = "/avatar.webp";
@@ -28,8 +27,6 @@ export default function MobileNavbar({ isNavOpen, toggleNav }) {
       ${isNavOpen ? "max-h-fit" : "hidden"} 
       `}
     >
-      {/* ... */}
-
       <ul className="flex flex-col justify-evenly items-left w-full">
         <li>
           <Link to="/company" className="navLink" onClick={toggleNav}>
@@ -54,9 +51,17 @@ export default function MobileNavbar({ isNavOpen, toggleNav }) {
 
         <li>
           {/* 使用條件渲染處理登入/未登入兩種狀態 */}
-          {user ? (
+          {loading ? (
+            // 載入中顯示預設頭像
+            <img
+              src="/avatar.webp"
+              alt="載入中..."
+              className="w-12 h-12 rounded-full object-cover"
+              loading="lazy"
+            />
+          ) : user ? (
             <details className="collapse">
-              <summary className="collapse-title font-semibold flex justify-center">
+              <summary className="collapse-title font-semibold flex justify-center cursor-pointer">
                 {/* 根據條件處理的頭像顯示 */}
                 <img
                   src={avatarSrc}
@@ -66,7 +71,7 @@ export default function MobileNavbar({ isNavOpen, toggleNav }) {
                 />
               </summary>
               <div
-                className="collapse-content"
+                className="collapse-content cursor-pointer"
                 onClick={() => {
                   // 複合動作：先導航至會員頁面，然後收合菜單
                   navigate("/member");
@@ -75,7 +80,7 @@ export default function MobileNavbar({ isNavOpen, toggleNav }) {
               >
                 會員資料
               </div>
-              <div className="collapse-content" onClick={logout}>
+              <div className="collapse-content cursor-pointer" onClick={logout}>
                 {/* 調用Zustand store中的登出方法 */}
                 登出
               </div>

@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
-import books from "../data/book";
+import books from "../data/books";
 import podcasts from "../data/podcasts";
-import youtubeVideos from "../data/youtube";
+import youtubeVideos from "../data/youtubes";
 import FavoriteButton from "../component/FavoriteButton";
 
 const InfoItem = () => {
@@ -18,17 +18,17 @@ const InfoItem = () => {
   const dataMap = {
     book: {
       // 處理不同資料結構: 優先使用books.books，若不存在則使用books整體
-      source: books.books || books,
+      source: books,
       notesKey: "bookNote",
       title: "BookNotes",
     },
     youtube: {
-      source: youtubeVideos.youtubeVideos || youtubeVideos,
+      source: youtubeVideos,
       notesKey: "highlight",
       title: "highlight",
     },
     podcast: {
-      source: podcasts.podcasts || podcasts,
+      source: podcasts,
       notesKey: "timestamps",
       title: "",
     },
@@ -49,7 +49,6 @@ const InfoItem = () => {
   // 條件渲染函數: 根據不同內容類型渲染專屬UI
   const renderTypeSpecificContent = () => {
     if (type === "book") {
-      // 書籍專屬UI: 圖片、標題和外部連結
       return (
         <>
           <img
@@ -140,10 +139,8 @@ const InfoItem = () => {
   const renderNotesList = () => {
     // 使用前面解構的notesKey從item中動態獲取筆記資料
     const notes = item[notesKey];
-
     // 陣列判空邏輯: 檢查notes是否存在且非空陣列
     if (!notes || notes.length === 0) return null;
-
     return (
       <>
         {/* 條件渲染: 僅當title存在時才顯示標題 */}

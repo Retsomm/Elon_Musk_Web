@@ -13,7 +13,7 @@ const Info = lazy(() => import("./pages/Info"));
 const Login = lazy(() => import("./pages/Login"));
 const Member = lazy(() => import("./pages/Member"));
 const Layout = lazy(() => import("./component/Layout"));
-const ScrollToTop = lazy(() => import("./component/ScrollToTop"));
+const ScrollToTop = lazy(() => import("./hooks/useScrollToTop"));
 const ProtectedRoute = lazy(() => import("./component/ProtectedRoute"));
 const InfoItem = lazy(() => import("./pages/InfoItem"));
 const ErrorBoundary = lazy(() => import("./component/ErrorBoundary"));

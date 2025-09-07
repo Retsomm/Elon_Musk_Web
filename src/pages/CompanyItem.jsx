@@ -1,21 +1,14 @@
-import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import companyData from "../data/Company.json"; // 從本地 JSON 檔案導入公司資料
-import Timeline from "../component/Timeline"; // 導入新的 Timeline 組件
+import companies from "../data/Companies.json"; 
+import Timeline from "../component/Timeline";
 
 function CompanyItem() {
   // 從 URL 參數中獲取公司名稱
   const { name } = useParams();
-
-  // 從導入的 JSON 檔案中取得公司資料陣列
-  const companies = companyData.companies;
-
   // 根據 URL 參數中的名稱查找對應的公司資料
   const company = companies.find((c) => c.name === name);
-
   // 如果找不到公司資料，顯示錯誤信息
   if (!company) return <div className="p-6">找不到公司資料</div>;
-
   // 渲染公司資料頁面
   return (
     <div className="min-h-screen p-6">

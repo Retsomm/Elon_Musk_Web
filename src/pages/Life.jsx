@@ -1,7 +1,7 @@
 import { useState } from "react";
 import MediaModal from "../component/MediaModal";
 import Timeline from "../component/Timeline";
-import eventsData from "../data/LifeEvent.json";
+import events from "../data/LifeEvent.json";
 
 function Life() {
   // useState Hook: 創建並管理本地狀態
@@ -16,7 +16,7 @@ function Life() {
   // 資料轉換處理：使用陣列的 map 方法將原始 JSON 資料轉換成 Timeline 元件可用的格式
   // 1. 遍歷 eventsData.events 陣列中的每個事件對象
   // 2. 為每個事件創建新的對象結構，保留需要的屬性並重命名/重組某些屬性
-  const timelineItems = eventsData.events.map((event) => ({
+  const timelineItems = events.map((event) => ({
     year: event.year, // 直接映射年份屬性
     event: event.desc, // 將原始資料中的 desc 屬性映射到新對象的 event 屬性
     media: event.img

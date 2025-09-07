@@ -6,19 +6,13 @@ import Nebula from "../component/Nebula";
 export default function DesktopNavbar({ toggleNav }) {
   // 從 authStore 中解構出 user 物件，使用 Zustand store 來管理認證狀態
   // user 物件包含使用者登入資訊，如 photoURL 等屬性
-  const { user } = authStore();
-  
+  const { user, loading } = authStore();
+
   // React Router v6 hook，用於程式化導航
   // 可通過 navigate('/path') 進行頁面跳轉
   const navigate = useNavigate();
-
-  // 使用者頭像來源的條件處理
-  // 1. 若 user 物件存在且有 photoURL 屬性，則使用用戶的頭像
-  // 2. 否則使用預設頭像
   let avatarSrc = "/avatar.webp";
   if (user?.photoURL) {
-    // 可選鏈運算符(?)，安全地訪問 user 物件的 photoURL 屬性
-    // 避免當 user 為 null 或 undefined 時出現錯誤
     avatarSrc = user.photoURL;
   } else {
     avatarSrc = "/avatar.webp";
@@ -71,19 +65,25 @@ export default function DesktopNavbar({ toggleNav }) {
         </li>
 
         <li>
-          {/* 條件式渲染：根據 user 物件是否存在決定顯示用戶頭像或登入連結 */}
-          {user ? (
-            // 若 user 存在，顯示用戶頭像並設置下拉選單
+          {loading ? (
+            // 載入中顯示預設頭像
+            <img
+              src="/avatar.webp"
+              alt="載入中..."
+              className="w-12 h-12 rounded-full object-cover"
+              loading="lazy"
+            />
+          ) : user ? (
+            // 用戶已登入
             <div className="dropdown">
               <div
                 tabIndex={0}
                 role="button"
                 className="btn m-1 bg-transparent border-none hover:bg-transparent"
-                // 點擊頭像時導航到會員頁面
                 onClick={() => navigate("/member")}
               >
                 <img
-                  src={avatarSrc}
+                  src={user.photoURL || "/avatar.webp"}
                   alt="會員頭像"
                   className="w-12 h-12 rounded-full object-cover"
                   loading="lazy"
@@ -91,7 +91,7 @@ export default function DesktopNavbar({ toggleNav }) {
               </div>
             </div>
           ) : (
-            // 若 user 不存在，顯示登入連結
+            // 用戶未登入
             <Link to="/login" className="navLink">
               登入
             </Link>

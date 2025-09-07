@@ -1,7 +1,6 @@
 import { useState, lazy, useEffect } from "react";
 import { authStore } from "../store/authStore";
 import { useToastStore } from "../store/toastStore";
-import { themeStore } from "../store/themeStore";
 // 使用 React.lazy 進行組件懶加載，減少初始載入時間
 const MessageBoard = lazy(() => import("../component/MessageBoard"));
 const CollectList = lazy(() => import("../component/CollectList"));
@@ -20,7 +19,6 @@ function Member() {
   const [memberPic, setMemberPic] = useState(""); // 用戶頭像路徑
   const [editMode, setEditMode] = useState(false); // 名稱編輯模式標記
   const [editName, setEditName] = useState(""); // 編輯中的名稱暫存
-  const { resetTheme } = themeStore(); // 從 themeStore 獲取重置主題方法
   const [mainTab, setMainTab] = useState("profile"); // 當前選中的頁籤
   const addToast = useToastStore((state) => state.addToast); // 從 toastStore 獲取顯示通知的方法
 
@@ -164,13 +162,10 @@ function Member() {
       </div>
     );
   }
-  const handleResetTheme = () => {
-    resetTheme();
-    addToast({ message: "主題已重置為預設", type: "success" });
-  };
+
   return (
-    <div className="memberComtainer flex px-10 max-sm:flex-col sm:justify-evenly">
-      <div className="memberSide flex sm:flex-col sm:flex-1/2 justify-center items-end border-b-black sm:pr-50 max-sm:mb-10 flex-wrap">
+    <div className="memberContainer flex px-10 max-sm:flex-col sm:justify-evenly">
+      <div className="memberSide flex sm:flex-col sm:flex-1/2 justify-center items-end border-b-black sm:pr-50 flex-wrap">
         <button
           className={`btn btn-success m-3 ${
             mainTab === "profile" ? "btn-active" : ""
@@ -195,9 +190,7 @@ function Member() {
         >
           留言板
         </button>
-        <button className="btn btn-outline m-3" onClick={handleResetTheme}>
-          重置主題
-        </button>
+        
         <button
           className="btn btn-warning m-3"
           onClick={() => {
@@ -208,7 +201,7 @@ function Member() {
           登出
         </button>
       </div>
-      <div className="memberSection flex sm:flex-col flex-1/2 justify-center items-start border-b-black sm:pl-50">
+      <div className="memberSection flex sm:flex-col flex-1/2 justify-center items-start border-b-black sm:pl-50 mt-5">
         {mainContent}
       </div>
     </div>

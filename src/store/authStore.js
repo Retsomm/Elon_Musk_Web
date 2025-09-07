@@ -112,6 +112,8 @@ auth.onAuthStateChanged((firebaseUser) => {
   const { setUser, setLoginType, setLoading } = authStore.getState();
   
   if (firebaseUser) {
+    // 添加除錯
+    console.log("Firebase user photoURL:", firebaseUser.photoURL);
     // 用戶已登入，更新本地狀態
     setUser({
       email: firebaseUser.email, // 用戶電子郵件

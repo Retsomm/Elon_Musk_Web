@@ -29,27 +29,12 @@ function MediaModal({ id, open, onClose, media }) {
         <div className="modal-box flex justify-center items-center rounded max-h-[80vh] overflow-auto">
           {/* 條件渲染：基於 media 物件的有效性和類型顯示不同內容 */}
           {hasValidMedia ? (
-            // 媒體類型判斷：image 類型顯示圖片，其他類型（如影片）使用 iframe
-            media.type === "image" ? (
-              <img
-                src={media.url}
-                alt={media.event || "media"} // 使用事件名稱作為替代文字，若無則使用預設值
-                className="w-fit sm:h-fit max-h-[80vh]"
-                loading="lazy" // 啟用延遲載入優化
-              />
-            ) : (
-              // 非圖片類型（如影片）使用 iframe 嵌入
-              <div className="sm:h-full w-full">
-                <iframe
-                  src={media.url}
-                  title={media.event || "media"}
-                  allowFullScreen
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  frameBorder="0"
-                  className="sm:h-full w-full rounded"
-                ></iframe>
-              </div>
-            )
+            <img
+              src={media.url}
+              alt={media.event || "media"} // 使用事件名稱作為替代文字，若無則使用預設值
+              className="w-fit sm:h-fit max-h-[80vh]"
+              loading="lazy" // 啟用延遲載入優化
+            />
           ) : (
             // 當 media 物件無效或未提供時顯示提示訊息
             <p>無媒體內容</p>

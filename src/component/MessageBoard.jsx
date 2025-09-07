@@ -12,6 +12,7 @@ function MessageBoard({ memberName }) {
   const [loading, setLoading] = useState(true); // 是否正在載入，布林值控制載入狀態顯示
   const messagesContainerRef = useRef(null); // 使用 useRef 建立對 DOM 元素的引用，用於控制訊息區塊自動滾動
   const addToast = useToastStore((state) => state.addToast); // 從全域狀態管理取得 toast 方法
+  const MAX_MESSAGE_LENGTH = 100; // 最大字數限制
 
   // 監聽登入狀態
   useEffect(() => {
@@ -86,6 +87,20 @@ function MessageBoard({ memberName }) {
         messagesContainerRef.current.scrollHeight;
     }
   }, [messages]); // 依賴於 messages 陣列，當訊息更新時觸發
+  //scrollTop：上方被捲掉、看不到的內容高度。
+  //clientHeight：可見區域高度（留言板外框）。
+  //scrollHeight：全部內容高度（不管有沒有捲軸，內容總長度）。
+  //當 scrollTop + clientHeight = scrollHeight 時，畫面剛好捲到最底，看到最後一則留言。
+    // 處理輸入框內容變更
+    
+  const handleContentChange = (e) => {
+    const inputValue = e.target.value;
+    
+    // 限制字數不超過最大限制
+    if (inputValue.length <= MAX_MESSAGE_LENGTH) {
+      setContent(inputValue);
+    }
+  };
 
   // 處理表單提交（送出訊息）
   const handleSubmit = async (e) => {
@@ -93,7 +108,7 @@ function MessageBoard({ memberName }) {
 
     // 檢查是否仍在載入中
     if (loading) {
-      addToast({ message: "請先登入！" });
+      addToast({ message: "載入中..." });
       return;
     }
 
@@ -106,6 +121,12 @@ function MessageBoard({ memberName }) {
     // 檢查訊息內容是否為空（去除前後空格）
     if (!content.trim()) {
       addToast({ message: "請輸入留言內容！" });
+      return;
+    }
+
+    // 檢查字數限制
+    if (content.trim().length > MAX_MESSAGE_LENGTH) {
+      addToast({ message: `留言字數不能超過 ${MAX_MESSAGE_LENGTH} 字！` });
       return;
     }
 
@@ -124,7 +145,7 @@ function MessageBoard({ memberName }) {
       console.log("即將寫入的訊息：", newMessage);
 
       // 使用 Firebase push 方法寫入資料，自動生成唯一鍵
-      await push(messagesRef, newMessage);
+      push(messagesRef, newMessage);
 
       setContent(""); // 清空輸入框，重置狀態
     } catch (error) {
@@ -134,7 +155,7 @@ function MessageBoard({ memberName }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center py-8">
+    <div className="min-h-screen flex flex-col items-center px-5">
       <Toast />
       <h1 className="text-3xl font-bold mb-6">留言板</h1>
 
@@ -142,15 +163,15 @@ function MessageBoard({ memberName }) {
       {loading ? (
         <p className="">載入中...</p>
       ) : user ? (
-        <div className="w-full max-w-md p-4 flex justify-center items-center">
+        <div className="w-full max-w-sm p-4 flex justify-center items-center">
           <p className="">歡迎 {memberName}</p>
         </div>
       ) : null}
 
       {/* 留言板主體 */}
-      <div className="w-full max-w-md border rounded-lg shadow-md flex flex-col h-[500px]">
+      <div className="border rounded-lg shadow-md flex flex-col h-[500px] max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto px-4 sm:px-0" >
         {/* 訊息顯示區域，使用 ref 獲取 DOM 元素引用，用於控制滾動 */}
-        <div className="flex-1 p-4 overflow-y-auto" ref={messagesContainerRef}>
+        <div className="flex-1 p-4 overflow-y-auto overflow-x-hidden" ref={messagesContainerRef}>
           {loading ? (
             <p className="text-center">載入中...</p>
           ) : user ? (
@@ -170,15 +191,15 @@ function MessageBoard({ memberName }) {
                 >
                   {/* 其他使用者的訊息 */}
                   {message.userId !== user.uid && (
-                    <div className="flex items-start">
-                      <div>
+                    <div className="flex items-start max-w-[75%]">
+                      <div className="w-full">
                         {/* 顯示使用者名稱（取 email @ 前段） */}
-                        <p className="text-sm">
+                        <p className="text-sm mb-1">
                           {(message.email || "").split("@")[0] || "未知使用者"}
                           {/* 使用字串分割操作取得使用者名稱 */}
                         </p>
-                        <div className="bg-base-400 p-2 rounded-lg max-w-xs border">
-                          <p className="text-base-800">{message.content}</p>
+                        <div className="bg-base-400 p-2 rounded-lg border">
+                          <p className="text-base-800 break-words whitespace-pre-wrap">{message.content}</p>
                           <p className="text-xs mt-1">
                             {/* 顯示時間（只顯示時:分） */}
                             {new Date(message.timestamp).toLocaleString(
@@ -196,10 +217,11 @@ function MessageBoard({ memberName }) {
 
                   {/* 自己的訊息 */}
                   {message.userId === user.uid && (
-                    <div className="flex items-end">
-                      <div className="bg-base-500 p-2 rounded-lg max-w-xs border">
-                        <p>{message.content}</p>
+                    <div className="flex items-end max-w-[75%]">
+                      <div className="bg-base-500 p-2 rounded-lg border w-full">
+                        <p className="break-words whitespace-pre-wrap">{message.content}</p>
                         <p className="text-xs mt-1 text-right">
+                          {/* 顯示時間（只顯示時:分） */}
                           {new Date(message.timestamp).toLocaleString("zh-TW", {
                             hour: "2-digit",
                             minute: "2-digit",
@@ -220,21 +242,27 @@ function MessageBoard({ memberName }) {
         {loading ? null : user ? (
           <form
             onSubmit={handleSubmit} // 表單提交處理函數
-            className="border-t p-4 flex items-center"
+            className="border-t p-4 flex flex-col"
           >
-            <input
-              type="text"
-              value={content} // 受控組件，值由 content 狀態控制
-              onChange={(e) => setContent(e.target.value)} // 更新輸入內容到狀態
-              className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="輸入訊息..."
-            />
-            <button
-              type="submit"
-              className="ml-2 bg-blue-500 p-2 rounded-lg hover:bg-blue-600 transition"
-            >
-              傳送
-            </button>
+            <div className="flex items-center">
+              <input
+                type="text"
+                value={content} // 受控組件，值由 content 狀態控制
+                onChange={handleContentChange} // 更新輸入內容到狀態，並限制字數
+                className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="輸入訊息..."
+              />
+              <button
+                type="submit"
+                className="ml-2 bg-blue-500 p-2 rounded-lg hover:bg-blue-600 transition"
+              >
+                傳送
+              </button>
+            </div>
+            {/* 字數統計 */}
+            <div className="text-xs text-gray-500 mt-1 text-right">
+              {content.length}/{MAX_MESSAGE_LENGTH}
+            </div>
           </form>
         ) : null}
       </div>

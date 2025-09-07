@@ -1,9 +1,6 @@
 import { Link } from "react-router-dom";
-import companyData from "../data/Company.json"; // 從JSON檔案導入公司資料
+import companies from "../data/Companies.json";
 import { useState, useEffect } from "react";
-
-// 從導入的JSON中提取companies陣列，包含多個公司物件
-const companies = companyData.companies;
 
 function Company() {
   // === Hook 方法: useState ===

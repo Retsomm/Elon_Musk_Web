@@ -10,7 +10,6 @@ import { create } from 'zustand';
  * 方法說明:
  * - toggleTheme: 在 'autumn' 和 'black' 主題間切換
  * - setTheme: 直接設定指定的主題
- * - resetTheme: 重置為預設主題 'black'
  */
 export const themeStore = create((set, get) => ({
   // 狀態屬性：從localStorage獲取已儲存的主題，若無則使用預設主題'black'
@@ -43,19 +42,6 @@ export const themeStore = create((set, get) => ({
     localStorage.setItem('theme', theme);
   },
   
-  // 重置主題方法：恢復預設主題'black'
-  resetTheme: () => {
-    const defaultTheme = 'black';
-    
-    // 更新store狀態為預設主題
-    set({ currentTheme: defaultTheme });
-    
-    // 更新DOM屬性
-    document.documentElement.setAttribute('data-theme', defaultTheme);
-    
-    // 移除localStorage中的主題設定，恢復至初始狀態
-    localStorage.removeItem('theme');
-  }
 }));
 
 // 初始化時同步主題設定到DOM

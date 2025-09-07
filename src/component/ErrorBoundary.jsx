@@ -1,35 +1,4 @@
 import React from "react";
-import { useToastStore } from "../store/toastStore";
-
-/**
- * 自定義錯誤處理Hook
- * 提供全局統一的錯誤處理機制
- * @returns {Object} 包含handleError方法的物件
- */
-export const useErrorHandler = () => {
-  // 從toastStore中獲取addToast方法，用於顯示錯誤訊息
-  const { addToast } = useToastStore();
-
-  // 使用useCallback封裝handleError函數以避免不必要的重新渲染
-  // 只有當addToast依賴變更時才會重建函數
-  const handleError = React.useCallback(
-    (error, context) => {
-      // 在控制台輸出錯誤詳情
-      console.error(`${context}:`, error);
-
-      // 使用toast系統顯示錯誤訊息
-      // 創建一個包含message和type屬性的toast物件
-      addToast({
-        message: `${context} 發生錯誤: ${error.message}`,
-        type: "error",
-      });
-    },
-    [addToast] // 依賴項：當addToast函數變化時重新建立handleError
-  );
-
-  // 返回包含handleError方法的物件，供組件使用
-  return { handleError };
-};
 
 /**
  * 錯誤邊界組件

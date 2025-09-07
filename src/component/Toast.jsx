@@ -25,7 +25,7 @@ export default function Toast() {
   }, [toasts, removeToast]);
 
   return (
-    <div className="fixed top-6 right-6 z-50 flex flex-col gap-2">
+    <div className="fixed top-6 right-6 z-[1001] flex flex-col gap-2 mt-16">
       {/* 使用 map 方法將 toasts 陣列轉換為 JSX 元素陣列 */}
       {toasts.map((toast) => (
         <div

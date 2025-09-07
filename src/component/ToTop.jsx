@@ -46,7 +46,6 @@ export default function ToTop() {
     <button
       // 點擊事件處理：使用平滑滾動回到頁面頂部
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      // 樣式設定：固定位置、z-index確保在其他元素之上、顏色、圓角等
       className="fixed bottom-8 right-8 z-50 bg-red-900 hover:bg-red-800 text-white rounded-full p-3 shadow-lg transition"
       aria-label="回到頂部"
     >
