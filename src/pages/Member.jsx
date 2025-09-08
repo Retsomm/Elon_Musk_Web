@@ -34,12 +34,9 @@ function Member() {
   // 用於初始化用戶名稱邏輯
   useEffect(() => {
     if (user) {
-      if (user.displayName) {
-        // 優先使用顯示名稱
+      if (isGmail) {
+        // 第一優先：Gmail 登入且有 displayName 時使用 Google 名稱
         setMemberName(user.displayName);
-      } else if (isGmail) {
-        // 次優先使用 name 屬性或從郵箱提取使用者名稱
-        setMemberName(user?.name || memberEmail.split("@")[0]);
       } else {
         // 從郵箱地址中提取使用者名稱（@ 前的部分）
         setMemberName(memberEmail.split("@")[0]);
@@ -190,7 +187,7 @@ function Member() {
         >
           留言板
         </button>
-        
+
         <button
           className="btn btn-warning m-3"
           onClick={() => {

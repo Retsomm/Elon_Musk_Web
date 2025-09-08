@@ -158,7 +158,7 @@ const InfoItem = () => {
                 {/* 傳遞屬性給子組件: 包括類型、ID、筆記索引和內容 */}
                 <FavoriteButton
                   type={type}
-                  id={id ?? ""} // 空值合併運算符: 若id為null/undefined則使用空字串
+                  id={String(id)}
                   noteIdx={i}
                   defaultContent={t}
                 />

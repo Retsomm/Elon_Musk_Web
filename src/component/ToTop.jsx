@@ -26,7 +26,6 @@ export default function ToTop() {
 
     // 註冊事件監聽器，當滾動或調整視窗大小時執行 handleScroll
     window.addEventListener("scroll", handleScroll);
-    window.addEventListener("resize", handleScroll);
 
     // 初始檢查是否應該顯示按鈕
     handleScroll();
@@ -34,7 +33,6 @@ export default function ToTop() {
     // 清理函數：組件卸載時移除事件監聽器，防止記憶體洩漏
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
     };
   }, []); // 空依賴陣列表示此 effect 只在組件掛載和卸載時執行
 

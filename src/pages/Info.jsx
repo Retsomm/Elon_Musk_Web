@@ -139,9 +139,9 @@ function Info() {
 
   useEffect(() => {
     setData({
-      books: books.books || books,
-      youtubeVideos: youtubeVideos.youtubeVideos || youtubeVideos,
-      podcasts: podcasts.podcasts || podcasts,
+      books: books,
+      youtubeVideos: youtubeVideos,
+      podcasts: podcasts,
     });
     setIsLoading(false);
   }, []);

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authStore } from "../store/authStore";
 import { useToastStore } from "../store/toastStore";
-import { themeStore } from "../store/themeStore";
 import {
   handleRegister as handleRegisterAction,
   handleEmailLogin as handleEmailLoginAction,
@@ -18,7 +17,6 @@ const Login = () => {
   const { login, register, loginWithGoogle } = authStore(); // 從 authStore 解構認證相關方法
   const navigate = useNavigate(); // React Router 導航控制 hook
   const { addToast } = useToastStore(); // 從 toastStore 解構通知方法
-  const { resetTheme } = themeStore(); // 從 themeStore 解構重置主題方法
 
   // 註冊處理函數
   const handleRegister = async (e) => {
