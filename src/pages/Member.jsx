@@ -1,6 +1,8 @@
 import { useState, lazy, useEffect } from "react";
 import { authStore } from "../store/authStore";
-import { useToastStore } from "../store/toastStore";
+import { toastStore } from "../store/toastStore";
+import { handleLogout as handleLogoutAction } from "../utils/authHandlers";
+import { useNavigate } from "react-router-dom";
 // 使用 React.lazy 進行組件懶加載，減少初始載入時間
 const MessageBoard = lazy(() => import("../component/MessageBoard"));
 const CollectList = lazy(() => import("../component/CollectList"));
@@ -14,13 +16,12 @@ function Member() {
   // loading: 表示身分驗證狀態是否正在加載
   // updateUserName: 更新用戶名稱的異步方法，連接到 Firebase Auth
   const { user, logout, loading, updateUserName } = authStore();
-
+  const navigate = useNavigate();
   // 本地狀態管理
   const [memberPic, setMemberPic] = useState(""); // 用戶頭像路徑
   const [editMode, setEditMode] = useState(false); // 名稱編輯模式標記
   const [editName, setEditName] = useState(""); // 編輯中的名稱暫存
   const [mainTab, setMainTab] = useState("profile"); // 當前選中的頁籤
-  const addToast = useToastStore((state) => state.addToast); // 從 toastStore 獲取顯示通知的方法
 
   // 處理用戶郵箱和頭像資訊
   const memberEmail = user?.email || ""; // 可選鏈操作符，防止 user 為 null/undefined
@@ -56,31 +57,26 @@ function Member() {
 
   // 處理名稱更新 - 異步操作連接到資料庫
   const handleUpdateName = async () => {
-    // 驗證輸入資料
     if (editName.trim() === "") {
-      addToast({ message: "名稱不能為空", type: "error" });
+      toastStore.error("名稱不能為空");
       return;
     }
     if (editName.trim().length > 10) {
-      addToast({ message: "名稱長度不能超過10個字元", type: "error" });
+      toastStore.error("名稱長度不能超過10個字元");
       return;
     }
     try {
-      // 調用 authStore 中的方法更新 Firebase Auth 中的用戶名稱
       await updateUserName(editName.trim());
-
-      // 更新本地狀態
       setMemberName(editName.trim());
       setEditMode(false);
-
-      // 顯示成功通知
-      addToast({ message: "名稱更新成功", type: "success" });
+      toastStore.success("名稱更新成功");
     } catch (error) {
-      // 錯誤處理和通知
-      addToast({ message: "名稱更新失敗: " + error.message, type: "error" });
+      toastStore.error("名稱更新失敗: " + error.message);
     }
   };
-
+  const handleLogout = async () => {
+    await handleLogoutAction({ logout }, navigate);
+  };
   // 使用條件渲染決定主內容區域顯示內容
   // 根據 mainTab 狀態動態切換顯示的頁面內容
   let mainContent = null;
@@ -188,13 +184,7 @@ function Member() {
           留言板
         </button>
 
-        <button
-          className="btn btn-warning m-3"
-          onClick={() => {
-            logout();
-            addToast({ message: "登出成功", type: "success" });
-          }}
-        >
+        <button className="btn btn-warning m-3" onClick={handleLogout}>
           登出
         </button>
       </div>

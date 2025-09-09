@@ -1,45 +1,19 @@
-import books from "../data/books.json";
-import podcasts from "../data/podcasts.json";
-import youtubes from "../data/youtubes.json";
 import { useAllFavorites } from "../hooks/useFavorites";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
-const dataSourceMap = {
-  book: {
-    collection: books,
-    titleField: "title",
-  },
-  youtube: {
-    collection: youtubes,
-    titleField: "title",
-  },
-  podcast: {
-    collection: podcasts,
-    titleField: "title",
-  },
-};
 
 export default function CollectList() {
   const { favoritesData, removeFavorite } = useAllFavorites();
-
   const collectItems = useMemo(() => {
     if (!favoritesData || Object.keys(favoritesData).length === 0) {
       return [];
     }
-
     return ["book", "youtube", "podcast"].flatMap((type) => {
       const typeFav = favoritesData[type];
       if (!typeFav) return [];
-
-      const { collection, titleField } = dataSourceMap[type];
-
       return Object.entries(typeFav).flatMap(([id, notesObj]) => {
-        // 找出 item
-        const item = collection.find((item) => item.id === id);
-        if (!item) return [];
-
-        // 直接渲染收藏內容
+        // 移除查找 item 的步驟，直接使用收藏數據中的內容
         return Object.entries(notesObj)
           .filter(([noteIdx, favData]) => favData && favData.status)
           .map(([noteIdx, favData]) => (
@@ -49,7 +23,7 @@ export default function CollectList() {
             >
               <div className="flex-1 m-3">
                 <div className="font-bold text-base sm:text-lg mb-1">
-                  {item[titleField]}
+                  {favData.title || `${type} - ${id}`}
                 </div>
                 <div className="text-sm break-words">{favData.content}</div>
               </div>
@@ -59,7 +33,9 @@ export default function CollectList() {
                 </div>
                 <button
                   className="max-sm:ml-3 btn btn-xs btn-error"
-                  onClick={() => removeFavorite(type, id, noteIdx)}
+                  onClick={() => {
+                    removeFavorite(type, id, noteIdx);
+                  }}
                 >
                   移除收藏
                 </button>
@@ -95,5 +71,7 @@ export default function CollectList() {
       </>
     );
   }
-  return <div className="flex flex-col items-center w-full px-2">{collectItems}</div>;
+  return (
+    <div className="flex flex-col items-center w-full px-2">{collectItems}</div>
+  );
 }

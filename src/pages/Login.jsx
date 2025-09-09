@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authStore } from "../store/authStore";
-import { useToastStore } from "../store/toastStore";
+import { toastStore } from "../store/toastStore";
 import {
   handleRegister as handleRegisterAction,
   handleEmailLogin as handleEmailLoginAction,
@@ -16,7 +16,6 @@ const Login = () => {
   // [Hook] 使用自定義 store hooks 獲取狀態和操作方法
   const { login, register, loginWithGoogle } = authStore(); // 從 authStore 解構認證相關方法
   const navigate = useNavigate(); // React Router 導航控制 hook
-  const { addToast } = useToastStore(); // 從 toastStore 解構通知方法
 
   // 註冊處理函數
   const handleRegister = async (e) => {
@@ -26,7 +25,6 @@ const Login = () => {
       email,
       password,
       { login, register, loginWithGoogle }, // 將認證方法作為物件傳遞
-      addToast, // 通知函數，用於顯示操作結果
       navigate // 導航函數，用於成功後跳轉
     );
     // 註: handleRegisterAction 內部可能涉及資料庫操作，如創建用戶記錄
@@ -40,7 +38,6 @@ const Login = () => {
       email,
       password,
       { login, register, loginWithGoogle }, // 將認證方法作為物件傳遞
-      addToast, // 通知函數
       navigate // 導航函數
     );
     // 註: handleEmailLoginAction 內部涉及與身份驗證系統的交互，可能讀取資料庫中的用戶資料進行比對
@@ -52,14 +49,11 @@ const Login = () => {
     // [物件處理] 將 auth 方法打包成物件傳遞給處理函數
     await handleGoogleLoginAction(
       { login, register, loginWithGoogle }, // 將認證方法作為物件傳遞
-      addToast, // 通知函數
       navigate // 導航函數
     );
     // 註: handleGoogleLoginAction 內部使用 OAuth 流程與 Google 身份驗證系統交互
     // 可能將 Google 返回的用戶資料存入或比對資料庫
   };
-
-
   return (
     <>
       <form
@@ -151,9 +145,9 @@ const Login = () => {
             </svg>
             Login with Google
           </button>
+          
         </div>
       </form>
-      
     </>
   );
 };

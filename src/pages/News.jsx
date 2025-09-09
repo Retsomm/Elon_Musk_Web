@@ -112,21 +112,13 @@ export default function News() {
               Array.isArray(parsed.articles) &&
               parsed.articles.length > 0
             ) {
-              console.log(
-                "使用 localStorage 快取資料:",
-                parsed.articles.length,
-                "篇新聞"
-              );
+            
               return parsed; // 返回今天的快取資料
             }
 
             // 如果非當天但有效的舊資料也可作為備用
             if (Array.isArray(parsed.articles) && parsed.articles.length > 0) {
-              console.log(
-                "使用舊的 localStorage 快取資料:",
-                parsed.articles.length,
-                "篇新聞"
-              );
+           
               return parsed; // 返回舊的快取資料
             }
           }
@@ -144,7 +136,6 @@ export default function News() {
           try {
             // 將新獲取的資料序列化後存入 localStorage
             localStorage.setItem("newsCache", JSON.stringify(data));
-            console.log(`新聞資料已更新並快取，共 ${data.articles.length} 篇`);
           } catch (e) {
             console.warn("儲存快取失敗:", e);
           }
@@ -165,7 +156,6 @@ export default function News() {
    * @returns {Promise<void>} 無返回值的 Promise
    */
   const retryFetchNews = async () => {
-    console.log("用戶觸發手動重新抓取");
     try {
       // 調用 mutate 方法強制重新驗證，跳過快取
       // undefined 表示使用原始的 key (API_URL)

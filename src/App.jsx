@@ -17,7 +17,7 @@ const ScrollToTop = lazy(() => import("./hooks/useScrollToTop"));
 const ProtectedRoute = lazy(() => import("./component/ProtectedRoute"));
 const InfoItem = lazy(() => import("./pages/InfoItem"));
 const ErrorBoundary = lazy(() => import("./component/ErrorBoundary"));
-const Toast = lazy(() => import("./component/Toast"));
+import Toast from "./component/Toast";
 function App() {
   const { currentTheme } = themeStore();
   return (
@@ -44,8 +44,8 @@ function App() {
             />
           </Route>
         </Routes>
-        <Toast />
       </BrowserRouter>
+      <Toast />
     </ErrorBoundary>
   );
 }

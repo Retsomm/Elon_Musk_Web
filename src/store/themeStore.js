@@ -18,6 +18,9 @@ export const themeStore = create((set, get) => ({
   // 切換主題方法：在'autumn'和'black'之間切換
   toggleTheme: () => {
     // 使用get()存取當前狀態，判斷並設定新主題
+    // get() 是一個函式，通常會回傳整個 store 的當前狀態（state）。
+    //currentTheme 是 state 物件裡的一個屬性。
+    //所以 get().currentTheme 就是「取得現在的狀態物件，然後存取其中的 currentTheme 屬性」。
     const newTheme = get().currentTheme === 'autumn' ? 'black' : 'autumn';
     
     // 更新store中的狀態

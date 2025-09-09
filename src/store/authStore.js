@@ -5,6 +5,7 @@ import {
   GoogleAuthProvider, // Google 認證提供者
   signInWithPopup, // 使用彈窗方式登入
   createUserWithEmailAndPassword, // 使用電子郵件和密碼創建帳號
+  signOut, // 登出
   updateProfile, // 更新用戶個人資料
 } from "firebase/auth";
 import { getDatabase, ref, update } from "firebase/database"; // 引入 Firebase 實時數據庫相關函數
@@ -62,9 +63,9 @@ export const authStore = create((set, get) => ({
   },
   
   // 登出功能
-  logout: () => {
-    set({ user: null, loginType: null }); // 清除本地狀態中的用戶資訊
-    auth.signOut(); // 調用 Firebase 登出方法
+  logout: async () => {
+    await signOut(auth);
+    set({ user: null, loginType: null });
   },
   
   // 更新用戶名稱功能 - 同步到 Firebase Auth 和 Realtime Database
@@ -112,8 +113,6 @@ auth.onAuthStateChanged((firebaseUser) => {
   const { setUser, setLoginType, setLoading } = authStore.getState();
   
   if (firebaseUser) {
-    // 添加除錯
-    console.log("Firebase user photoURL:", firebaseUser.photoURL);
     // 用戶已登入，更新本地狀態
     setUser({
       email: firebaseUser.email, // 用戶電子郵件

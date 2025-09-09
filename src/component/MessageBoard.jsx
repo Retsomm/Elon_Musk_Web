@@ -2,16 +2,17 @@ import { useState, useEffect, useRef } from "react";
 import { database, auth } from "../firebase";
 import { ref, push, onValue } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
-import { useToastStore } from "../store/toastStore";
+import { toastStore } from "../store/toastStore";
 import Toast from "./Toast";
+
 function MessageBoard({ memberName }) {
   // 狀態管理
   const [messages, setMessages] = useState([]); // 儲存所有訊息，使用陣列結構存儲多筆留言數據
   const [content, setContent] = useState(""); // 輸入框內容，用於控制表單輸入值
   const [user, setUser] = useState(null); // 當前登入使用者，存儲 Firebase Auth 返回的用戶物件
   const [loading, setLoading] = useState(true); // 是否正在載入，布林值控制載入狀態顯示
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const messagesContainerRef = useRef(null); // 使用 useRef 建立對 DOM 元素的引用，用於控制訊息區塊自動滾動
-  const addToast = useToastStore((state) => state.addToast); // 從全域狀態管理取得 toast 方法
   const MAX_MESSAGE_LENGTH = 100; // 最大字數限制
 
   // 監聽登入狀態
@@ -87,15 +88,22 @@ function MessageBoard({ memberName }) {
         messagesContainerRef.current.scrollHeight;
     }
   }, [messages]); // 依賴於 messages 陣列，當訊息更新時觸發
-  //scrollTop：上方被捲掉、看不到的內容高度。
-  //clientHeight：可見區域高度（留言板外框）。
-  //scrollHeight：全部內容高度（不管有沒有捲軸，內容總長度）。
-  //當 scrollTop + clientHeight = scrollHeight 時，畫面剛好捲到最底，看到最後一則留言。
-    // 處理輸入框內容變更
-    
+
+  // 組件掛載時清理之前的 toast
+  useEffect(() => {
+    toastStore.clear?.(); // 使用可選鏈運算符，避免方法不存在時報錯
+  }, []);
+
+  // 組件卸載時清理 toast
+  useEffect(() => {
+    return () => {
+      toastStore.clear?.();
+    };
+  }, []);
+  // 處理輸入框內容變更
   const handleContentChange = (e) => {
     const inputValue = e.target.value;
-    
+
     // 限制字數不超過最大限制
     if (inputValue.length <= MAX_MESSAGE_LENGTH) {
       setContent(inputValue);
@@ -104,53 +112,51 @@ function MessageBoard({ memberName }) {
 
   // 處理表單提交（送出訊息）
   const handleSubmit = async (e) => {
-    e.preventDefault(); // 阻止表單預設行為，避免頁面重整
+    e.preventDefault();
 
-    // 檢查是否仍在載入中
+    if (isSubmitting) return; // 防止重複提交
+
+    // 集中驗證，只顯示一個 toast
     if (loading) {
-      addToast({ message: "載入中..." });
+      toastStore.info("載入中...");
       return;
     }
 
-    // 檢查用戶是否已登入
     if (!user) {
-      addToast({ message: "請先登入！" });
+      toastStore.warning("請先登入！");
       return;
     }
 
-    // 檢查訊息內容是否為空（去除前後空格）
-    if (!content.trim()) {
-      addToast({ message: "請輸入留言內容！" });
+    const trimmedContent = content.trim();
+    if (!trimmedContent) {
+      toastStore.warning("請輸入留言內容！");
       return;
     }
 
-    // 檢查字數限制
-    if (content.trim().length > MAX_MESSAGE_LENGTH) {
-      addToast({ message: `留言字數不能超過 ${MAX_MESSAGE_LENGTH} 字！` });
+    if (trimmedContent.length > MAX_MESSAGE_LENGTH) {
+      toastStore.error(`留言字數不能超過 ${MAX_MESSAGE_LENGTH} 字！`);
       return;
     }
+
+    setIsSubmitting(true); // 設置提交狀態
 
     try {
-      // 建立資料庫引用
       const messagesRef = ref(database, "messages");
-
-      // 建立新訊息物件，包含所有需要的欄位
       const newMessage = {
-        content: content.trim(), // 去除前後空格
-        timestamp: new Date().toISOString(), // 將日期轉為 ISO 字串格式
-        userId: user.uid, // 用戶唯一標識
-        email: user.email || "", // 用戶電子郵件，可能為空
+        content: trimmedContent,
+        timestamp: new Date().toISOString(),
+        userId: user.uid,
+        email: user.email || "",
       };
 
-      console.log("即將寫入的訊息：", newMessage);
-
-      // 使用 Firebase push 方法寫入資料，自動生成唯一鍵
       push(messagesRef, newMessage);
-
-      setContent(""); // 清空輸入框，重置狀態
+      setContent("");
+      toastStore.success("留言發送成功！");
     } catch (error) {
-      // 錯誤處理：向使用者顯示錯誤提示
-      addToast({ message: "提交留言失敗：" + error.message });
+      console.error("提交留言失敗：", error);
+      toastStore.error("提交留言失敗：" + error.message);
+    } finally {
+      setIsSubmitting(false); // 重置提交狀態
     }
   };
 
@@ -169,9 +175,12 @@ function MessageBoard({ memberName }) {
       ) : null}
 
       {/* 留言板主體 */}
-      <div className="border rounded-lg shadow-md flex flex-col h-[500px] max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto px-4 sm:px-0" >
+      <div className="border rounded-lg shadow-md flex flex-col h-[500px] max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto px-4 sm:px-0">
         {/* 訊息顯示區域，使用 ref 獲取 DOM 元素引用，用於控制滾動 */}
-        <div className="flex-1 p-4 overflow-y-auto overflow-x-hidden" ref={messagesContainerRef}>
+        <div
+          className="flex-1 p-4 overflow-y-auto overflow-x-hidden"
+          ref={messagesContainerRef}
+        >
           {loading ? (
             <p className="text-center">載入中...</p>
           ) : user ? (
@@ -199,7 +208,9 @@ function MessageBoard({ memberName }) {
                           {/* 使用字串分割操作取得使用者名稱 */}
                         </p>
                         <div className="bg-base-400 p-2 rounded-lg border">
-                          <p className="text-base-800 break-words whitespace-pre-wrap">{message.content}</p>
+                          <p className="text-base-800 break-words whitespace-pre-wrap">
+                            {message.content}
+                          </p>
                           <p className="text-xs mt-1">
                             {/* 顯示時間（只顯示時:分） */}
                             {new Date(message.timestamp).toLocaleString(
@@ -219,7 +230,9 @@ function MessageBoard({ memberName }) {
                   {message.userId === user.uid && (
                     <div className="flex items-end max-w-[75%]">
                       <div className="bg-base-500 p-2 rounded-lg border w-full">
-                        <p className="break-words whitespace-pre-wrap">{message.content}</p>
+                        <p className="break-words whitespace-pre-wrap">
+                          {message.content}
+                        </p>
                         <p className="text-xs mt-1 text-right">
                           {/* 顯示時間（只顯示時:分） */}
                           {new Date(message.timestamp).toLocaleString("zh-TW", {
@@ -254,9 +267,14 @@ function MessageBoard({ memberName }) {
               />
               <button
                 type="submit"
-                className="ml-2 bg-blue-500 p-2 rounded-lg hover:bg-blue-600 transition"
+                disabled={isSubmitting} // 添加 disabled 屬性
+                className={`ml-2 p-2 rounded-lg transition ${
+                  isSubmitting
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-500 hover:bg-blue-600"
+                }`}
               >
-                傳送
+                {isSubmitting ? "發送中..." : "傳送"}
               </button>
             </div>
             {/* 字數統計 */}

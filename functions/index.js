@@ -94,7 +94,6 @@ export const getNews = onRequest({
      */
     const fetchNewsFromNewsAPI = async (query) => {
       try {
-        console.log(`正在搜索: "${query}"`);
         
         const response = await axios.get("https://newsapi.org/v2/everything", {
           params: {
@@ -158,7 +157,6 @@ export const getNews = onRequest({
             imageUrl: item.urlToImage || null
           }));
 
-        console.log(`搜索 "${query}" 找到 ${articles.length} 篇優質文章`);
         return articles;
 
       } catch (error) {
@@ -257,7 +255,6 @@ export const getNews = onRequest({
     };
 
     try {
-      console.log('開始抓取 Elon Musk 相關英文新聞...');
       const allResults = [];
 
       /**
@@ -283,7 +280,6 @@ export const getNews = onRequest({
         }
       });
 
-      console.log(`總共收集到 ${allResults.length} 篇文章`);
 
       /**
        * 文章去重處理
@@ -314,7 +310,6 @@ export const getNews = onRequest({
         return true;
       });
 
-      console.log(`去重後剩餘 ${uniqueArticles.length} 篇文章`);
 
       /**
        * 文章排序處理
@@ -354,7 +349,6 @@ export const getNews = onRequest({
         ...topArticles.slice(10) // 未驗證的文章
       ].slice(0, 25);
 
-      console.log(`最終返回 ${finalArticles.length} 篇文章`);
 
       /**
        * 回傳結果組裝

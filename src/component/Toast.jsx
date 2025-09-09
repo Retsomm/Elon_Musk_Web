@@ -1,46 +1,52 @@
-import { useToastStore } from "../store/toastStore";
-import { useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 
+// Toast 容器組件
+// 使用 react-hot-toast 的 Toaster 組件來顯示所有 toast
 export default function Toast() {
-  // 從 Zustand store 獲取 toasts 陣列與 removeToast 方法
-  // toasts: 包含多個 toast 訊息物件的陣列，每個物件有 id, message, type 屬性
-  // removeToast: 根據 id 移除特定 toast 的方法
-  const { toasts, removeToast } = useToastStore();
 
-  // useEffect hook: 處理 toast 的自動移除邏輯
-  // 依賴陣列包含 toasts 和 removeToast，當它們變化時重新執行
-  useEffect(() => {
-    // 如果沒有 toast，直接返回，不執行後續邏輯
-    if (toasts.length === 0) return;
-
-    // 使用 map 方法遍歷 toasts 陣列，為每個 toast 設置定時器
-    // 返回一個包含所有計時器 ID 的新陣列
-    const timers = toasts.map(
-      (toast) => setTimeout(() => removeToast(toast.id), 1500) // 1.5 秒後自動移除 toast
-    );
-
-    // 清理函數：當組件卸載或 effect 重新執行前，清除所有定時器
-    // 防止記憶體洩漏和過時的 state 更新
-    return () => timers.forEach((timer) => clearTimeout(timer));
-  }, [toasts, removeToast]);
 
   return (
-    <div className="fixed top-6 right-6 z-[1001] flex flex-col gap-2 mt-16">
-      {/* 使用 map 方法將 toasts 陣列轉換為 JSX 元素陣列 */}
-      {toasts.map((toast) => (
-        <div
-          key={toast.id} // 使用唯一 id 作為 React key 提升渲染效能
-          className={`px-4 py-2 rounded shadow-lg animate-fade-in font-bold cursor-pointer ${
-            // 條件渲染：根據 toast.type 決定使用不同的樣式類別
-            toast.type === "success"
-              ? "bg-green-500 text-white"
-              : "bg-blue-600 text-white"
-          }`}
-          onClick={() => removeToast(toast.id)} // 點擊時移除特定 toast
-        >
-          {toast.message} {/* 顯示 toast 的訊息內容 */}
-        </div>
-      ))}
-    </div>
+    <Toaster
+      position="top-right"
+      reverseOrder={false}
+      gutter={8}
+      containerClassName=""
+      containerStyle={{
+        top: "88px", // 考慮到 header 高度，調整位置
+      }}
+      toastOptions={{
+        // 全局默認設定
+        className: "",
+        duration: 4000,
+        style: {
+          background: "#363636",
+          color: "#fff",
+        },
+        // 成功通知樣式
+        success: {
+          duration: 3000,
+          style: {
+            background: "#22c55e",
+            color: "#fff",
+          },
+        },
+        // 錯誤通知樣式
+        error: {
+          duration: 4000,
+          style: {
+            background: "#ef4444",
+            color: "#fff",
+          },
+        },
+        // 載入中 toast 樣式
+        loading: {
+          duration: Infinity, // 載入中的 toast 應該手動關閉
+          style: {
+            background: "#3b82f6",
+            color: "#fff",
+          },
+        },
+      }}
+    />
   );
 }
