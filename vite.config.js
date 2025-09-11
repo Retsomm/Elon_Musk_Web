@@ -48,7 +48,7 @@ export default defineConfig({
           // 值為陣列，包含要包含在該塊中的模組
           vendor: ['react', 'react-dom'], // React 核心庫
           router: ['react-router-dom'], // 路由相關庫
-          ui: ['lucide-react', 'class-variance-authority', 'clsx'], // UI 相關庫
+          ui: ['lucide-react'], // UI 相關庫
         },
       },
     },

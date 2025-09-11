@@ -1,6 +1,6 @@
 // src/App.jsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
 import { themeStore } from "./store/themeStore";
 import "./App.css";
 import "./index.css";
@@ -18,35 +18,38 @@ const ProtectedRoute = lazy(() => import("./component/ProtectedRoute"));
 const InfoItem = lazy(() => import("./pages/InfoItem"));
 const ErrorBoundary = lazy(() => import("./component/ErrorBoundary"));
 import Toast from "./component/Toast";
+
 function App() {
   const { currentTheme } = themeStore();
   return (
-    <ErrorBoundary>
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Layout currentTheme={currentTheme} />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/life" element={<Life />} />
-            <Route path="/company" element={<Company />} />
-            <Route path="/company/:name" element={<CompanyItem />} />
-            <Route path="/news" element={<News />} />
-            <Route path="/info" element={<Info />} />
-            <Route path="/info/:type/:id" element={<InfoItem />} />
-            <Route path="/login" element={<Login />} />
-            <Route
-              path="/member"
-              element={
-                <ProtectedRoute>
-                  <Member />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-      <Toast />
-    </ErrorBoundary>
+    <Suspense fallback={<div>Loading...</div>}>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Routes>
+            <Route path="/" element={<Layout currentTheme={currentTheme} />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/life" element={<Life />} />
+              <Route path="/company" element={<Company />} />
+              <Route path="/company/:name" element={<CompanyItem />} />
+              <Route path="/news" element={<News />} />
+              <Route path="/info" element={<Info />} />
+              <Route path="/info/:type/:id" element={<InfoItem />} />
+              <Route path="/login" element={<Login />} />
+              <Route
+                path="/member"
+                element={
+                  <ProtectedRoute>
+                    <Member />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+        <Toast />
+      </ErrorBoundary>
+    </Suspense>
   );
 }
 
