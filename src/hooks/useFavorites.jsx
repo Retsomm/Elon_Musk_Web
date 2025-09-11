@@ -13,7 +13,13 @@ import { database } from "../firebase";
  * @param {string} defaultContent - 預設內容，收藏時儲存的初始內容
  * @returns {Object} 包含收藏狀態和操作方法的物件
  */
-export const useFavoriteItem = (type, id, noteIdx, defaultContent = "") => {
+export const useFavoriteItem = (
+  type,
+  id,
+  noteIdx,
+  defaultContent = "",
+  title
+) => {
   // Hook: 取得當前登入用戶的 ID
   const userId = useFirebaseUserId();
 
@@ -49,7 +55,11 @@ export const useFavoriteItem = (type, id, noteIdx, defaultContent = "") => {
       toastStore.success("已移除收藏");
     } else {
       // 資料庫操作：新增收藏，儲存物件 { status: true, content: defaultContent }
-      set(favRef, { status: true, content: defaultContent });
+      set(favRef, {
+        status: true,
+        content: defaultContent,
+        title: title || `${type} - ${id}`,
+      });
 
       toastStore.success("已加入收藏");
     }

@@ -161,6 +161,7 @@ const InfoItem = () => {
                   id={String(id)}
                   noteIdx={i}
                   defaultContent={t}
+                  title={item.title || `${type} - ${id}`}
                 />
               </li>
               <div className="divider m-0"></div>

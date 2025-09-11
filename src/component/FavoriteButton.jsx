@@ -8,12 +8,12 @@ import { useFavoriteItem } from "../hooks/useFavorites";
  * @param {string} defaultContent - 收藏項目的預設內容，預設為空字串
  * @returns {JSX.Element} 渲染收藏按鈕
  */
-function FavoriteButton({ type, id, noteIdx, defaultContent = "" }) {
+function FavoriteButton({ type, id, noteIdx, defaultContent = "", title }) {
   /**
    * 使用自定義 Hook 處理收藏功能
    * - toggleFavorite: 切換收藏狀態的函式，會在點擊按鈕時調用
    * - isFavorited: 布林值，表示當前項目是否已被收藏
-   * 
+   *
    * useFavoriteItem Hook 負責:
    * 1. 從資料庫或狀態管理中檢查項目是否已收藏
    * 2. 提供切換收藏狀態的方法，可能涉及資料庫操作
@@ -23,12 +23,16 @@ function FavoriteButton({ type, id, noteIdx, defaultContent = "" }) {
     type,
     id,
     noteIdx,
-    defaultContent
+    defaultContent,
+    title
   );
 
   return (
     <>
-      <button className="btn btn-square btn-ghost bg-transparent hover:bg-transparent" onClick={toggleFavorite}>
+      <button
+        className="btn btn-square btn-ghost bg-transparent hover:bg-transparent"
+        onClick={toggleFavorite}
+      >
         {/* 條件渲染: 根據 isFavorited 狀態顯示不同的心形圖示 */}
         {isFavorited ? (
           // 已收藏狀態 - 實心紅色愛心
