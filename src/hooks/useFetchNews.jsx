@@ -2,12 +2,20 @@ import useSWR from "swr";
 import { getFunctions, httpsCallable } from "firebase/functions";
 
 /**
- * 取得台灣當天日期字串 (yyyy-mm-dd)
- * @returns {string} 格式化為 'yyyy-mm-dd' 的台灣日期
+ * 取得台灣時區（UTC+8）當前日期的字串 (格式: YYYY-MM-DD)。
+ *
+ * 原理：
+ * - 先取得現在的 UTC 時間。
+ * - 再將 UTC 小時數加 8，調整為台灣時區。
+ * - 以 ISO 格式轉字串，並擷取前 10 碼（即日期部分）。
+ *
+ * @returns {string} 例如 "2025-09-13"
  */
 export function getTaiwanDateString() {
   const now = new Date();
-  now.setHours(now.getHours() + 8 - now.getTimezoneOffset() / 60);
+  // UTC + 8 小時，將日期調整到台灣時區
+  now.setUTCHours(now.getUTCHours() + 8);
+  // 轉成 ISO 字串並擷取 YYYY-MM-DD
   return now.toISOString().slice(0, 10);
 }
 
@@ -18,78 +26,86 @@ export function getTaiwanDateString() {
  * @returns {Array} 合併後的文章陣列，最多15篇，按時間排序
  */
 function mergeAndDedupeArticles(newArticles, existingArticles = []) {
+  // 將新文章和現有文章合併成一個陣列
   const allArticles = [...newArticles, ...existingArticles];
 
-  // 根據標題和來源去重
+  // 根據標題和來源去重：過濾出唯一的文章，只保留第一次出現的
   const uniqueArticles = allArticles.filter((article, index, arr) => {
     return (
+      // 回傳陣列中第一個 title 和 source 都跟目前 article 一樣的元素的索引值
       arr.findIndex(
         (a) => a.title === article.title && a.source === article.source
       ) === index
     );
   });
 
-  // 按發布時間排序（最新在前）
+  // 按發布時間排序（最新在前），使用 pubDate 或 timestamp 作為排序依據
   const sortedArticles = uniqueArticles.sort((a, b) => {
     const dateA = new Date(a.pubDate || a.timestamp);
     const dateB = new Date(b.pubDate || b.timestamp);
-    return dateB - dateA;
+    return dateB - dateA; // 降序排序，最新在前
   });
 
-  // 限制最多15篇
+  // 限制最多15篇，返回前15篇
   return sortedArticles.slice(0, 15);
 }
 
 /**
- * SWR fetcher 函數 - 使用 Firebase httpsCallable
- * @returns {Promise<Object>} 處理後的新聞資料物件
+ * SWR fetcher 函數 - 使用 Firebase httpsCallable 獲取新聞資料
+ * 負責呼叫 Firebase Cloud Function 並處理回應
+ * @returns {Promise<Object>} 處理後的新聞資料物件，包含文章列表、時間戳、日期、新增數量、總數量等
  */
 const fetcher = async () => {
   try {
-    // 初始化 Firebase Functions
+    // 初始化 Firebase Functions 實例
     const functions = getFunctions();
+    // 獲取名為 "getNews" 的 Cloud Function
     const getNews = httpsCallable(functions, "getNews");
 
-    // 呼叫 Cloud Function
+    // 呼叫 Cloud Function，傳入參數限制最多40個新聞
     const result = await getNews({ limit: 40 });
 
-    // 改善回應資料檢查
+    // 記錄 Firebase Function 的回應以便除錯
     console.log("Firebase Function 回應:", result);
 
-    // 檢查回應結構
+    // 檢查回應是否為有效物件
     if (!result || typeof result !== "object") {
       throw new Error("Firebase Function 回應格式不正確");
     }
 
+    // 處理 API 回傳的資料格式：有些 API 將資料放在 data 欄位，有些放在 articles
+    // 如果兩者都沒有，拋出錯誤
     let data;
     if (result.data) {
       data = result.data;
     } else if (result.articles) {
-      // 如果直接在 result 中有 articles
+      // 如果直接在 result 中有 articles，但後續需要 data.metadata，所以不直接設為 result.articles
       data = result;
     } else {
       throw new Error("Firebase Function 回應中缺少 data 或 articles 欄位");
     }
 
+    // 提取文章陣列，如果沒有則為空陣列
     const newArticles = data.articles || [];
 
+    // 如果沒有新文章，記錄警告並返回空資料結構，使用 fallbackData
     if (newArticles.length === 0) {
       console.warn("API 回應中沒有新聞資料，使用歷史快取");
-      // 不拋出錯誤，而是返回空陣列，讓 SWR 使用 fallbackData
       return {
         articles: [],
-        timestamp: new Date().toISOString(),
-        date: getTaiwanDateString(),
-        newCount: 0,
-        totalCount: 0,
-        metadata: data.metadata || {},
-        error: "沒有新的新聞資料",
+        timestamp: new Date().toISOString(), // 當前時間戳
+        date: getTaiwanDateString(), // 台灣時區日期
+        newCount: 0, // 新增文章數量
+        totalCount: 0, // 總文章數量
+        metadata: data.metadata || {}, // 元資料
+        error: "沒有新的新聞資料", // 錯誤訊息
       };
     }
 
-    // 獲取現有的歷史新聞
+    // 嘗試從 localStorage 獲取現有的歷史新聞快取
     let existingArticles = [];
     try {
+      // newsHistoryCache 是自訂的 localStorage key，用來存放新聞快取資料
       const cache = localStorage.getItem("newsHistoryCache");
       if (cache) {
         const parsed = JSON.parse(cache);
@@ -99,26 +115,27 @@ const fetcher = async () => {
       console.warn("讀取歷史快取失敗:", e);
     }
 
-    // 合併新舊新聞
+    // 合併新舊新聞，並去重和排序
     const mergedArticles = mergeAndDedupeArticles(
       newArticles,
       existingArticles
     );
 
+    // 返回處理後的資料物件
     return {
-      articles: mergedArticles,
-      timestamp: new Date().toISOString(),
-      date: getTaiwanDateString(),
-      newCount: newArticles.length,
-      totalCount: mergedArticles.length,
-      metadata: data.metadata || {},
+      articles: mergedArticles, // 合併後的文章列表
+      timestamp: new Date().toISOString(), // 當前時間戳
+      date: getTaiwanDateString(), // 台灣時區日期
+      newCount: newArticles.length, // 新增文章數量
+      totalCount: mergedArticles.length, // 總文章數量
+      metadata: data.metadata || {}, // 元資料
     };
   } catch (error) {
+    // 記錄詳細錯誤資訊
     console.error("Firebase Function 詳細錯誤:", error);
 
-    // Firebase Functions 錯誤處理
+    // 處理 Firebase Functions 特定錯誤，提供更友好的錯誤訊息
     if (error.code) {
-      // 針對常見的 Firebase 錯誤提供更友好的錯誤訊息
       switch (error.code) {
         case "functions/internal":
           throw new Error(`伺服器內部錯誤，請稍後重試`);
@@ -132,6 +149,7 @@ const fetcher = async () => {
           throw new Error(`服務錯誤 (${error.code}): ${error.message}`);
       }
     }
+    // 如果不是 Firebase 錯誤，直接拋出原錯誤
     throw error;
   }
 };
@@ -140,23 +158,32 @@ const fetcher = async () => {
  * 自訂 Hook：負責「顯示、快取、重試」新聞資料
  * 使用 SWR 優化 API 請求和快取機制，並維護歷史新聞
  *
- * @param {Object} swrOptions - 覆寫 SWR 設定（可選）
+ * @param {Object} swrOptions - 覆寫 SWR 設定（可選），允許自訂 SWR 行為
  * @returns {{ data: any, error: any, isLoading: boolean, mutate: Function, isValidating: boolean }}
+ *   - data: 獲取的新聞資料物件
+ *   - error: 錯誤物件，如果有錯誤
+ *   - isLoading: 是否正在載入資料
+ *   - mutate: 手動觸發重新獲取資料的函數
+ *   - isValidating: 是否正在驗證資料（重新獲取中）
  */
+//如果呼叫 useFetchNews() 時沒有傳入任何參數，swrOptions 會自動是一個空物件 {}，這樣在函式內部就可以安全地使用 swrOptions 的屬性
 export default function useFetchNews(swrOptions = {}) {
+  // 定義 SWR 的預設選項
   const defaultOptions = {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: true,
-    refreshInterval: 0,
-    errorRetryCount: 3,
-    errorRetryInterval: 2000,
-    dedupingInterval: 5 * 60 * 1000,
+    revalidateOnFocus: false, // 視窗聚焦時不重新驗證
+    revalidateOnReconnect: true, // 網路重新連線時重新驗證
+    refreshInterval: 0, // 不自動刷新
+    errorRetryCount: 3, // 錯誤重試次數
+    errorRetryInterval: 2000, // 重試間隔（毫秒）
+    dedupingInterval: 5 * 60 * 1000, // 去重間隔（5分鐘）
+    // 預設使用歷史快取作為初始資料
     fallbackData: (() => {
+      // 嘗試從 localStorage 載入歷史快取作為 fallback
       try {
         const cache = localStorage.getItem("newsHistoryCache");
         if (cache) {
           const parsed = JSON.parse(cache);
-
+          // 確保快取資料格式正確且有文章
           if (Array.isArray(parsed.articles) && parsed.articles.length > 0) {
             console.log("使用歷史快取資料:", parsed.articles.length, "篇新聞");
             return parsed;
@@ -164,19 +191,21 @@ export default function useFetchNews(swrOptions = {}) {
         }
       } catch (e) {
         console.warn("讀取歷史快取失敗:", e);
+        // 如果讀取失敗，移除損壞的快取
         localStorage.removeItem("newsHistoryCache");
       }
-      return null;
+      return null; // 沒有快取時返回 null
     })(),
     onSuccess: (data) => {
+      // 成功獲取資料時，將資料儲存到 localStorage
       if (data && data.articles) {
         try {
-          // 保存到歷史快取
+          // 保存到新的快取鍵
+          //第一個參數 "newsCache"：這是鍵（key），用來標識存儲在 localStorage 中的數據項。在這裡，它是新聞快取資料的唯一標識符。
+          //第二個參數 JSON.stringify(data)：這是值（value），將新聞資料物件 data 轉換為 JSON 字串格式，因為 localStorage 只支援存儲字串類型。JSON.stringify 將物件序列化為字串，以便存儲和後續解析。
           localStorage.setItem("newsHistoryCache", JSON.stringify(data));
-
           // 也保存到舊的快取鍵以維持向後兼容
           localStorage.setItem("newsCache", JSON.stringify(data));
-
           console.log(
             `成功更新新聞: 新增 ${data.newCount} 篇，總計 ${data.totalCount} 篇`
           );
@@ -186,9 +215,8 @@ export default function useFetchNews(swrOptions = {}) {
       }
     },
     onError: (error) => {
+      // 發生錯誤時，記錄錯誤並嘗試使用歷史快取
       console.error("SWR 錯誤:", error.message);
-
-      // 當發生錯誤時，嘗試使用歷史快取
       try {
         const cache = localStorage.getItem("newsHistoryCache");
         if (cache) {
@@ -207,21 +235,24 @@ export default function useFetchNews(swrOptions = {}) {
     },
   };
 
-  // 使用固定的 key，因為我們不再需要 URL
+  // 使用 SWR Hook 獲取資料，使用固定 key "getNews"
   const { data, error, isLoading, mutate, isValidating } = useSWR(
-    "getNews", // 固定的 key
-    fetcher,
-    { ...defaultOptions, ...swrOptions }
+    "getNews", // 固定的 key，因為不再依賴 URL，數據來源是 Firebase Cloud Function，而不是傳統的 REST API URL
+    fetcher, // 資料獲取函數
+    { ...defaultOptions, ...swrOptions } // 合併預設和自訂選項
   );
 
+  // 返回 SWR 的狀態和資料
   return { data, error, isLoading, mutate, isValidating };
 }
 
 /**
  * 清除歷史新聞快取的工具函數
+ * 移除 localStorage 中的新聞快取資料
  */
 export function clearNewsHistory() {
   try {
+    // 移除新的和舊的快取鍵
     localStorage.removeItem("newsHistoryCache");
     localStorage.removeItem("newsCache");
     console.log("歷史新聞快取已清除");

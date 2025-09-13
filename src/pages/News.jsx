@@ -12,6 +12,8 @@ export default function News() {
    */
   const retryFetchNews = async () => {
     try {
+      //第一個參數 undefined：在 SWR 中，mutate 的第一個參數通常是 key（用於識別要更新的資料）。當傳入 undefined 時，會重新驗證所有快取的資料。
+      //第二個參數 { revalidate: true }：表示執行重新驗證（revalidation），也就是強制 SWR 重新向伺服器請求最新的資料並更新快取。
       await mutate(undefined, { revalidate: true });
     } catch (err) {
       console.error("手動重新抓取失敗:", err);
