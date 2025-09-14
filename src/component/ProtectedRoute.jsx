@@ -12,7 +12,7 @@ function ProtectedRoute({ children }) {
 
   // 如果沒有登入，導向登入頁面
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
   // 已登入則顯示子元件
   return children;

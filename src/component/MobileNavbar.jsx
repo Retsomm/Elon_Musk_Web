@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { authStore } from "../store/authStore";
 
 export default function MobileNavbar({ isNavOpen, toggleNav }) {
@@ -22,31 +22,45 @@ export default function MobileNavbar({ isNavOpen, toggleNav }) {
 
   return (
     <div
-      className={`hamLists z-999 mt-15 p-5 flex align-middle justify-between shadow-2xl bg-base-100 md:hidden relative
-      // 條件渲染使用模板字符串動態控制CSS類
+      className={`hamLists z-[999] fixed top-16 w-full p-5 flex align-middle justify-between shadow-2xl bg-base-100 md:hidden
       ${isNavOpen ? "max-h-fit" : "hidden"} 
       `}
     >
       <ul className="flex flex-col justify-evenly items-left w-full">
         <li>
-          <Link to="/company" className="navLink" onClick={toggleNav}>
+          <NavLink to="/" className={({ isActive }) => 
+              isActive ? "navLink active" : "navLink"
+            } onClick={toggleNav}>
+            首頁
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/company" className={({ isActive }) => 
+              isActive ? "navLink active" : "navLink"
+            } onClick={toggleNav}>
             公司
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/life" className="navLink" onClick={toggleNav}>
+          <NavLink to="/life" className={({ isActive }) => 
+              isActive ? "navLink active" : "navLink"
+            } onClick={toggleNav}>
             生平
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/news" className="navLink" onClick={toggleNav}>
+          <NavLink to="/news" className={({ isActive }) => 
+              isActive ? "navLink active" : "navLink"
+            } onClick={toggleNav}>
             新聞
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/info" className="navLink" onClick={toggleNav}>
+          <NavLink to="/info" className={({ isActive }) => 
+              isActive ? "navLink active" : "navLink"
+            } onClick={toggleNav}>
             更多消息
-          </Link>
+          </NavLink>
         </li>
 
         <li>
@@ -86,9 +100,11 @@ export default function MobileNavbar({ isNavOpen, toggleNav }) {
               </div>
             </details>
           ) : (
-            <Link to="/login" className="navLink" onClick={toggleNav}>
+            <NavLink to="/login" className={({ isActive }) => 
+              isActive ? "navLink active" : "navLink"
+            } onClick={toggleNav}>
               登入
-            </Link>
+            </NavLink>
           )}
         </li>
       </ul>

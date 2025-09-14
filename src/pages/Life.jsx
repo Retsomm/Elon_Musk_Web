@@ -4,15 +4,11 @@ import Timeline from "../component/Timeline";
 import events from "../data/LifeEvent.json";
 
 function Life() {
-  // useState Hook: 創建並管理本地狀態
   // modalImg 狀態用於儲存當前被選中顯示的媒體對象(包含類型和URL)
   // 初始值為 null，表示沒有選中任何媒體
   const [modalImg, setModalImg] = useState(null);
-
   // modalOpen 狀態用於控制模態框的顯示與隱藏
-  // 布林值，true表示開啟，false表示關閉
   const [modalOpen, setModalOpen] = useState(false);
-
   // 資料轉換處理：使用陣列的 map 方法將原始 JSON 資料轉換成 Timeline 元件可用的格式
   // 1. 遍歷 eventsData.events 陣列中的每個事件對象
   // 2. 為每個事件創建新的對象結構，保留需要的屬性並重命名/重組某些屬性
@@ -38,7 +34,7 @@ function Life() {
   };
 
   return (
-    <div className="w-full flex justify-center p-8">
+    <div className="w-full flex justify-center mt-24 p-6">
       {/* 媒體顯示彈出視窗 */}
       <MediaModal
         id="life_modal"

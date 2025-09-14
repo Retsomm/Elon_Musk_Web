@@ -105,7 +105,7 @@ function UnityParticleSystem() {
       <div className="relative flex items-center justify-center text-center">
         <div className="relative z-10 px-6 max-w-3xl">
           <h1 className="sm:text-6xl text-3xl font-bold mt-10 not-first:drop-shadow-lg">
-            Elon Musk： <br /> 改變世界的實踐家
+            Elon Musk <br /> 改變世界的實踐家
           </h1>
           <p className="text-xl mt-10 leading-loose">
             馬斯克不只是一位企業家，更是一位推動人類科技進步的夢想家。他用創新和勇氣，挑戰看似不可能的夢想，從電動車到太空探索，不斷顛覆我們對未來的想像。

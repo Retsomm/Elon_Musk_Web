@@ -4,7 +4,7 @@ import useFetchNews from "../hooks/useFetchNews";
  * 使用自訂 Hook 進行新聞資料獲取、快取及重試
  */
 export default function News() {
-  // 移除 URL 參數，現在使用 Firebase httpsCallable
+  // 使用自訂 Hook 獲取新聞資料及相關狀態
   const { data, error, isLoading, mutate, isValidating } = useFetchNews();
 
   /**
@@ -19,7 +19,7 @@ export default function News() {
       console.error("手動重新抓取失敗:", err);
     }
   };
-
+  // 從 data 中提取新聞列表和最後更新時間
   const news = data?.articles || [];
   const lastUpdated = data?.timestamp;
 
@@ -35,10 +35,9 @@ export default function News() {
           disabled={isLoading || isValidating}
         >
           {isLoading || isValidating ? (
-            <>
-              <span className="loading loading-spinner loading-sm"></span>
+            <span className="loading loading-spinner loading-sm">
               重新載入中...
-            </>
+            </span>
           ) : (
             "重新載入"
           )}
@@ -48,7 +47,7 @@ export default function News() {
   }
 
   return (
-    <div>
+    <div className="mt-16">
       {/* 控制面板 */}
       <div className="text-center mb-6 p-4 rounded-lg">
         <button

@@ -46,69 +46,57 @@ function InfoSkeleton({ type, count }) {
 // 通用 item 渲染器
 function renderInfoItem(item, type) {
   // type: "book" | "youtube" | "podcast"
-  let imgClass =
-    type === "book"
-      ? "w-32 h-48 object-cover mb-2 rounded"
-      : type === "youtube"
-      ? "w-full h-40 object-cover rounded mb-2"
-      : "w-16 h-16 object-cover rounded mr-4";
-  let width = type === "book" ? 128 : type === "youtube" ? 320 : 64;
-  let height = type === "book" ? 192 : type === "youtube" ? 160 : 64;
-  let link = `/info/${type}/${item.id}`;
+  const config = {
+    book: {
+      imgClass: "w-32 h-48 object-cover mb-2 rounded",
+      width: 128,
+      height: 192,
+      cardClass: "card w-70 shadow-md hover:shadow-lg mx-auto",
+      containerClass: "card-body items-center text-center"
+    },
+    youtube: {
+      imgClass: "w-full h-40 object-cover rounded mb-2",
+      width: 320,
+      height: 160,
+      cardClass: "card w-80 shadow-md hover:shadow-lg mx-auto",
+      containerClass: "card-body items-center text-center"
+    },
+    podcast: {
+      imgClass: "w-16 h-16 object-cover rounded mr-4",
+      width: 64,
+      height: 64,
+      cardClass: "card sm:w-1/4 shadow-md",
+      containerClass: "card-body flex items-center"
+    }
+  };
 
-  if (type === "podcast") {
-    return (
-      <li key={item.url} className="card w-1/4 shadow-md">
-        <div className="card-body flex items-center">
-          {item.img && (
-            <img
-              src={item.img}
-              alt={item.title}
-              width={width}
-              height={height}
-              className={imgClass}
-              loading="lazy"
-            />
-          )}
-          <p className="text-lg font-medium mb-2 leading-loose">{item.title}</p>
-          <Link to={link} className="btn btn-primary w-fit">
-            查看更多
-          </Link>
-        </div>
-      </li>
-    );
-  } else {
-    return (
-      <div
-        key={item.url}
-        className={
-          type === "youtube"
-            ? "card w-80 shadow-md hover:shadow-lg mx-auto"
-            : "card w-70 shadow-md hover:shadow-lg mx-auto"
-        }
-      >
-        <div className="card-body items-center text-center">
-          {item.img && (
-            <img
-              src={item.img}
-              alt={item.title}
-              width={width}
-              height={height}
-              className={imgClass}
-              loading="lazy"
-            />
-          )}
-          <p className="text-lg font-medium mb-2 leading-loose">{item.title}</p>
-          <Link to={link} className="btn btn-primary w-fit">
-            查看更多
-          </Link>
-        </div>
+  const { imgClass, width, height, cardClass, containerClass } = config[type];
+  const link = `/info/${type}/${item.id}`;
+  const ContainerTag = type === "podcast" ? "li" : "div";
+
+  return (
+    <ContainerTag key={item.url} className={cardClass}>
+      <div className={containerClass}>
+        {item.img && (
+          <img
+            src={item.img}
+            alt={item.title}
+            width={width}
+            height={height}
+            className={imgClass}
+            loading="lazy"
+          />
+        )}
+        <p className="text-lg font-medium mb-2 leading-loose">{item.title}</p>
+        <Link to={link} className="btn btn-primary w-fit">
+          查看更多
+        </Link>
       </div>
-    );
-  }
+    </ContainerTag>
+  );
 }
 
-// 高階 Section 元件
+// Section 元件
 function InfoSection({ title, isLoading, items, type }) {
   // type: "book" | "youtube" | "podcast"
   const skeletonCount = type === "book" ? 2 : type === "youtube" ? 6 : 3;
@@ -116,7 +104,7 @@ function InfoSection({ title, isLoading, items, type }) {
 
   return (
     <div>
-      <h2 className="text-3xl font-bold mb-4 text-center">{title}</h2>
+      <h2 className="text-3xl font-bold my-4 text-center">{title}</h2>
       <SectionTag className="flex flex-wrap justify-center gap-4">
         {isLoading ? (
           <InfoSkeleton type={type} count={skeletonCount} />
@@ -136,7 +124,6 @@ function Info() {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState("");
-
   useEffect(() => {
     setData({
       books: books,
@@ -147,41 +134,42 @@ function Info() {
   }, []);
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
+    <div className="mx-auto mt-16">
       {/* 篩選表單 */}
-      <form className="filter flex justify-center mt-10">
-        <input
-          className="btn btn-square"
-          type="reset"
-          value="×"
-          onClick={() => setFilter("")}
-        />
-        <input
-          className="btn"
-          type="radio"
-          name="frameworks"
-          aria-label="Books"
-          checked={filter === "books"}
-          onChange={() => setFilter("books")}
-        />
-        <input
-          className="btn"
-          type="radio"
-          name="frameworks"
-          aria-label="Youtube"
-          checked={filter === "youtube"}
-          onChange={() => setFilter("youtube")}
-        />
-        <input
-          className="btn"
-          type="radio"
-          name="frameworks"
-          aria-label="Podcasts"
-          checked={filter === "podcasts"}
-          onChange={() => setFilter("podcasts")}
-        />
-      </form>
-
+      <div className="sticky top-20 z-50 flex justify-center">
+        <form className="filter flex justify-center m-4 gap-2">
+          <input
+            className="btn btn-square"
+            type="reset"
+            value="×"
+            onClick={() => setFilter("")}
+          />
+          <input
+            className="btn"
+            type="radio"
+            name="frameworks"
+            aria-label="Books"
+            checked={filter === "books"}
+            onChange={() => setFilter("books")}
+          />
+          <input
+            className="btn"
+            type="radio"
+            name="frameworks"
+            aria-label="Youtube"
+            checked={filter === "youtube"}
+            onChange={() => setFilter("youtube")}
+          />
+          <input
+            className="btn"
+            type="radio"
+            name="frameworks"
+            aria-label="Podcasts"
+            checked={filter === "podcasts"}
+            onChange={() => setFilter("podcasts")}
+          />
+        </form>
+      </div>
       {(filter === "" || filter === "books") && (
         <InfoSection
           title="Books"

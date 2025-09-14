@@ -9,7 +9,6 @@ const InfoItem = () => {
   // type可能是'book', 'youtube', 或'podcast'
   // id是該內容的唯一識別符
   const { type, id } = useParams();
-
   // 物件資料處理: 使用物件映射表統一三種不同內容類型的資料提取邏輯
   // 每種類型包含:
   // - source: 資料來源陣列
@@ -30,7 +29,7 @@ const InfoItem = () => {
     podcast: {
       source: podcasts,
       notesKey: "timestamps",
-      title: "",
+      title: "timestamps",
     },
   };
 
@@ -45,7 +44,6 @@ const InfoItem = () => {
   if (!item) {
     return <div className="text-center mt-10">找不到資料</div>;
   }
-
   // 條件渲染函數: 根據不同內容類型渲染專屬UI
   const renderTypeSpecificContent = () => {
     if (type === "book") {
@@ -75,14 +73,10 @@ const InfoItem = () => {
         </>
       );
     } else if (type === "youtube") {
-      // 字串處理: 使用正則表達式從YouTube URL中提取影片ID
-      let youtubeId = "";
-      if (item.url) {
-        const match = item.url.match(
-          /(?:v=|\/embed\/|\.be\/)([A-Za-z0-9_-]{11})/
-        );
-        youtubeId = match ? match[1] : "";
-      }
+      // 如果 item.url 是 null 或 undefined，youtubeId 保持為空字符串
+      const youtubeId =
+        item.url?.match(/(?:v=|\/embed\/|\.be\/)([A-Za-z0-9_-]{11})/)?.[1] ||
+        "";
 
       return (
         <div className="aspect-w-16 aspect-h-9 mb-4">
@@ -97,25 +91,19 @@ const InfoItem = () => {
     } else if (type === "podcast") {
       // 字串處理: 使用正則表達式從Apple Podcast URL提取國家代碼和ID
       // 用於構建嵌入式播放器URL
-      let embedUrl = "";
-      if (item.url) {
-        const match = item.url.match(
-          /https:\/\/podcasts\.apple\.com\/([a-zA-Z-]+)\/podcast\/[^/]+\/id(\d+)\?i=(\d+)/
-        );
-        if (match) {
-          const country = match[1];
-          const podcastId = match[2];
-          const episodeId = match[3];
-          embedUrl = `https://embed.podcasts.apple.com/${country}/podcast/id${podcastId}?i=${episodeId}`;
-        }
-      }
+      const match = item.url?.match(
+        /https:\/\/podcasts\.apple\.com\/([a-zA-Z-]+)\/podcast\/[^/]+\/id(\d+)\?i=(\d+)/
+      );
+      const embedUrl = match
+        ? `https://embed.podcasts.apple.com/${match[1]}/podcast/id${match[2]}?i=${match[3]}`
+        : "";
 
       return (
         <>
           <div className="w-full mb-4">
             <iframe
               allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
-              frameBorder="0"
+              
               height="175"
               style={{
                 width: "100%",
@@ -134,8 +122,7 @@ const InfoItem = () => {
       );
     }
   };
-
-  // 陣列資料處理: 渲染筆記/亮點列表
+  // 陣列資料處理: 渲染筆記/亮點/時間戳列表
   const renderNotesList = () => {
     // 使用前面解構的notesKey從item中動態獲取筆記資料
     const notes = item[notesKey];
@@ -171,12 +158,10 @@ const InfoItem = () => {
       </>
     );
   };
-
   // 三元運算符: 根據內容類型決定不同的最大寬度
   const maxWidth = type === "book" ? "max-w-xl" : "max-w-2xl";
-
   return (
-    <div className={`${maxWidth} mx-auto mt-10 card p-6`}>
+    <div className={`${maxWidth} mx-auto mt-16 card p-6`}>
       {renderTypeSpecificContent()}
       {renderNotesList()}
     </div>

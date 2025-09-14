@@ -8,26 +8,22 @@
  */
 export const validateEmail = (email) => {
     const emailRegex = /\S+@\S+\.\S+/;
-
     if (!email) {
         return {
             isValid: false,
             message: "請輸入 Email"
         };
     }
-
     if (!emailRegex.test(email)) {
         return {
             isValid: false,
             message: "請輸入正確的 Email 格式"
         };
     }
-
     return {
         isValid: true
     };
 };
-
 /**
  * 驗證密碼強度
  * 密碼需至少8碼，包含大小寫字母、數字、特殊符號
@@ -90,6 +86,7 @@ export const validatePassword = (password) => {
  */
 export const validateLoginForm = (email, password) => {
     const emailValidation = validateEmail(email);
+    // 如果 email 驗證不通過，直接返回錯誤結果
     if (!emailValidation.isValid) {
         return emailValidation;
     }

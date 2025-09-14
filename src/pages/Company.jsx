@@ -28,7 +28,7 @@ function Company() {
   }, []);
 
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-screen p-6 mt-16">
       <div className="container flex flex-wrap justify-center gap-8 mx-auto">
         {companies.map((company, index) => (
           <div key={index}>

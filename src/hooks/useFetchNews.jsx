@@ -88,17 +88,33 @@ const fetcher = async () => {
     // 提取文章陣列，如果沒有則為空陣列
     const newArticles = data.articles || [];
 
-    // 如果沒有新文章，記錄警告並返回空資料結構，使用 fallbackData
+    // 如果沒有新文章，記錄警告並返回歷史快取資料
     if (newArticles.length === 0) {
       console.warn("API 回應中沒有新聞資料，使用歷史快取");
+
+      // 嘗試從 localStorage 獲取歷史資料
+      try {
+        const cache = localStorage.getItem("newsHistoryCache");
+        if (cache) {
+          const parsed = JSON.parse(cache);
+          if (parsed.articles && parsed.articles.length > 0) {
+            console.log("返回歷史快取資料:", parsed.articles.length, "篇新聞");
+            return parsed; // 直接返回歷史快取
+          }
+        }
+      } catch (e) {
+        console.warn("讀取歷史快取失敗:", e);
+      }
+
+      // 如果沒有歷史快取，才返回空資料
       return {
         articles: [],
-        timestamp: new Date().toISOString(), // 當前時間戳
-        date: getTaiwanDateString(), // 台灣時區日期
-        newCount: 0, // 新增文章數量
-        totalCount: 0, // 總文章數量
-        metadata: data.metadata || {}, // 元資料
-        error: "沒有新的新聞資料", // 錯誤訊息
+        timestamp: new Date().toISOString(),
+        date: getTaiwanDateString(),
+        newCount: 0,
+        totalCount: 0,
+        metadata: data.metadata || {},
+        error: "沒有新的新聞資料",
       };
     }
 
@@ -196,15 +212,12 @@ export default function useFetchNews(swrOptions = {}) {
       }
       return null; // 沒有快取時返回 null
     })(),
-    onSuccess: (data) => {
-      // 成功獲取資料時，將資料儲存到 localStorage
-      if (data && data.articles) {
+    // SWR 提供的配置選項
+     onSuccess: (data) => {
+      // 成功獲取資料時，只有當有新聞文章時才儲存到 localStorage
+      if (data && data.articles && data.articles.length > 0) {
         try {
-          // 保存到新的快取鍵
-          //第一個參數 "newsCache"：這是鍵（key），用來標識存儲在 localStorage 中的數據項。在這裡，它是新聞快取資料的唯一標識符。
-          //第二個參數 JSON.stringify(data)：這是值（value），將新聞資料物件 data 轉換為 JSON 字串格式，因為 localStorage 只支援存儲字串類型。JSON.stringify 將物件序列化為字串，以便存儲和後續解析。
           localStorage.setItem("newsHistoryCache", JSON.stringify(data));
-          // 也保存到舊的快取鍵以維持向後兼容
           localStorage.setItem("newsCache", JSON.stringify(data));
           console.log(
             `成功更新新聞: 新增 ${data.newCount} 篇，總計 ${data.totalCount} 篇`
@@ -212,8 +225,12 @@ export default function useFetchNews(swrOptions = {}) {
         } catch (e) {
           console.warn("儲存歷史快取失敗:", e);
         }
+      } else {
+        // 如果沒有新文章，不更新快取，保留歷史資料
+        console.log("沒有新文章，保留現有快取");
       }
     },
+    // SWR 提供的配置選項
     onError: (error) => {
       // 發生錯誤時，記錄錯誤並嘗試使用歷史快取
       console.error("SWR 錯誤:", error.message);

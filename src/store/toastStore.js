@@ -2,6 +2,8 @@ import toast from 'react-hot-toast';
 
 export const toastStore = {
   // 成功通知
+  // message：要顯示的通知訊息內容
+  // options：可選的配置選項物件
   success: (message, options = {}) => {
     // 先清除同類型的舊通知，避免堆積
     if (options.id) {

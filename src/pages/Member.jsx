@@ -1,11 +1,10 @@
-import { useState, lazy, useEffect } from "react";
+import { useState,useEffect } from "react";
 import { authStore } from "../store/authStore";
 import { toastStore } from "../store/toastStore";
 import { handleLogout as handleLogoutAction } from "../utils/authHandlers";
 import { useNavigate } from "react-router-dom";
-// 使用 React.lazy 進行組件懶加載，減少初始載入時間
-const MessageBoard = lazy(() => import("../component/MessageBoard"));
-const CollectList = lazy(() => import("../component/CollectList"));
+import MessageBoard from "../component/MessageBoard";
+import CollectList from "../component/CollectList";
 // 預設頭像路徑
 const DEFAULT_PIC = "/avatar.webp";
 
@@ -18,7 +17,6 @@ function Member() {
   const { user, logout, loading, updateUserName } = authStore();
   const navigate = useNavigate();
   // 本地狀態管理
-  const [memberPic, setMemberPic] = useState(""); // 用戶頭像路徑
   const [editMode, setEditMode] = useState(false); // 名稱編輯模式標記
   const [editName, setEditName] = useState(""); // 編輯中的名稱暫存
   const [mainTab, setMainTab] = useState("profile"); // 當前選中的頁籤
@@ -35,23 +33,17 @@ function Member() {
   // 用於初始化用戶名稱邏輯
   useEffect(() => {
     if (user) {
-      if (isGmail) {
-        // 第一優先：Gmail 登入且有 displayName 時使用 Google 名稱
-        setMemberName(user.displayName);
+      let name = "";
+      if (isGmail && user.displayName) {
+        name = user.displayName;
       } else {
-        // 從郵箱地址中提取使用者名稱（@ 前的部分）
-        setMemberName(memberEmail.split("@")[0]);
+        name = memberEmail.split("@")[0];
       }
+      setMemberName(name);
     }
   }, [user, isGmail, memberEmail]); // 依賴數組，決定何時重新執行此 effect
 
-  // 使用條件運算決定頭像來源
-  let picSrc = "/avatar.webp";
-  if (googlePhoto) {
-    picSrc = googlePhoto;
-  } else if (memberPic) {
-    picSrc = memberPic;
-  }
+  const picSrc = googlePhoto || DEFAULT_PIC;
 
   if (loading) return null; // 加載中不渲染內容
 
@@ -144,7 +136,6 @@ function Member() {
   } else if (mainTab === "collect") {
     mainContent = (
       <div className="sectionCollect flex flex-col items-center">
-        <h2 className="text-xl font-bold mb-4">收藏頁面</h2>
         <CollectList />
       </div>
     );
@@ -157,8 +148,8 @@ function Member() {
   }
 
   return (
-    <div className="memberContainer flex px-10 max-sm:flex-col sm:justify-evenly">
-      <div className="memberSide flex sm:flex-col sm:flex-1/2 justify-center items-end border-b-black sm:pr-50 flex-wrap">
+    <div className="memberContainer flex px-30 max-md:flex-col md:justify-around mt-16">
+      <div className="memberSide md:left-10 md:fixed md:top-1/3 flex md:flex-col md:flex-1/2 justify-center items-end border-b-black flex-wrap mt-16 md:mt-0">
         <button
           className={`btn btn-success m-3 ${
             mainTab === "profile" ? "btn-active" : ""

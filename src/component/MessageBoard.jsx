@@ -3,7 +3,6 @@ import { database, auth } from "../firebase";
 import { ref, push, onValue } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 import { toastStore } from "../store/toastStore";
-import Toast from "./Toast";
 
 function MessageBoard({ memberName }) {
   // 狀態管理
@@ -88,19 +87,24 @@ function MessageBoard({ memberName }) {
         messagesContainerRef.current.scrollHeight;
     }
   }, [messages]); // 依賴於 messages 陣列，當訊息更新時觸發
+  /*
+  scrollTop 和 scrollHeight 視覺化說明：
 
-  // 組件掛載時清理之前的 toast
-  useEffect(() => {
-    toastStore.clear?.(); // 使用可選鏈運算符，避免方法不存在時報錯
-  }, []);
+  ┌─────────────────┐ ← 容器頂部 (scrollTop = 0)
+  │ 可見內容區域1   │
+  │ 可見內容區域2   │ ← clientHeight (可見區域高度)
+  │ 可見內容區域3   │
+  ├─────────────────┤ ← 容器底部 (當前可見範圍)
+  │ 隱藏內容區域4   │
+  │ 隱藏內容區域5   │ ← scrollHeight (總內容高度)
+  │ 隱藏內容區域6   │
+  └─────────────────┘ ← 內容底部 (scrollTop = scrollHeight)
 
-  // 組件卸載時清理 toast
-  useEffect(() => {
-    return () => {
-      toastStore.clear?.();
-    };
-  }, []);
-  // 處理輸入框內容變更
+  - scrollTop：元素向上滾動的像素距離 (可讀寫)
+  - scrollHeight：元素內容的總高度，包含不可見區域 (唯讀)
+  - 當 scrollTop = scrollHeight 時，滾動到最底部
+  - 這確保新留言出現時，用戶能立即看到最新內容
+  */
   const handleContentChange = (e) => {
     const inputValue = e.target.value;
 
@@ -113,26 +117,21 @@ function MessageBoard({ memberName }) {
   // 處理表單提交（送出訊息）
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (isSubmitting) return; // 防止重複提交
-
     // 集中驗證，只顯示一個 toast
     if (loading) {
       toastStore.info("載入中...");
       return;
     }
-
     if (!user) {
       toastStore.warning("請先登入！");
       return;
     }
-
     const trimmedContent = content.trim();
     if (!trimmedContent) {
       toastStore.warning("請輸入留言內容！");
       return;
     }
-
     if (trimmedContent.length > MAX_MESSAGE_LENGTH) {
       toastStore.error(`留言字數不能超過 ${MAX_MESSAGE_LENGTH} 字！`);
       return;
@@ -162,17 +161,14 @@ function MessageBoard({ memberName }) {
 
   return (
     <div className="min-h-screen flex flex-col items-center px-5">
-      <Toast />
-      <h1 className="text-3xl font-bold mb-6">留言板</h1>
-
       {/* 顯示使用者資訊 */}
       {loading ? (
         <p className="">載入中...</p>
-      ) : user ? (
+      ) : (
         <div className="w-full max-w-sm p-4 flex justify-center items-center">
-          <p className="">歡迎 {memberName}</p>
+          <p className="text-lg">歡迎 {memberName}</p>
         </div>
-      ) : null}
+      )}
 
       {/* 留言板主體 */}
       <div className="border rounded-lg shadow-md flex flex-col h-[500px] max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto px-4 sm:px-0">
@@ -183,76 +179,75 @@ function MessageBoard({ memberName }) {
         >
           {loading ? (
             <p className="text-center">載入中...</p>
-          ) : user ? (
-            messages.length === 0 ? (
-              <p className="text-center">還沒有訊息，快來聊天吧！</p>
-            ) : (
-              // 使用 map 方法將訊息陣列轉換為 JSX 元素陣列
-              messages.map((message) => (
-                <div
-                  key={message.id} // 使用唯一 ID 作為 React key
-                  className={`flex mb-4 ${
-                    // 條件渲染：判斷訊息是自己的還是他人的
-                    message.userId === user.uid
-                      ? "justify-end"
-                      : "justify-start"
-                  }`}
-                >
-                  {/* 其他使用者的訊息 */}
-                  {message.userId !== user.uid && (
-                    <div className="flex items-start max-w-[75%]">
-                      <div className="w-full">
-                        {/* 顯示使用者名稱（取 email @ 前段） */}
-                        <p className="text-sm mb-1">
-                          {(message.email || "").split("@")[0] || "未知使用者"}
-                          {/* 使用字串分割操作取得使用者名稱 */}
-                        </p>
-                        <div className="bg-base-400 p-2 rounded-lg border">
-                          <p className="text-base-800 break-words whitespace-pre-wrap">
-                            {message.content}
-                          </p>
-                          <p className="text-xs mt-1">
-                            {/* 顯示時間（只顯示時:分） */}
-                            {new Date(message.timestamp).toLocaleString(
-                              "zh-TW", // 使用台灣時區
-                              {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              }
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* 自己的訊息 */}
-                  {message.userId === user.uid && (
-                    <div className="flex items-end max-w-[75%]">
-                      <div className="bg-base-500 p-2 rounded-lg border w-full">
-                        <p className="break-words whitespace-pre-wrap">
+          ) : messages.length === 0 ? (
+            <p className="text-center">還沒有訊息，快來聊天吧！</p>
+          ) : (
+            // 使用 map 方法將訊息陣列轉換為 JSX 元素陣列
+            messages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex mb-4 ${
+                  // 條件渲染：判斷訊息是自己的還是他人的
+                  message.userId === user.uid ? "justify-end" : "justify-start"
+                }`}
+              >
+                {/* 其他使用者的訊息 */}
+                {message.userId !== user.uid && (
+                  <div className="flex items-start max-w-[75%]">
+                    <div className="w-full">
+                      {/* 顯示使用者名稱（取 email @ 前段） */}
+                      <p className="text-sm mb-1">
+                        {(message.email || "").split("@")[0] || "未知使用者"}
+                        {/* 使用字串分割操作取得使用者名稱 */}
+                      </p>
+                      <div className="bg-base-400 p-2 rounded-lg border">
+                        <p className="text-base-800 break-words whitespace-pre-wrap">
                           {message.content}
                         </p>
-                        <p className="text-xs mt-1 text-right">
-                          {/* 顯示時間（只顯示時:分） */}
-                          {new Date(message.timestamp).toLocaleString("zh-TW", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
+                        <p className="text-xs mt-1">
+                          {new Date(message.timestamp).toLocaleString(
+                            "zh-TW", // 使用台灣時區
+                            {
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
                         </p>
                       </div>
                     </div>
-                  )}
-                </div>
-              ))
-            )
-          ) : (
-            <p className="text-center">請先登入以使用留言板！</p>
+                  </div>
+                )}
+
+                {/* 自己的訊息 */}
+                {message.userId === user.uid && (
+                  <div className="flex items-end max-w-[75%]">
+                    <div className="bg-base-500 p-2 rounded-lg border w-full">
+                      <p className="break-words whitespace-pre-wrap">
+                        {message.content}
+                      </p>
+                      <p className="text-xs mt-1 text-right">
+                        {new Date(message.timestamp).toLocaleString(
+                          "zh-TW", // 使用台灣時區
+                          {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))
           )}
         </div>
-
-        {/* 輸入框（僅登入時顯示） */}
-        {loading ? null : user ? (
+        {!loading && (
           <form
             onSubmit={handleSubmit} // 表單提交處理函數
             className="border-t p-4 flex flex-col"
@@ -282,7 +277,7 @@ function MessageBoard({ memberName }) {
               {content.length}/{MAX_MESSAGE_LENGTH}
             </div>
           </form>
-        ) : null}
+        )}
       </div>
     </div>
   );

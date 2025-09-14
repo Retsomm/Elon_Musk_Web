@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Hamburger } from "lucide-react";
 import { authStore } from "../store/authStore";
 import Nebula from "../component/Nebula";
@@ -19,49 +19,75 @@ export default function DesktopNavbar({ toggleNav }) {
   }
 
   return (
-    <nav className="nav p-2 px-10 flex align-middle sm:justify-between justify-center shadow-2xl z-[1000] items-center bg-base-100 relative overflow-hidden">
+    <nav className="fixed top-0 left-0 right-0 nav p-2 px-10 flex align-middle md:justify-between justify-center shadow-2xl z-[1000] items-center bg-base-100 overflow-hidden">
       <div className="absolute inset-0 w-full h-full -z-10 pointer-events-none">
         <Nebula className="w-full h-full" />
       </div>
-      <div className="ham md:hidden left-5 absolute rounded-full p-2">
-        {/* 點擊漢堡選單觸發 toggleNav 函數，控制行動版選單的顯示/隱藏 */}
-        <Hamburger className="hamburger cursor-pointer" onClick={toggleNav} />
-      </div>
       <div
-        className="logo"
-        // 條件式事件處理：僅在行動裝置時執行 toggleNav
-        // 使用 window.innerWidth 檢測螢幕寬度，若小於 768px 則啟用 toggleNav 功能
-        onClick={window.innerWidth < 768 ? toggleNav : undefined}
+        className="ham md:hidden left-5 absolute rounded-full p-2"
+        onClick={toggleNav}
       >
-        <Link to="/" className="navLink flex text-center">
-          <img
-            src="/logo.webp"
-            className="max-w-md"
-            alt="Elon Musk 首頁連結"
-            loading="lazy"
-          />
-        </Link>
+        <Hamburger className="hamburger cursor-pointer" />
+      </div>
+      <div className="logo">
+        <img
+          src="/logo.webp"
+          className="h-12 cursor-pointer"
+          alt="web logo"
+          loading="lazy"
+        />
       </div>
       <ul className="flex justify-evenly max-md:hidden items-center">
         <li>
-          <Link to="/company" className="navLink">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive ? "navLink active" : "navLink"
+            }
+            onClick={toggleNav}
+          >
+            首頁
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/company"
+            className={({ isActive }) =>
+              isActive ? "navLink active" : "navLink"
+            }
+          >
             公司
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/life" className="navLink">
+          <NavLink
+            to="/life"
+            className={({ isActive }) =>
+              isActive ? "navLink active" : "navLink"
+            }
+          >
             生平
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/news" className="navLink">
+          <NavLink
+            to="/news"
+            className={({ isActive }) =>
+              isActive ? "navLink active" : "navLink"
+            }
+          >
             新聞
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/info" className="navLink">
+          <NavLink
+            to="/info"
+            className={({ isActive }) =>
+              isActive ? "navLink active" : "navLink"
+            }
+          >
             更多消息
-          </Link>
+          </NavLink>
         </li>
 
         <li>
@@ -92,9 +118,14 @@ export default function DesktopNavbar({ toggleNav }) {
             </div>
           ) : (
             // 用戶未登入
-            <Link to="/login" className="navLink">
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                isActive ? "navLink active" : "navLink"
+              }
+            >
               登入
-            </Link>
+            </NavLink>
           )}
         </li>
       </ul>

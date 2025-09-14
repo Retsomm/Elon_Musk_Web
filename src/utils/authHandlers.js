@@ -108,18 +108,11 @@ export const handleGoogleLogin = async (
  */
 export const handleLogout = async (
     authActions,
-    navigate
 ) => {
     try {
-        
         // 先執行登出，再顯示成功訊息
         await authActions.logout();
-        
         toastStore.success("登出成功！");
-        
-        setTimeout(() => {
-            navigate("/");
-        }, 1000);
     } catch (error) {
         toastStore.error(error.message || "登出失敗");
     }

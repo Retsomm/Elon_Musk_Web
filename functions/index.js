@@ -4,8 +4,11 @@ import axios from "axios";
 /**
  * 負責「抓取、整理、回傳」Elon Musk 相關新聞資料
  * 使用多個優質英文新聞來源，確保連結有效性和內容品質
+ * 此函數通過 NewsAPI 獲取新聞，進行過濾、去重和排序，最後驗證連結有效性
  */
 
+// 定義搜索關鍵字陣列，用於查詢相關新聞
+// 包含核心關鍵字、公司相關和產品相關詞，以擴大搜索範圍
 const searchQueries = [
   // 核心關鍵字
   'Elon Musk',
@@ -34,6 +37,8 @@ const searchQueries = [
   'Tesla supercharger'
 ];
 
+// 定義優質新聞來源列表，用於評估新聞品質
+// 包含頂級媒體、科技媒體、財經媒體等，以確保內容可靠性
 const qualitySources = [
   // 原有的頂級來源
   'reuters.com',
@@ -80,6 +85,9 @@ const qualitySources = [
 
 /**
  * 計算文章相關性評分
+ * 基於標題和描述中的關鍵字匹配給予分數，並根據來源品質加分
+ * @param {Object} item - 新聞文章物件
+ * @returns {number} 相關性分數
  */
 const calculateRelevance = (item) => {
   const content = (item.title + ' ' + (item.description || '')).toLowerCase();
@@ -120,6 +128,9 @@ const calculateRelevance = (item) => {
 
 /**
  * 驗證URL連結有效性
+ * 使用 axios 發送 HEAD 請求檢查連結是否可訪問
+ * @param {string} url - 要驗證的URL
+ * @returns {boolean} 連結是否有效
  */
 const validateLink = async (url) => {
   try {
@@ -135,6 +146,10 @@ const validateLink = async (url) => {
 
 /**
  * 計算兩個字串的相似度
+ * 使用 Levenshtein 距離計算相似度，用於去重新聞
+ * @param {string} str1 - 第一個字串
+ * @param {string} str2 - 第二個字串
+ * @returns {number} 相似度 (0 到 1)
  */
 function calculateSimilarity(str1, str2) {
   const longer = str1.length > str2.length ? str1 : str2;
@@ -150,6 +165,9 @@ function calculateSimilarity(str1, str2) {
  * 計算編輯距離(Levenshtein距離)
  * 避免重複新聞：不同媒體可能報導相同事件，標題略有差異
  * 提高新聞品質：確保使用者看到的是不同內容，而非重複資訊
+ * @param {string} str1 - 第一個字串
+ * @param {string} str2 - 第二個字串
+ * @returns {number} 編輯距離
  */
 function levenshteinDistance(str1, str2) {
   const matrix = [];
@@ -175,6 +193,8 @@ function levenshteinDistance(str1, str2) {
   return matrix[str2.length][str1.length];
 }
 
+// 導出 Firebase Cloud Function
+// 配置區域、記憶體、超時和最大實例數
 export const getNews = onCall({
   region: "us-central1",
   memory: "1GiB",
@@ -192,9 +212,12 @@ export const getNews = onCall({
 
   /**
    * 從NewsAPI抓取英文新聞
+   * @param {string} query - 搜索關鍵字
+   * @returns {Array} 過濾後的文章陣列
    */
   const fetchNewsFromNewsAPI = async (query) => {
     try {
+      // 發送 GET 請求到 NewsAPI
       const response = await axios.get("https://newsapi.org/v2/everything", {
         params: {
           q: query,
@@ -212,6 +235,7 @@ export const getNews = onCall({
         return [];
       }
 
+      // 過濾文章：檢查基本完整性、來源品質和內容相關性
       const articles = response.data.articles
         .filter(item => {
           // 基本內容完整性檢查
@@ -284,7 +308,7 @@ export const getNews = onCall({
       }
     });
 
-    // 文章去重處理
+    // 文章去重處理：基於標題相似度過濾重複文章
     const seenTitles = new Set();
     const uniqueArticles = allResults.filter(article => {
       const normalizedTitle = article.title
@@ -304,7 +328,7 @@ export const getNews = onCall({
       return true;
     });
 
-    // 文章排序處理
+    // 文章排序處理：先按相關性分數，再按發佈時間
     const sorted = uniqueArticles.sort((a, b) => {
       if (b.relevanceScore !== a.relevanceScore) {
         return b.relevanceScore - a.relevanceScore;
@@ -312,7 +336,7 @@ export const getNews = onCall({
       return new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime();
     });
 
-    // 連結有效性驗證
+    // 連結有效性驗證：對前10篇文章進行驗證
     const topArticles = sorted.slice(0, 30);
     const validationPromises = topArticles.slice(0, 10).map(async (article) => {
       const isValid = await validateLink(article.link);
@@ -327,7 +351,7 @@ export const getNews = onCall({
       ...topArticles.slice(10)
     ].slice(0, limit);
 
-    // 回傳結果
+    // 回傳結果：包含文章列表和元資料
     return {
       articles: finalArticles,
       timestamp: new Date().toISOString(),
@@ -347,4 +371,4 @@ export const getNews = onCall({
       details: err.message
     });
   }
-});
+});   

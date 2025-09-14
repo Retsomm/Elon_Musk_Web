@@ -24,10 +24,6 @@ export const useFirebaseUserId = () => {
 
   /**
    * 副作用 Hook - 設置 Firebase 認證狀態監聽器
-   *
-   * 依賴陣列：[] (空陣列)
-   * - 表示此 effect 只在組件掛載時執行一次
-   * - 不會因為任何 props 或 state 變化而重新執行
    */
   useEffect(() => {
     /**
@@ -45,33 +41,11 @@ export const useFirebaseUserId = () => {
      * - 當使用者未登入：user 為 null
      */
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      /**
-       * 條件判斷與狀態更新
-       *
-       * 三元運算子處理：
-       * - user 存在（truthy）：提取 user.uid 作為 userId
-       * - user 不存在（falsy/null）：設定 userId 為 null
-       *
-       * 這樣的設計確保：
-       * - 登入狀態：userId 為有效的字串 ID
-       * - 登出狀態：userId 為 null，方便組件判斷認證狀態
-       */
       setUserId(user ? user.uid : null);
     });
 
-    /**
-     * 清理函數 - 取消訂閱認證狀態監聽
-     *
-     * 返回的 unsubscribe 函數：
-     * - 這是 onAuthStateChanged 返回的取消訂閱函數
-     * - 當組件卸載時會自動調用此函數
-     * - 防止記憶體洩漏和不必要的監聽器繼續運行
-     *
-     * React Hook 最佳實踐：
-     * - 所有設置的訂閱、定時器等都應該在組件卸載時清理
-     */
     return () => unsubscribe();
-  }, []); // 空依賴陣列確保只在掛載時設置監聽器
+  }, []); // 空依賴陣列，確保只在組件掛載和卸載時執行
 
   /**
    * 返回當前使用者 ID

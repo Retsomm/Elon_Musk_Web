@@ -8,7 +8,7 @@ import {
   signOut, // 登出
   updateProfile, // 更新用戶個人資料
 } from "firebase/auth";
-import { getDatabase, ref, update } from "firebase/database"; // 引入 Firebase 實時數據庫相關函數
+import { getDatabase, ref, update,get} from "firebase/database"; // 引入 Firebase 實時數據庫相關函數
 import "../firebase"; // 引入 Firebase 配置文件
 
 // 初始化 Firebase 認證實例
@@ -108,24 +108,51 @@ export const authStore = create((set, get) => ({
 }));
 
 // 監聽 Firebase 認證狀態變化 (當登入狀態改變時會觸發此函數)
-auth.onAuthStateChanged((firebaseUser) => {
+auth.onAuthStateChanged(async (firebaseUser) => {  // 添加 async 以支持 await
   // 從狀態存儲中獲取方法
   const { setUser, setLoginType, setLoading } = authStore.getState();
   
   if (firebaseUser) {
-    // 用戶已登入，更新本地狀態
-    setUser({
-      email: firebaseUser.email, // 用戶電子郵件
-      name: firebaseUser.displayName, // 用戶顯示名稱
-      photoURL: firebaseUser.photoURL, // 用戶頭像 URL
-      displayName: firebaseUser.displayName, // 用戶顯示名稱 (同 name)
-      uid: firebaseUser.uid // 用戶唯一識別碼，用於數據庫操作
-    });
+    // 優先從 Realtime Database 獲取 displayName
+    const userId = firebaseUser.uid;
+    const userRef = ref(database, `users/${userId}`);
     
-    // 根據認證提供者 ID 判斷登入類型
-    // providerData 是一個陣列，包含用戶的認證提供者資訊
-    const providerId = firebaseUser.providerData[0]?.providerId;
-    setLoginType(providerId === "google.com" ? "google" : "email");
+    try {
+      // 使用 get 一次性獲取數據庫中的 displayName
+      const snapshot = await get(userRef);
+      const dbDisplayName = snapshot.exists() ? snapshot.val().displayName : null;
+      
+      // 計算最終顯示名稱：
+      // 1. 優先使用數據庫中的 displayName（如果存在）
+      // 2. 否則使用 Firebase Auth 的 displayName
+      // 3. 如果都為空，使用 email 的 @ 前面的部分作為預設值
+      const finalDisplayName = dbDisplayName || firebaseUser.displayName || firebaseUser.email.split('@')[0];
+      
+      // 用戶已登入，更新本地狀態
+      setUser({
+        email: firebaseUser.email, // 用戶電子郵件
+        name: finalDisplayName, // 用戶顯示名稱（已處理優先級）
+        photoURL: firebaseUser.photoURL, // 用戶頭像 URL
+        displayName: finalDisplayName, // 用戶顯示名稱（同 name）
+        uid: firebaseUser.uid // 用戶唯一識別碼，用於數據庫操作
+      });
+      
+      // 根據認證提供者 ID 判斷登入類型
+      const providerId = firebaseUser.providerData[0]?.providerId;
+      setLoginType(providerId === "google.com" ? "google" : "email");
+    } catch (error) {
+      console.error("獲取數據庫中的 displayName 時發生錯誤:", error);
+      // 如果數據庫獲取失敗，回退到 Firebase Auth 的 displayName 或預設值
+      const fallbackDisplayName = firebaseUser.displayName || firebaseUser.email.split('@')[0];
+      setUser({
+        email: firebaseUser.email,
+        name: fallbackDisplayName,
+        photoURL: firebaseUser.photoURL,
+        displayName: fallbackDisplayName,
+        uid: firebaseUser.uid
+      });
+      setLoginType(firebaseUser.providerData[0]?.providerId === "google.com" ? "google" : "email");
+    }
   } else {
     // 用戶未登入或已登出，清除本地狀態
     setUser(null);

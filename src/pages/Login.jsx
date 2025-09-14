@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authStore } from "../store/authStore";
-import { toastStore } from "../store/toastStore";
 import {
   handleRegister as handleRegisterAction,
   handleEmailLogin as handleEmailLoginAction,
@@ -27,7 +26,6 @@ const Login = () => {
       { login, register, loginWithGoogle }, // 將認證方法作為物件傳遞
       navigate // 導航函數，用於成功後跳轉
     );
-    // 註: handleRegisterAction 內部可能涉及資料庫操作，如創建用戶記錄
   };
 
   // 一般登入處理函數
@@ -40,7 +38,6 @@ const Login = () => {
       { login, register, loginWithGoogle }, // 將認證方法作為物件傳遞
       navigate // 導航函數
     );
-    // 註: handleEmailLoginAction 內部涉及與身份驗證系統的交互，可能讀取資料庫中的用戶資料進行比對
   };
 
   // Google 登入處理函數
@@ -51,8 +48,6 @@ const Login = () => {
       { login, register, loginWithGoogle }, // 將認證方法作為物件傳遞
       navigate // 導航函數
     );
-    // 註: handleGoogleLoginAction 內部使用 OAuth 流程與 Google 身份驗證系統交互
-    // 可能將 Google 返回的用戶資料存入或比對資料庫
   };
   return (
     <>

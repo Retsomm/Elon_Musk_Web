@@ -6,7 +6,7 @@ import DesktopNavbar from "./DesktopNavbar";
 import Footer from "./Footer";
 import ToTop from "./ToTop";
 
-export default function Layout({ currentTheme }) {
+export default function Layout() {
   //手機模式下，導覽列表的收合狀態
   const [isNavOpen, setIsNavOpen] = useState(false);
 
@@ -16,7 +16,7 @@ export default function Layout({ currentTheme }) {
 
   return (
     <div>
-      <DesktopNavbar toggleNav={toggleNav} currentTheme={currentTheme} />
+      <DesktopNavbar toggleNav={toggleNav}/>
       <MobileNavbar isNavOpen={isNavOpen} toggleNav={toggleNav} />
       <main className="min-h-screen flex flex-col justify-center z-0">
         <Outlet />
