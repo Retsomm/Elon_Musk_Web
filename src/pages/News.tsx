@@ -1,5 +1,5 @@
-import React from 'react';
-import useFetchNews from "../hooks/useFetchNews";
+import React, { useState } from 'react';
+import useFetchNews, { clearNewsHistory } from "../hooks/useFetchNews";
 import type { NewsArticle, NewsResponse } from "../types/news";
 
 /**
@@ -9,6 +9,9 @@ import type { NewsArticle, NewsResponse } from "../types/news";
 export default function News(): React.ReactElement {
   // 使用自訂 Hook 獲取新聞資料及相關狀態
   const { data, error, isLoading, mutate, isValidating } = useFetchNews();
+  
+  // 清除快取狀態
+  const [isClearingCache, setIsClearingCache] = useState(false);
 
   /**
    * 手動重新抓取新聞
@@ -22,6 +25,27 @@ export default function News(): React.ReactElement {
     }
   };
 
+  /**
+   * 清除新聞快取並重新獲取資料
+   */
+  const clearCacheAndRefresh = async (): Promise<void> => {
+    try {
+      setIsClearingCache(true);
+      
+      // 清除 localStorage 中的快取
+      clearNewsHistory();
+      
+      // 清除 SWR 的快取並重新獲取資料
+      await mutate();
+      
+      console.log("快取已清除，正在重新獲取新聞資料");
+    } catch (err) {
+      console.error("清除快取失敗:", err);
+    } finally {
+      setIsClearingCache(false);
+    }
+  };
+
   // 從 data 中提取新聞列表和最後更新時間
   const news: NewsArticle[] = data?.articles || [];
   const lastUpdated: string | undefined = data?.timestamp;
@@ -32,20 +56,39 @@ export default function News(): React.ReactElement {
         <div className="text-red-500 mb-4 text-lg">
           載入失敗，請檢查網路連線後重試 (錯誤: {error.message})
         </div>
-        <button
-          className="btn btn-primary"
-          onClick={retryFetchNews}
-          disabled={isLoading || isValidating}
-          type="button"
-        >
-          {isLoading || isValidating ? (
-            <span className="loading loading-spinner loading-sm">
-              重新載入中...
-            </span>
-          ) : (
-            "重新載入"
-          )}
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+          <button
+            className="btn btn-primary"
+            onClick={retryFetchNews}
+            disabled={isLoading || isValidating || isClearingCache}
+            type="button"
+          >
+            {isLoading || isValidating ? (
+              <span className="loading loading-spinner loading-sm">
+                重新載入中...
+              </span>
+            ) : (
+              "重新載入"
+            )}
+          </button>
+          
+          <button
+            className="btn btn-warning"
+            onClick={clearCacheAndRefresh}
+            disabled={isLoading || isValidating || isClearingCache}
+            type="button"
+            title="清除本地快取可能解決載入問題"
+          >
+            {isClearingCache ? (
+              <>
+                <span className="loading loading-spinner loading-sm"></span>
+                清除中...
+              </>
+            ) : (
+              "🗑️ 清除快取"
+            )}
+          </button>
+        </div>
       </div>
     );
   }
@@ -54,21 +97,40 @@ export default function News(): React.ReactElement {
     <div className="mt-16">
       {/* 控制面板 */}
       <div className="text-center mb-6 p-4 rounded-lg">
-        <button
-          className="btn btn-secondary mb-3"
-          onClick={retryFetchNews}
-          disabled={isLoading || isValidating}
-          type="button"
-        >
-          {isLoading || isValidating ? (
-            <>
-              <span className="loading loading-spinner loading-sm"></span>
-              {isLoading ? "載入中..." : "更新中..."}
-            </>
-          ) : (
-            "🔄 重新抓取新聞"
-          )}
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-3">
+          <button
+            className="btn btn-secondary"
+            onClick={retryFetchNews}
+            disabled={isLoading || isValidating || isClearingCache}
+            type="button"
+          >
+            {isLoading || isValidating ? (
+              <>
+                <span className="loading loading-spinner loading-sm"></span>
+                {isLoading ? "載入中..." : "更新中..."}
+              </>
+            ) : (
+              "🔄 重新抓取新聞"
+            )}
+          </button>
+          
+          <button
+            className="btn btn-warning"
+            onClick={clearCacheAndRefresh}
+            disabled={isLoading || isValidating || isClearingCache}
+            type="button"
+            title="清除本地快取並重新獲取新聞資料"
+          >
+            {isClearingCache ? (
+              <>
+                <span className="loading loading-spinner loading-sm"></span>
+                清除中...
+              </>
+            ) : (
+              "🗑️ 清除快取"
+            )}
+          </button>
+        </div>
 
         {lastUpdated && (
           <div className="text-sm text-gray-600">

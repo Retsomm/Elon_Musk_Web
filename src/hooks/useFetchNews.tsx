@@ -142,8 +142,28 @@ const fetcher = async (): Promise<NewsResponse> => {
         if (cache) {
           const parsed: NewsCache = JSON.parse(cache);
           if (parsed.articles && parsed.articles.length > 0) {
-            console.log("返回歷史快取資料:", parsed.articles.length, "篇新聞");
-            return parsed; // 直接返回歷史快取
+            // 確保歷史快取資料也經過字段標準化處理
+            const normalizedArticles = parsed.articles.map((article: any) => ({
+              title: article.title || '',
+              description: article.description || '',
+              url: article.link || article.url || '', // 統一使用 url 字段
+              imageUrl: article.imageUrl || article.urlToImage || '',
+              source: article.source || '',
+              pubDate: article.pubDate || article.publishedAt || '',
+              timestamp: article.timestamp || new Date().toISOString(),
+              author: article.author || '',
+              content: article.content || '',
+              category: article.category || '',
+              language: article.language || 'en'
+            }));
+            
+            console.log("返回歷史快取資料:", normalizedArticles.length, "篇新聞");
+            
+            // 返回標準化後的歷史快取資料
+            return {
+              ...parsed,
+              articles: normalizedArticles
+            };
           }
         }
       } catch (e) {
@@ -169,7 +189,20 @@ const fetcher = async (): Promise<NewsResponse> => {
       const cache = localStorage.getItem("newsHistoryCache");
       if (cache) {
         const parsed: NewsCache = JSON.parse(cache);
-        existingArticles = parsed.articles || [];
+        // 確保現有快取資料也經過字段標準化處理
+        existingArticles = (parsed.articles || []).map((article: any) => ({
+          title: article.title || '',
+          description: article.description || '',
+          url: article.link || article.url || '', // 統一使用 url 字段
+          imageUrl: article.imageUrl || article.urlToImage || '',
+          source: article.source || '',
+          pubDate: article.pubDate || article.publishedAt || '',
+          timestamp: article.timestamp || new Date().toISOString(),
+          author: article.author || '',
+          content: article.content || '',
+          category: article.category || '',
+          language: article.language || 'en'
+        }));
       }
     } catch (e) {
       console.warn("讀取歷史快取失敗:", e);
@@ -237,8 +270,26 @@ export default function useFetchNews(swrOptions: SwrNewsOptions = {}): UseFetchN
         const parsed: NewsCache = JSON.parse(cache);
         // 確保快取資料格式正確且有文章
         if (Array.isArray(parsed.articles) && parsed.articles.length > 0) {
-          console.log("使用歷史快取資料:", parsed.articles.length, "篇新聞");
-          return parsed as NewsResponse;
+          // 確保歷史快取資料經過字段標準化處理
+          const normalizedArticles = parsed.articles.map((article: any) => ({
+            title: article.title || '',
+            description: article.description || '',
+            url: article.link || article.url || '', // 統一使用 url 字段
+            imageUrl: article.imageUrl || article.urlToImage || '',
+            source: article.source || '',
+            pubDate: article.pubDate || article.publishedAt || '',
+            timestamp: article.timestamp || new Date().toISOString(),
+            author: article.author || '',
+            content: article.content || '',
+            category: article.category || '',
+            language: article.language || 'en'
+          }));
+          
+          console.log("使用歷史快取資料:", normalizedArticles.length, "篇新聞");
+          return {
+            ...parsed,
+            articles: normalizedArticles
+          } as NewsResponse;
         }
       }
     } catch (e) {
