@@ -35,7 +35,7 @@ export const useFavoriteItem = (
 
   // 修正：只有當 userId 存在時才監聽資料庫
   const favoritesArray: FavoriteItem[] | null = useDatabaseValue(
-    userId ? `favorites/${userId}` : "",  // 修正：傳遞空字串而不是 null
+    userId ? `favorites/${userId}` : null,  // 修正：傳遞 null 而不是空字串
     []
   );
 
@@ -107,7 +107,7 @@ export const useAllFavorites = (): UseAllFavoritesReturn => {
 
   // 修正：只有當 userId 存在時才監聽資料庫
   const favoritesData: FavoriteItem[] | null = useDatabaseValue(
-    userId ? `favorites/${userId}` : "",  // 修正：傳遞空字串而不是 null
+    userId ? `favorites/${userId}` : null,  // 修正：傳遞 null 而不是空字串
     []
   );
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ref, onValue } from "firebase/database";
 import { database } from "../firebase";
 
@@ -19,20 +19,26 @@ export const useDatabaseValue = <T = any>(
   defaultValue: T | null = null
 ): T | null => {
   const [data, setData] = useState<T | null>(defaultValue);
+  const defaultValueRef = useRef(defaultValue);
+  
+  // 更新 ref 當 defaultValue 改變時
+  defaultValueRef.current = defaultValue;
 
   useEffect(() => {
     if (!path) {
-      setData(defaultValue);
+      setData(defaultValueRef.current);
       return;
     }
+    
     const dbRef = ref(database, path);
 
     const unsubscribe = onValue(dbRef, (snapshot) => {
       const value = snapshot.val() as T | null;
-      setData(value);
+      setData(value ?? defaultValueRef.current);
     });
+    
     return () => unsubscribe();
-  }, [path, defaultValue]);
+  }, [path]);
 
   return data;
 };
