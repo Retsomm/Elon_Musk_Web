@@ -72,7 +72,3 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           projectId: vite-react-elon-5dae6
           channelId: live
-          entryPoint: ./
-          target: hosting
-        env:
-          NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
