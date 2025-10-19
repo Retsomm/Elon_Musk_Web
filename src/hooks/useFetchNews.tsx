@@ -103,7 +103,22 @@ const fetcher = async (): Promise<NewsResponse> => {
     }
 
     // 提取文章陣列，如果沒有則為空陣列
-    const newArticles = data.articles || [];
+    const rawArticles = data.articles || [];
+    
+    // 轉換資料格式：將 Firebase Function 返回的 link 字段轉換為前端期待的 url 字段
+    const newArticles: NewsArticle[] = rawArticles.map((article: any) => ({
+      title: article.title || '',
+      description: article.description || '',
+      url: article.link || article.url || '', // 優先使用 link，後備 url
+      imageUrl: article.imageUrl || article.urlToImage || '',
+      source: article.source || '',
+      pubDate: article.pubDate || article.publishedAt || '',
+      timestamp: article.timestamp || new Date().toISOString(),
+      author: article.author || '',
+      content: article.content || '',
+      category: article.category || '',
+      language: article.language || 'en'
+    }));
 
     // 如果沒有新文章，記錄警告並返回歷史快取資料
     if (newArticles.length === 0) {

@@ -77,6 +77,6 @@ jobs:
           projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
           channelId: live
           entryPoint: ./
-          targets: hosting,functions
+          target: hosting,functions
         env:
           NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}

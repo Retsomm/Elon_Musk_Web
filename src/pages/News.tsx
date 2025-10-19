@@ -139,14 +139,24 @@ export default function News(): React.ReactElement {
                 </p>
               )}
               <div className="tooltip tooltip-right" data-tip="前往外部網站">
-                <a
-                  className="btn btn-primary w-fit mt-3"
-                  href={article.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  閱讀更多
-                </a>
+                {article.url && article.url.trim() !== '' ? (
+                  <a
+                    className="btn btn-primary w-fit mt-3"
+                    href={article.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    閱讀更多
+                  </a>
+                ) : (
+                  <button
+                    className="btn btn-disabled w-fit mt-3"
+                    disabled
+                    title="此新聞沒有可用連結"
+                  >
+                    無可用連結
+                  </button>
+                )}
               </div>
             </div>
           ))}
