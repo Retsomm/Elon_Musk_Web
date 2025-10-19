@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    /* 專案基本設定 */
+    "target": "ES2020",
+    "useDefineForClassFields": true, // Vite 建議
+    "lib": ["ES2020", "DOM",  "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    
+    /* 模組解析 */
+    "moduleResolution": "bundler", // 適用於 Vite
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true, // 讓 Vite 處理編譯，TS 只負責型別檢查
+    "jsx": "react-jsx", // 支援 React 17+ 的 JSX 轉換
+    
+    /* 漸進式導入關鍵 */
+    "allowJs": true, // 啟用 JavaScript 和 TypeScript 檔案共存 (關鍵)
+    
+    /* 型別檢查 */
+    "strict": true, // 嚴格模式 (推薦，可先設為 false 降低導入難度)
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["vite/client", "node"]
+    // 你可以添加路徑別名 (paths)，如果你的 Vite 配置中有設定的話
+    // "paths": {
+    //   "@/*": ["./src/*"]
+    // }
+  },
+  "include": ["src"], // 只檢查 src 資料夾下的檔案
+  "references": [{ "path": "./tsconfig.node.json" }] // Vite 專案結構建議
+}
