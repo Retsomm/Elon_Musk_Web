@@ -106,23 +106,35 @@ const fetcher = async (): Promise<NewsResponse> => {
     const rawArticles = data.articles || [];
     
     // 轉換資料格式：將 Firebase Function 返回的 link 字段轉換為前端期待的 url 字段
-    const newArticles: NewsArticle[] = rawArticles.map((article: any) => ({
-      title: article.title || '',
-      description: article.description || '',
-      url: article.link || article.url || '', // 優先使用 link，後備 url
-      imageUrl: article.imageUrl || article.urlToImage || '',
-      source: article.source || '',
-      pubDate: article.pubDate || article.publishedAt || '',
-      timestamp: article.timestamp || new Date().toISOString(),
-      author: article.author || '',
-      content: article.content || '',
-      category: article.category || '',
-      language: article.language || 'en'
-    }));
+    const newArticles: NewsArticle[] = rawArticles
+      .map((article: any) => ({
+        title: article.title || '',
+        description: article.description || '',
+        url: article.link || article.url || '', // 優先使用 link，後備 url
+        imageUrl: article.imageUrl || article.urlToImage || '',
+        source: article.source || '',
+        pubDate: article.pubDate || article.publishedAt || '',
+        timestamp: article.timestamp || new Date().toISOString(),
+        author: article.author || '',
+        content: article.content || '',
+        category: article.category || '',
+        language: article.language || 'en'
+      }))
+      .filter((article: NewsArticle) => {
+        // 過濾掉沒有有效 URL 的文章
+        return article.url && article.url.trim() !== '' && article.title && article.title.trim() !== '';
+      });
+
+    console.log(`處理新聞數據: 原始 ${rawArticles.length} 篇，過濾後 ${newArticles.length} 篇有效新聞`);
+    if (newArticles.length > 0) {
+      const withValidUrls = newArticles.filter(a => a.url && a.url.trim() !== '').length;
+      console.log(`其中 ${withValidUrls} 篇有有效連結`);
+    }
 
     // 如果沒有新文章，記錄警告並返回歷史快取資料
     if (newArticles.length === 0) {
       console.warn("API 回應中沒有新聞資料，使用歷史快取");
+      console.log("原始 API 回應:", JSON.stringify(rawArticles.slice(0, 2), null, 2)); // 只記錄前2篇以避免日誌過長
 
       // 嘗試從 localStorage 獲取歷史資料
       try {

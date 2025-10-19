@@ -149,13 +149,21 @@ export default function News(): React.ReactElement {
                     閱讀更多
                   </a>
                 ) : (
-                  <button
-                    className="btn btn-disabled w-fit mt-3"
-                    disabled
-                    title="此新聞沒有可用連結"
-                  >
-                    無可用連結
-                  </button>
+                  <div>
+                    <button
+                      className="btn btn-disabled w-fit mt-3"
+                      disabled
+                      title="此新聞沒有可用連結"
+                    >
+                      無可用連結
+                    </button>
+                    {/* 開發環境下顯示調試信息 */}
+                    {process.env.NODE_ENV === 'development' && (
+                      <div className="text-xs text-red-500 mt-1">
+                        調試: URL = "{article.url}"
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
             </div>

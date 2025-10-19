@@ -273,14 +273,18 @@ export const getNews = onCall({
         .map((item) => ({
           title: item.title.trim(),
           source: item.source.name,
-          link: item.url,
+          link: item.url || '', // 確保 link 字段存在且不為空
           description: item.description || "",
           pubDate: item.publishedAt,
           query,
           relevanceScore: calculateRelevance(item),
           imageUrl: item.urlToImage || null,
           sourceType: qualitySources.some(s => item.url.toLowerCase().includes(s.toLowerCase())) ? 'premium' : 'standard'
-        }));
+        }))
+        .filter(article => {
+          // 過濾掉沒有有效連結的文章
+          return article.link && article.link.trim() !== '' && article.link.startsWith('http');
+        });
 
       return articles;
 
@@ -352,7 +356,7 @@ export const getNews = onCall({
     ].slice(0, limit);
 
     // 回傳結果：包含文章列表和元資料
-    return {
+    const result = {
       articles: finalArticles,
       timestamp: new Date().toISOString(),
       totalFound: uniqueArticles.length,
@@ -363,6 +367,11 @@ export const getNews = onCall({
         language: 'en'
       }
     };
+
+    // 添加日誌記錄以便調試
+    console.log(`成功獲取 ${finalArticles.length} 篇新聞，其中 ${finalArticles.filter(a => a.link && a.link.trim() !== '').length} 篇有有效連結`);
+    
+    return result;
 
   } catch (err) {
     console.error("獲取新聞失敗:", err);
