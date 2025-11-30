@@ -5,7 +5,13 @@ import { fileURLToPath } from 'url';
 
 export default defineConfig({
   // 插件陣列 - 使用陣列方法添加所需插件
-  plugins: [react()], // React 插件處理 JSX 轉換
+  plugins: [
+    react({
+      babel: {
+        plugins: ['babel-plugin-react-compiler'],
+      },
+    })
+  ], // React 插件處理 JSX 轉換，並啟用 React Compiler
   
   // 路徑解析設定物件
   resolve: {

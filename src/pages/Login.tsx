@@ -6,7 +6,7 @@ import {
   handleEmailLogin as handleEmailLoginAction,
   handleGoogleLogin as handleGoogleLoginAction,
 } from "../utils/authHandlers";
-import type { AuthActions, NavigationFunction } from "../utils/authHandlers";
+import type {NavigationFunction } from "../utils/authHandlers";
 import type { FormEvent, ChangeEvent, FC } from "react";
 
 const Login: FC = () => {
@@ -14,9 +14,15 @@ const Login: FC = () => {
   const [email, setEmail] = useState(""); // 管理電子郵件輸入值的狀態
   const [password, setPassword] = useState(""); // 管理密碼輸入值的狀態
 
-  // [Hook] 使用自定義 store hooks 獲取狀態和操作方法
-  const { login, register, loginWithGoogle, logout } = authStore(); // 從 authStore 解構認證相關方法
-  const navigate: NavigationFunction = useNavigate(); // React Router 導航控制 hook
+  // [Hook] React Router 導航控制 hook
+  const navigate: NavigationFunction = useNavigate(); 
+  
+  // [Hook] 使用自定義 store hooks 獲取狀態和操作方法，避免解構賦值問題
+  const authState = authStore();
+  const login = authState.login;
+  const register = authState.register;
+  const loginWithGoogle = authState.loginWithGoogle;
+  const logout = authState.logout;
 
   // 註冊處理函數
   const handleRegister = async (e: FormEvent<HTMLButtonElement>): Promise<void> => {

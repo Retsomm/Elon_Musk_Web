@@ -7,11 +7,8 @@ import MessageBoard from "../component/MessageBoard";
 import CollectList from "../component/CollectList";
 import type { 
   MemberTabType, 
-  MemberState, 
   TabButtonConfig, 
-  MemberProfileInfo, 
   NameEditValidation,
-  MemberPageConfig 
 } from "../types/member";
 
 // 預設頭像路徑
@@ -66,8 +63,6 @@ const Member: React.FC = () => {
   }, [user, isGmail, memberEmail]); // 依賴數組，決定何時重新執行此 effect
 
   const picSrc: string = googlePhoto || DEFAULT_PIC;
-
-  if (loading) return null; // 加載中不渲染內容
 
   // 名稱驗證函數
   const validateName = (name: string): NameEditValidation => {
@@ -209,28 +204,36 @@ const Member: React.FC = () => {
   }
 
   return (
-    <div className="memberContainer flex px-30 max-md:flex-col md:justify-around mt-16">
-      <div className="memberSide md:left-10 md:fixed md:top-1/3 flex md:flex-col md:flex-1/2 justify-center items-end border-b-black flex-wrap mt-16 md:mt-0">
-        {TAB_CONFIGS.map((tab) => (
-          <button
-            key={tab.key}
-            className={`btn ${tab.buttonClass} m-3 ${
-              mainTab === tab.key ? "btn-active" : ""
-            }`}
-            onClick={() => handleTabChange(tab.key)}
-          >
-            {tab.label}
-          </button>
-        ))}
+    <>
+      {loading ? (
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="loading loading-spinner loading-lg"></div>
+        </div>
+      ) : (
+        <div className="memberContainer flex px-30 max-md:flex-col md:justify-around mt-16">
+          <div className="memberSide md:left-10 md:fixed md:top-1/3 flex md:flex-col md:flex-1/2 justify-center items-end border-b-black flex-wrap mt-16 md:mt-0">
+            {TAB_CONFIGS.map((tab) => (
+              <button
+                key={tab.key}
+                className={`btn ${tab.buttonClass} m-3 ${
+                  mainTab === tab.key ? "btn-active" : ""
+                }`}
+                onClick={() => handleTabChange(tab.key)}
+              >
+                {tab.label}
+              </button>
+            ))}
 
-        <button className="btn btn-warning m-3" onClick={handleLogout}>
-          登出
-        </button>
-      </div>
-      <div className="memberSection flex sm:flex-col flex-1/2 justify-center items-start border-b-black sm:pl-50 mt-5">
-        {mainContent}
-      </div>
-    </div>
+            <button className="btn btn-warning m-3" onClick={handleLogout}>
+              登出
+            </button>
+          </div>
+          <div className="memberSection flex sm:flex-col flex-1/2 justify-center items-start border-b-black sm:pl-50 mt-5">
+            {mainContent}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

@@ -9,20 +9,18 @@ interface DesktopNavbarProps {
 }
 
 export default function DesktopNavbar({ toggleNav }: DesktopNavbarProps): React.ReactElement {
-  // 從 authStore 中解構出 user 物件，使用 Zustand store 來管理認證狀態
-  // user 物件包含使用者登入資訊，如 photoURL 等屬性
-  const { user, loading } = authStore();
-
+  "use no memo";
+  
   // React Router v6 hook，用於程式化導航
   // 可通過 navigate('/path') 進行頁面跳轉
   const navigate = useNavigate();
-  let avatarSrc: string = "/avatar.webp";
-  if (user?.photoURL) {
-    avatarSrc = user.photoURL;
-  } else {
-    avatarSrc = "/avatar.webp";
-  }
-
+  
+  // 從 authStore 中分別獲取需要的狀態，避免解構賦值可能的問題
+  const authState = authStore();
+  const user = authState.user;
+  const loading = authState.loading;
+  
+  // Removed unused avatarSrc variable
   return (
     <nav className="fixed top-0 left-0 right-0 nav p-2 px-10 flex align-middle md:justify-between justify-center shadow-2xl z-[1000] items-center bg-base-100 overflow-hidden">
       <div className="absolute inset-0 w-full h-full -z-10 pointer-events-none">

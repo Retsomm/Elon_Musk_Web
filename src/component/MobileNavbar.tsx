@@ -15,10 +15,16 @@ interface NavLinkClassNameProps {
 }
 
 export default function MobileNavbar({ isNavOpen, toggleNav }: MobileNavbarProps) {
-  // 從Zustand store中獲取用戶信息和登出方法
-  const { user, logout, loading } = authStore();
+  "use no memo";
+  
   // React Router導航hook，用於程序化頁面跳轉
   const navigate = useNavigate();
+  
+  // 從Zustand store中分別獲取需要的狀態，避免解構賦值可能的問題
+  const authState = authStore();
+  const user = authState.user;
+  const logout = authState.logout;
+  const loading = authState.loading;
 
   // 設定頭像來源，預設為 "/avatar.webp"
   let avatarSrc: string = "/avatar.webp";

@@ -12,8 +12,14 @@ function ProtectedRoute({ children }: ProtectedRouteProps) {
   // 從 authStore 取得 user 和 loading 狀態
   const { user, loading } = authStore();
 
-  // 如果正在載入驗證狀態，暫時不渲染內容
-  if (loading) return null;
+  // 如果正在載入驗證狀態，顯示 loading 畫面
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="loading loading-spinner loading-lg"></div>
+      </div>
+    );
+  }
 
   // 如果沒有登入，導向登入頁面
   if (!user) {
