@@ -1,8 +1,8 @@
-import { useParams } from "react-router-dom";
-import books from "../data/books.json";
-import podcasts from "../data/podcasts.json";
-import youtubeVideos from "../data/youtubes.json";
-import FavoriteButton from "../component/FavoriteButton";
+import { useParams, Link } from "react-router-dom";
+import books from "data/books.json";
+import podcasts from "data/podcasts.json";
+import youtubeVideos from "data/youtubes.json";
+import FavoriteButton from "components/FavoriteButton";
 import { JSX } from "react";
 /**
  * 媒體項目基本介面

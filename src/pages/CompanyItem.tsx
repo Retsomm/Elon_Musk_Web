@@ -1,8 +1,8 @@
 import { useParams, Link } from "react-router-dom";
-import companies from "../data/Companies.json";
-import Timeline from "../component/Timeline";
+import companies from "data/Companies.json";
+import Timeline from "components/Timeline";
 import { JSX } from "react";
-import type { Company, Product, CompanyParams } from "../types/timeline";
+import type { Company, Product, CompanyParams } from "types/timeline";
 /**
  * 公司詳細資料頁面組件
  * 根據 URL 參數顯示特定公司的詳細資訊

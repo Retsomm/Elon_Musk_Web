@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { database, auth } from "../firebase";
+import { database, auth } from "@/firebase";
 import { ref, push, onValue } from "firebase/database";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { toastStore } from "../store/toastStore";
+import { toastStore } from "store/toastStore";
 
 // 定義訊息型別
 interface Message {

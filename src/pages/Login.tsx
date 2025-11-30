@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authStore } from "../store/authStore";
+import { authStore } from "store/authStore";
 import {
   handleRegister as handleRegisterAction,
   handleEmailLogin as handleEmailLoginAction,
   handleGoogleLogin as handleGoogleLoginAction,
-} from "../utils/authHandlers";
-import type {NavigationFunction } from "../utils/authHandlers";
+} from "utils/authHandlers";
+import type {NavigationFunction } from "utils/authHandlers";
 import type { FormEvent, ChangeEvent, FC } from "react";
 
 const Login: FC = () => {

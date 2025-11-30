@@ -1,7 +1,7 @@
-import { useAllFavorites } from "../hooks/useFavorites";
+import { useAllFavorites } from "hooks/useFavorites";
 import React from "react";
 import { Link } from "react-router-dom";
-import type { FavoriteItem } from "../types/favorites";
+import type { FavoriteItem } from "types/favorites";
 
 interface CollectItemProps {
   item: FavoriteItem;

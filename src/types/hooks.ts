@@ -1,7 +1,7 @@
 // 自定義 Hook 相關類型定義
 
-import type { FirebaseUser } from './common';
-import type { FirebaseError, DatabaseSnapshot } from './firebase';
+import type { FirebaseUser } from 'types/common';
+import type { FirebaseError, DatabaseSnapshot } from 'types/firebase';
 
 // 基礎 Hook 返回類型
 export interface BaseHookReturn {

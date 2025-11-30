@@ -1,5 +1,5 @@
 import { JSX } from "react";
-import type { TimelineItem, TimelineProps } from "../types/timeline";
+import type { TimelineItem, TimelineProps } from "types/timeline";
 /**
  * Timeline 元件 - 用於顯示時間軸內容
  * @param {Array} timelineData - 時間軸資料陣列，每個項目包含 year, event 和可能的 media 物件

@@ -1,5 +1,5 @@
-import { validateLoginForm, validateRegisterForm } from './validation';
-import { toastStore } from '../store/toastStore';
+import { validateLoginForm, validateRegisterForm } from 'utils/validation';
+import { toastStore } from 'store/toastStore';
 /**
  * 認證操作介面
  */

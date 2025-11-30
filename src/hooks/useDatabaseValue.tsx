@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { ref, onValue } from "firebase/database";
-import { database } from "../firebase";
+import { database } from "@/firebase";
 
 /**
  * 自定義 Hook: 用於監聽 Firebase 實時資料庫的數據變化

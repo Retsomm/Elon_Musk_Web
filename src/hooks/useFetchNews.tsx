@@ -10,7 +10,7 @@ import type {
   FirebaseFunctionError,
   DateString,
   ISOString
-} from "../types/news";
+} from "types/news";
 
 /**
  * 取得台灣時區（UTC+8）當前日期的字串 (格式: YYYY-MM-DD)。

@@ -1,15 +1,15 @@
-import { useState, useEffect, type ChangeEvent, type SyntheticEvent } from "react";
-import { authStore } from "../store/authStore";
-import { toastStore } from "../store/toastStore";
-import { handleLogout as handleLogoutAction } from "../utils/authHandlers";
+import { useState, useEffect, ChangeEvent, SyntheticEvent } from "react";
+import { authStore } from "store/authStore";
+import { toastStore } from "store/toastStore";
+import { handleLogout as handleLogoutAction } from "utils/authHandlers";
 import { useNavigate } from "react-router-dom";
-import MessageBoard from "../component/MessageBoard";
-import CollectList from "../component/CollectList";
+import MessageBoard from "components/MessageBoard";
+import CollectList from "components/CollectList";
 import type { 
   MemberTabType, 
   TabButtonConfig, 
   NameEditValidation,
-} from "../types/member";
+} from "types/member";
 
 // 預設頭像路徑
 const DEFAULT_PIC: string = "/avatar.webp";

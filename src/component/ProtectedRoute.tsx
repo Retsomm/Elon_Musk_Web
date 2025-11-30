@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { ReactNode } from "react";
-import { authStore } from "../store/authStore";
+import { authStore } from "store/authStore";
 
 // ProtectedRoute 元件的 Props 型別定義
 interface ProtectedRouteProps {

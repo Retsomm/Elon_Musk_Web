@@ -18,6 +18,14 @@ export default defineConfig({
     alias: {
       // 路徑別名物件 - 鍵值對映射，簡化 import 路徑
       "@": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "./src"),
+      // 添加各個資料夾的絕對路徑別名
+      "pages": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "./src/pages"),
+      "components": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "./src/component"),
+      "hooks": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "./src/hooks"),
+      "store": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "./src/store"),
+      "types": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "./src/types"),
+      "utils": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "./src/utils"),
+      "data": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "./src/data"),
       // 此處使用 path 方法處理目錄路徑，fileURLToPath 將 URL 轉為檔案路徑
     },
   },

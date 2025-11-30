@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import useFetchNews, { clearNewsHistory } from "../hooks/useFetchNews";
-import type { NewsArticle, NewsResponse } from "../types/news";
+import useFetchNews, { clearNewsHistory } from "hooks/useFetchNews";
+import type { NewsArticle, NewsResponse } from "types/news";
 
 /**
  * News 組件介面

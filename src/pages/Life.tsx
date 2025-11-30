@@ -1,8 +1,8 @@
 import { useState } from "react";
-import MediaModal from "../component/MediaModal";
-import Timeline from "../component/Timeline";
-import events from "../data/LifeEvent.json";
-import type { TimelineItem } from "../types/timeline";
+import MediaModal from "components/MediaModal";
+import Timeline from "components/Timeline";
+import events from "data/LifeEvent.json";
+import type { TimelineItem } from "types/timeline";
 
 // 定義原始事件資料的型別
 interface LifeEvent {

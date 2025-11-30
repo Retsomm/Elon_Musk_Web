@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { Hamburger } from "lucide-react";
-import { authStore } from "../store/authStore";
-import Nebula from "./Nebula";
+import { authStore } from "store/authStore";
+import Nebula from "components/Nebula";
 
 // 定義 DesktopNavbar 組件的 props 型別
 interface DesktopNavbarProps {

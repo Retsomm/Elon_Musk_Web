@@ -1,14 +1,14 @@
 import { set, ref } from "firebase/database";
-import { toastStore } from "../store/toastStore";
-import { useFirebaseUserId } from "./useFirebaseUserId";
-import { useDatabaseValue } from "./useDatabaseValue";
-import { database } from "../firebase";
+import { toastStore } from "store/toastStore";
+import { useFirebaseUserId } from "hooks/useFirebaseUserId";
+import { useDatabaseValue } from "hooks/useDatabaseValue";
+import { database } from "@/firebase";
 import type { 
   FavoriteItem, 
   UseFavoriteItemReturn, 
   UseAllFavoritesReturn,
   CreateFavoriteParams 
-} from "../types/favorites";
+} from "types/favorites";
 
 /**
  * 生成唯一的收藏項目 ID

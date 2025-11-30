@@ -1,5 +1,5 @@
 import { JSX } from "react";
-import { useFavoriteItem } from "../hooks/useFavorites";
+import { useFavoriteItem } from "hooks/useFavorites";
 
 /**
  * FavoriteButton 組件的 Props 介面

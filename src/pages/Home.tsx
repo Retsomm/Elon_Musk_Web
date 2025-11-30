@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import UnityParticleSystem from "../component/UnityParticleSystem";
+import UnityParticleSystem from "components/UnityParticleSystem";
 import { JSX } from "react";
 /**
  * 頁面區塊介面

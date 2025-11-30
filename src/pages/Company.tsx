@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import companies from "../data/Companies.json";
+import companies from "data/Companies.json";
 import { useState, useEffect, JSX } from "react";
 
 interface Company {

@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import MobileNavbar from "./MobileNavbar";
-import DesktopNavbar from "./DesktopNavbar";
+import MobileNavbar from "components/MobileNavbar";
+import DesktopNavbar from "components/DesktopNavbar";
 
-import Footer from "./Footer";
-import ToTop from "./ToTop";
+import Footer from "components/Footer";
+import ToTop from "components/ToTop";
 
 // 定義 toggleNav 函數的型別
 type ToggleNavFunction = () => void;

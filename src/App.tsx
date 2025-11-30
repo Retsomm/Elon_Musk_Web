@@ -5,19 +5,19 @@ import type { FC, ComponentType, LazyExoticComponent } from "react";
 import "./App.css";
 import "./index.css";
 
-// 懶載入頁面元件
-const Home: LazyExoticComponent<ComponentType<any>> = lazy(() => import("./pages/Home.tsx"));
-const Life: LazyExoticComponent<ComponentType<any>> = lazy(() => import("./pages/Life.tsx"));
-const Company: LazyExoticComponent<ComponentType<any>> = lazy(() => import("./pages/Company.tsx"));
-const CompanyItem: LazyExoticComponent<ComponentType<any>> = lazy(() => import("./pages/CompanyItem.tsx"));
-const News: LazyExoticComponent<ComponentType<any>> = lazy(() => import("./pages/News.tsx"));
-const Info: LazyExoticComponent<ComponentType<any>> = lazy(() => import("./pages/Info.tsx"));
-const Login: LazyExoticComponent<ComponentType<any>> = lazy(() => import("./pages/Login.tsx"));
-const Member: LazyExoticComponent<ComponentType<any>> = lazy(() => import("./pages/Member.tsx"));
-const InfoItem: LazyExoticComponent<ComponentType<any>> = lazy(() => import("./pages/InfoItem.tsx"));
-// 懶載入共用元件
-const Layout: LazyExoticComponent<ComponentType<any>> = lazy(() => import("./component/Layout.tsx"));
-const ScrollToTop: LazyExoticComponent<ComponentType<any>> = lazy(() => import("./hooks/useScrollToTop.tsx"));
+// 懶載入頁面元件 - 使用新的路徑別名
+const Home: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/Home"));
+const Life: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/Life"));
+const Company: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/Company"));
+const CompanyItem: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/CompanyItem"));
+const News: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/News"));
+const Info: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/Info"));
+const Login: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/Login"));
+const Member: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/Member"));
+const InfoItem: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/InfoItem"));
+// 懶載入共用元件 - 使用新的路徑別名
+const Layout: LazyExoticComponent<ComponentType<any>> = lazy(() => import("components/Layout"));
+const ScrollToTop: LazyExoticComponent<ComponentType<any>> = lazy(() => import("hooks/useScrollToTop"));
 const ProtectedRoute: LazyExoticComponent<ComponentType<any>> = lazy(() => import("./component/ProtectedRoute.tsx"));
 const ErrorBoundary: LazyExoticComponent<ComponentType<any>> = lazy(() => import("./component/ErrorBoundary.tsx"));
 

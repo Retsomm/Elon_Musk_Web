@@ -22,11 +22,20 @@
     "strict": true, // 嚴格模式 (推薦，可先設為 false 降低導入難度)
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["vite/client", "node"]
-    // 你可以添加路徑別名 (paths)，如果你的 Vite 配置中有設定的話
-    // "paths": {
-    //   "@/*": ["./src/*"]
-    // }
+    "types": ["vite/client", "node"],
+    
+    /* 路徑別名設定 */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "pages/*": ["./src/pages/*"],
+      "components/*": ["./src/component/*"],
+      "hooks/*": ["./src/hooks/*"],
+      "store/*": ["./src/store/*"],
+      "types/*": ["./src/types/*"],
+      "utils/*": ["./src/utils/*"],
+      "data/*": ["./src/data/*"]
+    }
   },
   "include": ["src"], // 只檢查 src 資料夾下的檔案
   "references": [{ "path": "./tsconfig.node.json" }] // Vite 專案結構建議

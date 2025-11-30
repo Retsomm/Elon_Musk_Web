@@ -1,7 +1,7 @@
 import { useState, useEffect, JSX } from "react";
-import books from "../data/books.json";
-import podcasts from "../data/podcasts.json";
-import youtubeVideos from "../data/youtubes.json";
+import books from "data/books.json";
+import podcasts from "data/podcasts.json";
+import youtubeVideos from "data/youtubes.json";
 import { Link } from "react-router-dom";
 /**
  * 媒體項目基本介面

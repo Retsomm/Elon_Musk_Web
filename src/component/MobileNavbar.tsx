@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { authStore } from "../store/authStore";
+import { authStore } from "store/authStore";
 
 // 定義 MobileNavbar 組件的 props 類型
 interface MobileNavbarProps {

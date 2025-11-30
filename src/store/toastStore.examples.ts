@@ -1,8 +1,8 @@
 // Toast Store 使用範例
 // 此文件展示如何使用型別化的 toastStore
 
-import { toastStore } from './toastStore';
-import type { ToastOptions, PromiseMessages } from '../types/toast';
+import { toastStore } from 'store/toastStore';
+import type { ToastOptions, PromiseMessages } from 'types/toast';
 
 // 基本使用範例
 export const toastExamples = {
