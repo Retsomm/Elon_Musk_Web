@@ -1,4 +1,69 @@
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect } from "react";
+
+// NebulaWave 類別：定義星雲波浪特性和行為的物件藍圖
+// 移至元件外部以符合 React Compiler 優化要求
+class NebulaWave {
+  amplitude: number;
+  frequency: number;
+  speed: number;
+  hue: number;
+  yOffset: number;
+  time: number;
+
+  constructor(canvasHeight: number) {
+    // 物件屬性初始化，使用隨機值增加多樣性
+    this.amplitude = 100 + Math.random() * 200; // 振幅（波浪高度）
+    this.frequency = 0.005 + Math.random() * 0.01; // 頻率（波浪密度）
+    this.speed = 0.002 + Math.random() * 0.03; // 移動速度
+    this.hue = Math.random() * 360; // HSL 色彩的色相值
+    this.yOffset = Math.random() * canvasHeight; // Y軸偏移量
+    this.time = 0; // 時間累積器
+  }
+
+  // 更新波浪狀態的方法
+  update(): void {
+    this.time += this.speed;
+  }
+  
+  // 繪製波浪的方法
+  draw(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+    ctx.globalAlpha = 0.1;
+
+    // 創建波浪漸變
+    const gradient = ctx.createLinearGradient(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+    gradient.addColorStop(0, `hsla(${this.hue}, 80%, 60%, 0)`);
+    gradient.addColorStop(0.5, `hsla(${this.hue}, 80%, 60%, 0.3)`);
+    gradient.addColorStop(1, `hsla(${this.hue + 60}, 80%, 60%, 0)`);
+
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height);
+
+    // 繪製波浪
+    for (let x = 0; x < canvas.width; x += 5) {
+      const y =
+        this.yOffset +
+        Math.sin(x * this.frequency + this.time) * this.amplitude +
+        Math.sin(x * this.frequency * 2 + this.time * 1.5) *
+          (this.amplitude * 0.5) +
+        Math.sin(x * this.frequency * 0.5 + this.time * 0.8) *
+          (this.amplitude * 0.3);
+      ctx.lineTo(x, y);
+    }
+
+    ctx.lineTo(canvas.width, canvas.height);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+}
 
 const Nebula: React.FC = () => {
   // 使用 useRef 創建持久引用，保存 canvas 元素
@@ -6,32 +71,8 @@ const Nebula: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   // 使用 useRef 追蹤 animation frame ID，用於在組件卸載時取消動畫
   const animationIdRef = useRef<number | null>(null);
-  // useCallback 包裝 resizeCanvas 函數
-  // 此 hook 會記憶化函數，避免重複創建，優化效能
-  // 空依賴陣列 [] 表示該函數不依賴任何狀態變數，只會創建一次
-  const resizeCanvas = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    
-    const container = canvas.parentElement;
-
-    if (canvas && container) {
-      const { width, height } = container.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-
-      ctx.scale(dpr, dpr);
-    }
-  }, []);
+  
   // useEffect 處理副作用，如 DOM 操作、事件監聽、動畫設置等
-  // 依賴於 resizeCanvas，當 resizeCanvas 改變時會重新執行
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -39,70 +80,30 @@ const Nebula: React.FC = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     
+    // resizeCanvas 函式移到 useEffect 內部
+    const resizeCanvas = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      
+      const container = canvas.parentElement;
+
+      if (canvas && container) {
+        const { width, height } = container.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+
+        ctx.scale(dpr, dpr);
+      }
+    };
+    
     resizeCanvas();
-
-    // NebulaWave 類別：定義星雲波浪特性和行為的物件藍圖
-    class NebulaWave {
-      amplitude: number;
-      frequency: number;
-      speed: number;
-      hue: number;
-      yOffset: number;
-      time: number;
-
-      constructor(canvasHeight: number) {
-        // 物件屬性初始化，使用隨機值增加多樣性
-        this.amplitude = 100 + Math.random() * 200; // 振幅（波浪高度）
-        this.frequency = 0.005 + Math.random() * 0.01; // 頻率（波浪密度）
-        this.speed = 0.002 + Math.random() * 0.03; // 移動速度
-        this.hue = Math.random() * 360; // HSL 色彩的色相值
-        this.yOffset = Math.random() * canvasHeight; // Y軸偏移量
-        this.time = 0; // 時間累積器
-      }
-
-      // 更新波浪狀態的方法
-      update(): void {
-        this.time += this.speed;
-      }
-      // 繪製波浪的方法
-      draw(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
-        ctx.save();
-        ctx.globalCompositeOperation = "screen";
-        ctx.globalAlpha = 0.1;
-
-        // 創建波浪漸變
-        const gradient = ctx.createLinearGradient(
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
-        gradient.addColorStop(0, `hsla(${this.hue}, 80%, 60%, 0)`);
-        gradient.addColorStop(0.5, `hsla(${this.hue}, 80%, 60%, 0.3)`);
-        gradient.addColorStop(1, `hsla(${this.hue + 60}, 80%, 60%, 0)`);
-
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.moveTo(0, canvas.height);
-
-        // 繪製波浪
-        for (let x = 0; x < canvas.width; x += 5) {
-          const y =
-            this.yOffset +
-            Math.sin(x * this.frequency + this.time) * this.amplitude +
-            Math.sin(x * this.frequency * 2 + this.time * 1.5) *
-              (this.amplitude * 0.5) +
-            Math.sin(x * this.frequency * 0.5 + this.time * 0.8) *
-              (this.amplitude * 0.3);
-          ctx.lineTo(x, y);
-        }
-
-        ctx.lineTo(canvas.width, canvas.height);
-        ctx.closePath();
-        ctx.fill();
-        ctx.restore();
-      }
-    }
 
     // 使用 Array.from 創建固定長度的陣列並初始化
     // { length: 8 } 創建一個有 8 個空位的類陣列物件
@@ -170,7 +171,7 @@ const Nebula: React.FC = () => {
         cancelAnimationFrame(animationIdRef.current);
       }
     };
-  }, [resizeCanvas]);
+  }, []);
 
   return (
     <div className="w-full h-48 bg-black relative overflow-hidden">

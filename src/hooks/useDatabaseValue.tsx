@@ -21,8 +21,10 @@ export const useDatabaseValue = <T = any>(
   const [data, setData] = useState<T | null>(defaultValue);
   const defaultValueRef = useRef(defaultValue);
   
-  // 更新 ref 當 defaultValue 改變時
-  defaultValueRef.current = defaultValue;
+  // 修正: 在 useEffect 中更新 ref，不在 render 期間直接更新
+  useEffect(() => {
+    defaultValueRef.current = defaultValue;
+  }, [defaultValue]);
 
   useEffect(() => {
     if (!path) {

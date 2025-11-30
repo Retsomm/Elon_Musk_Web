@@ -52,13 +52,16 @@ const Member: React.FC = () => {
   // 用於初始化用戶名稱邏輯
   useEffect(() => {
     if (user) {
-      let name: string = "";
-      if (isGmail && user.displayName) {
-        name = user.displayName;
-      } else {
-        name = memberEmail.split("@")[0];
-      }
-      setMemberName(name);
+      // 修正: 使用 setTimeout 來避免同步 setState
+      setTimeout(() => {
+        let name: string = "";
+        if (isGmail && user.displayName) {
+          name = user.displayName;
+        } else {
+          name = memberEmail.split("@")[0];
+        }
+        setMemberName(name);
+      }, 0);
     }
   }, [user, isGmail, memberEmail]); // 依賴數組，決定何時重新執行此 effect
 

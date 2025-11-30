@@ -1,5 +1,5 @@
 import { useAllFavorites } from "../hooks/useFavorites";
-import { useMemo } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import type { FavoriteItem } from "../types/favorites";
 
@@ -43,7 +43,7 @@ function CollectItem({ item, onRemove }: CollectItemProps) {
 export default function CollectList() {
   const { favoritesData, removeFavorite } = useAllFavorites();
 
-  const collectItems = useMemo(() => {
+  const collectItems = (() => {
     if (!Array.isArray(favoritesData) || favoritesData.length === 0) {
       return [];
     }
@@ -58,7 +58,7 @@ export default function CollectList() {
           onRemove={removeFavorite} 
         />
       ));
-  }, [favoritesData, removeFavorite]);
+  })();
 
   if (collectItems.length === 0) {
     return (

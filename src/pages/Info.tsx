@@ -220,8 +220,9 @@ function Info(): JSX.Element {
     podcasts: [],
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [filter, setFilter] = useState<String>("");
-  useEffect((): void => {
+  const [filter, setFilter] = useState<string>("");
+  
+  useEffect(() => {
     setData({
       books: books as BookItem[],
       youtubeVideos: youtubeVideos as YouTubeItem[],
