@@ -1,4 +1,4 @@
-import { onCall, HttpsError } from "firebase-functions/v2/https";
+import { onRequest } from "firebase-functions/v2/https";
 import axios from "axios";
 
 /**
@@ -195,19 +195,28 @@ function levenshteinDistance(str1, str2) {
 
 // 導出 Firebase Cloud Function
 // 配置區域、記憶體、超時和最大實例數
-export const getNews = onCall({
+export const getNews = onRequest({
   region: "us-central1",
   memory: "1GiB",
   timeoutSeconds: 120,
   maxInstances: 10
-}, async (request) => {
-  
+}, async (req, res) => {
+  // CORS headers
+  res.set('Access-Control-Allow-Origin', req.get('Origin') || '*');
+  res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(204).send('');
+  }
+
   // 驗證請求參數（可選）
-  const { limit = 40, sources = null } = request.data || {};
-  
+  const { limit = 40, sources = null } = req.body || {};
+
   // 驗證 API Key
   if (!process.env.NEWS_API_KEY) {
-    throw new HttpsError('failed-precondition', 'News API key not configured');
+    return res.status(500).json({ error: 'News API key not configured' });
   }
 
   /**
@@ -370,14 +379,16 @@ export const getNews = onCall({
 
     // 添加日誌記錄以便調試
     console.log(`成功獲取 ${finalArticles.length} 篇新聞，其中 ${finalArticles.filter(a => a.link && a.link.trim() !== '').length} 篇有有效連結`);
-    
-    return result;
+
+    return res.status(200).json(result);
 
   } catch (err) {
     console.error("獲取新聞失敗:", err);
-    throw new HttpsError('internal', '伺服器錯誤，請稍後再試', {
-      timestamp: new Date().toISOString(),
-      details: err.message
+    return res.status(500).json({
+      error: 'internal',
+      message: '伺服器錯誤，請稍後再試',
+      details: err?.message || String(err),
+      timestamp: new Date().toISOString()
     });
   }
 });   
