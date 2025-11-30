@@ -96,7 +96,7 @@ export default function News(): React.ReactElement {
   return (
     <div className="mt-16">
       {/* 控制面板 */}
-      <div className="text-center mb-6 p-4 rounded-lg">
+      <div className="text-center my-6 p-4 rounded-lg">
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-3">
           <button
             className="btn btn-secondary"
