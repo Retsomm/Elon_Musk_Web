@@ -1,5 +1,4 @@
 import useSWR from "swr";
-import { getFunctions, httpsCallable } from "firebase/functions";
 import type {
   NewsArticle,
   NewsResponse,
@@ -69,25 +68,21 @@ function mergeAndDedupeArticles(newArticles: NewsArticle[], existingArticles: Ne
  */
 const fetcher = async (): Promise<NewsResponse> => {
   try {
-    // 初始化 Firebase Functions 實例
-    const functions = getFunctions();
-    // 獲取名為 "getNews" 的 Cloud Function
-    const getNews = httpsCallable(functions, "getNews");
+    // 直接呼叫 HTTP endpoint（onRequest）
+    const endpoint = `https://us-central1-${import.meta.env.VITE_FIREBASE_PROJECT_ID}.cloudfunctions.net/getNews`;
+    const resp = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ limit: 40 } as GetNewsParams),
+      credentials: 'omit'
+    });
 
-    // 呼叫 Cloud Function，傳入參數限制最多40個新聞
-    const result = await getNews({ limit: 40 } as GetNewsParams);
-
-    // 記錄 Firebase Function 的回應以便除錯
-    console.log("Firebase Function 回應:", result);
-
-    // 檢查回應是否為有效物件
-    if (!result || typeof result !== "object") {
-      throw new Error("Firebase Function 回應格式不正確");
+    if (!resp.ok) {
+      const text = await resp.text();
+      throw new Error(`Function HTTP error ${resp.status}: ${text}`);
     }
 
-    // 處理 API 回傳的資料格式：有些 API 將資料放在 data 欄位，有些放在 articles
-    // 如果兩者都沒有，拋出錯誤
-    const firebaseResult = result.data as FirebaseNewsResponse;
+    const firebaseResult = (await resp.json()) as FirebaseNewsResponse;
     let data: { articles: NewsArticle[]; metadata?: any };
     
     if (firebaseResult?.data) {
