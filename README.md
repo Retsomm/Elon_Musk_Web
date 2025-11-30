@@ -239,7 +239,7 @@ cd EMW-main
 
 2. **安裝依賴**
 ```bash
-npm install
+yarn install
 ```
 
 3. **設定環境變數**
@@ -250,17 +250,17 @@ cp .env.example .env
 
 4. **啟動開發伺服器**
 ```bash
-npm run dev
+yarn dev
 ```
 
 5. **建置生產版本**
 ```bash
-npm run build
+yarn build
 ```
 
 ## 📋 可用指令
 
-- `npm run dev` - 啟動開發伺服器
-- `npm run build` - 建置生產版本
-- `npm run preview` - 預覽建置結果
-- `npm run lint` - 執行 ESLint 檢查
+- `yarn dev` - 啟動開發伺服器
+- `yarn build` - 建置生產版本
+- `yarn preview` - 預覽建置結果
+- `yarn lint` - 執行 ESLint 檢查

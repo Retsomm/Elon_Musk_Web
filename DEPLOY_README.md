@@ -87,7 +87,7 @@ Firebase 服務帳戶金鑰（JSON 格式）
 如果您想在本地測試部署，可以安裝 Firebase CLI：
 
 ```bash
-npm install -g firebase-tools
+yarn global add firebase-tools
 firebase login
 firebase init hosting
 ```
