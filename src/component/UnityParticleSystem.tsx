@@ -10,7 +10,7 @@ interface ParticleConfig {
 }
 
 // 粒子系統組件的 Props 型別定義
-interface UnityParticleSystemProps {}
+export type UnityParticleSystemProps = Record<string, unknown>;
 
 // 動畫循環的型別定義
 type AnimationFunction = () => void;
@@ -143,7 +143,6 @@ const UnityParticleSystem: FC<UnityParticleSystemProps> = () => {
 
 export default UnityParticleSystem;
 export type { 
-  UnityParticleSystemProps, 
   ParticleConfig, 
   AnimationFunction, 
   ResizeHandler 

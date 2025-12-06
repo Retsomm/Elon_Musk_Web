@@ -6,8 +6,7 @@ import { database } from "@/firebase";
 import type { 
   FavoriteItem, 
   UseFavoriteItemReturn, 
-  UseAllFavoritesReturn,
-  CreateFavoriteParams 
+  UseAllFavoritesReturn
 } from "types/favorites";
 
 /**

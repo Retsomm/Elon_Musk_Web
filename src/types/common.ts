@@ -58,7 +58,7 @@ export interface PaginationProps {
 }
 
 // API 回應基礎格式
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   message?: string;
@@ -81,7 +81,7 @@ export interface ValidationError {
   code?: string;
 }
 
-export interface FormState<T = any> {
+export interface FormState<T = unknown> {
   data: T;
   errors: ValidationError[];
   isValid: boolean;
@@ -92,14 +92,14 @@ export interface FormState<T = any> {
 // 搜索相關類型
 export interface SearchOptions {
   query: string;
-  filters?: Record<string, any>;
+  filters?: Record<string, unknown>;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
   page?: number;
   limit?: number;
 }
 
-export interface SearchResult<T = any> {
+export interface SearchResult<T = unknown> {
   items: T[];
   total: number;
   page: number;
@@ -138,13 +138,13 @@ export interface LocalStorageKeys {
 }
 
 // 路由相關類型
-export interface RouteConfig {
+export interface RouteConfig<P = unknown> {
   path: string;
-  component: React.ComponentType<any>;
+  component: React.ComponentType<P>;
   exact?: boolean;
   protected?: boolean;
   title?: string;
-  meta?: Record<string, any>;
+  meta?: Record<string, unknown>;
 }
 
 // 錯誤邊界相關類型
@@ -165,7 +165,7 @@ export interface PerformanceMetric {
   value: number;
   unit: 'ms' | 'kb' | 'count';
   timestamp: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 // Firebase 認證相關類型

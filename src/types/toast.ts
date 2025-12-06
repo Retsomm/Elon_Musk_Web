@@ -7,15 +7,13 @@ import {
 } from 'react-hot-toast';
 
 // Toast 選項介面（基於 react-hot-toast 的選項）
-export interface ToastOptions extends Partial<ReactHotToastOptions> {
-  // 可以添加自定義選項
-}
+export type ToastOptions = Partial<ReactHotToastOptions>;
 
 // Promise Toast 訊息配置
 export interface PromiseMessages {
   loading?: string;
-  success?: string | ((data?: any) => string);
-  error?: string | ((error?: any) => string);
+  success?: string | ((data?: unknown) => string);
+  error?: string | ((error?: unknown) => string);
 }
 
 // Promise Toast 選項

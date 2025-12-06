@@ -42,7 +42,7 @@ export interface UseAuthReturn extends BaseHookReturn {
 }
 
 // 資料庫值監聽 Hook 返回類型
-export interface UseDatabaseValueReturn<T = any> extends BaseHookReturn {
+export interface UseDatabaseValueReturn<T = unknown> extends BaseHookReturn {
   data: T | null;
   snapshot: DatabaseSnapshot<T> | null;
   exists: boolean;
@@ -54,7 +54,7 @@ export interface UseDatabaseValueReturn<T = any> extends BaseHookReturn {
 }
 
 // 資料庫列表監聽 Hook 返回類型
-export interface UseDatabaseListReturn<T = any> extends BaseHookReturn {
+export interface UseDatabaseListReturn<T = unknown> extends BaseHookReturn {
   data: T[];
   snapshots: DatabaseSnapshot<T>[];
   isEmpty: boolean;
@@ -90,10 +90,10 @@ export interface DatabaseHookOptions extends HookOptions {
   orderBy?: string;
   limitToFirst?: number;
   limitToLast?: number;
-  startAt?: any;
-  endAt?: any;
-  equalTo?: any;
-  onDataChange?: (data: any) => void;
+  startAt?: unknown;
+  endAt?: unknown;
+  equalTo?: unknown;
+  onDataChange?: (data: unknown) => void;
   onError?: (error: FirebaseError) => void;
 }
 
@@ -107,7 +107,7 @@ export interface UseLocalStorageReturn<T> {
 }
 
 // 異步操作 Hook 返回類型
-export interface UseAsyncReturn<T, P extends any[] = any[]> extends BaseHookReturn {
+export interface UseAsyncReturn<T, P extends unknown[] = unknown[]> extends BaseHookReturn {
   data: T | null;
   execute: (...params: P) => Promise<T>;
   reset: () => void;
@@ -115,14 +115,14 @@ export interface UseAsyncReturn<T, P extends any[] = any[]> extends BaseHookRetu
 }
 
 // 表單 Hook 返回類型
-export interface UseFormReturn<T extends Record<string, any>> {
+export interface UseFormReturn<T extends Record<string, unknown>> {
   values: T;
   errors: Partial<Record<keyof T, string>>;
   touched: Partial<Record<keyof T, boolean>>;
   isValid: boolean;
   isDirty: boolean;
   isSubmitting: boolean;
-  setValue: (field: keyof T, value: any) => void;
+  setValue: (field: keyof T, value: unknown) => void;
   setValues: (values: Partial<T>) => void;
   setError: (field: keyof T, error: string) => void;
   setErrors: (errors: Partial<Record<keyof T, string>>) => void;

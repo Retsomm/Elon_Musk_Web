@@ -49,12 +49,12 @@ function MessageBoard({ memberName }: MessageBoardProps): React.ReactElement {
     onValue(
       messagesRef,
       (snapshot) => {
-        const data = snapshot.val() as Record<string, any> | null; // 取得所有訊息資料，返回一個鍵值對物件
+        const data = snapshot.val() as Record<string, Omit<Message, "id">> | null; // 取得所有訊息資料，返回一個鍵值對物件
         if (data) {
           // 資料處理：將 Firebase 物件轉為陣列結構
           // Object.entries 將物件轉換為 [key, value] 形式的二維陣列
           const messageList: Message[] = Object.entries(data)
-            .map(([id, message]: [string, any]): Message => ({
+            .map(([id, message]: [string, Omit<Message, "id">]): Message => ({
               id, // 將 Firebase 生成的唯一 key 作為 id
               content: message.content || "",
               timestamp: message.timestamp || "",

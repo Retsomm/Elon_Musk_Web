@@ -80,7 +80,7 @@ export type FirebaseFunctionErrorCode =
 export interface FirebaseFunctionError extends Error {
   code: FirebaseFunctionErrorCode;
   message: string;
-  details?: any;
+  details?: unknown;
 }
 
 // Firebase httpsCallable 的請求參數
@@ -117,7 +117,7 @@ export interface UseFetchNewsReturn {
   /** 新聞資料 */
   data: NewsResponse | undefined;
   /** 錯誤物件 */
-  error: any;
+  error?: unknown;
   /** 是否正在載入 */
   isLoading: boolean;
   /** 手動重新獲取資料的函數 */
@@ -140,12 +140,12 @@ export interface SwrNewsOptions {
   errorRetryInterval?: number;
   /** 去重間隔 (毫秒) */
   dedupingInterval?: number;
-  /** 後備資料 */
-  fallbackData?: NewsResponse | null;
+  /** 後備資料 (與 SWR 相容：可為資料或 Promise<資料>) */
+  fallbackData?: NewsResponse | Promise<NewsResponse>;
   /** 成功回調 */
   onSuccess?: (data: NewsResponse) => void;
   /** 錯誤回調 */
-  onError?: (error: any) => void;
+  onError?: (error: unknown) => void;
 }
 
 // 本地快取類型

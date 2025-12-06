@@ -14,7 +14,7 @@ export interface TimelineItem {
 }
 
 // 時間軸事件介面 (向後兼容)
-export interface TimelineEvent extends TimelineItem {}
+export type TimelineEvent = TimelineItem;
 
 // Timeline 組件 Props 類型
 export interface TimelineProps {

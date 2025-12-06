@@ -1,25 +1,25 @@
 // src/App.tsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
-import type { FC, ComponentType, LazyExoticComponent } from "react";
+import type { FC } from "react";
 import "./App.css";
 import "./index.css";
 
 // 懶載入頁面元件 - 使用新的路徑別名
-const Home: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/Home"));
-const Life: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/Life"));
-const Company: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/Company"));
-const CompanyItem: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/CompanyItem"));
-const News: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/News"));
-const Info: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/Info"));
-const Login: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/Login"));
-const Member: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/Member"));
-const InfoItem: LazyExoticComponent<ComponentType<any>> = lazy(() => import("pages/InfoItem"));
+const Home = lazy(() => import("pages/Home"));
+const Life = lazy(() => import("pages/Life"));
+const Company = lazy(() => import("pages/Company"));
+const CompanyItem = lazy(() => import("pages/CompanyItem"));
+const News = lazy(() => import("pages/News"));
+const Info = lazy(() => import("pages/Info"));
+const Login = lazy(() => import("pages/Login"));
+const Member = lazy(() => import("pages/Member"));
+const InfoItem = lazy(() => import("pages/InfoItem"));
 // 懶載入共用元件 - 使用新的路徑別名
-const Layout: LazyExoticComponent<ComponentType<any>> = lazy(() => import("components/Layout"));
-const ScrollToTop: LazyExoticComponent<ComponentType<any>> = lazy(() => import("hooks/useScrollToTop"));
-const ProtectedRoute: LazyExoticComponent<ComponentType<any>> = lazy(() => import("./component/ProtectedRoute.tsx"));
-const ErrorBoundary: LazyExoticComponent<ComponentType<any>> = lazy(() => import("./component/ErrorBoundary.tsx"));
+const Layout = lazy(() => import("components/Layout"));
+const ScrollToTop = lazy(() => import("hooks/useScrollToTop"));
+const ProtectedRoute = lazy(() => import("./component/ProtectedRoute.tsx"));
+const ErrorBoundary = lazy(() => import("./component/ErrorBoundary.tsx"));
 
 // 直接匯入的元件
 import Toast from "./component/Toast.tsx";

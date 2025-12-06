@@ -7,7 +7,7 @@ interface Company {
   description: string;
   img: string;
 }
-const MOBILE_BREAKPOINT = 768; // 手機尺寸的斷點
+// const MOBILE_BREAKPOINT = 768; // 手機尺寸的斷點 (已移除未使用變數)
 const Company = (): JSX.Element => {
   // === Hook 方法: useState ===
   // 宣告狀態變數isMobile，用於追蹤畫面是否為手機尺寸
@@ -38,7 +38,7 @@ const Company = (): JSX.Element => {
    * @param index - 陣列索引
    * @returns JSX.Element
    */
-  const renderMobileCard = (company: Company, index: number): JSX.Element => (
+  const renderMobileCard = (company: Company, _index?: number): JSX.Element => (
     <div className="card bg-base-100 w-96 shadow-xl">
       <figure className="px-10 pt-10">
         <img src={company.img} alt={company.name} className="rounded-xl" />
@@ -63,7 +63,7 @@ const Company = (): JSX.Element => {
    * @param index - 陣列索引
    * @returns JSX.Element
    */
-  const renderDesktopCard = (company: Company, index: number): JSX.Element => (
+  const renderDesktopCard = (company: Company, _index?: number): JSX.Element => (
     <div className="card bg-base-100 image-full w-96 h-48 shadow-xl overflow-hidden">
       <figure>
         <img

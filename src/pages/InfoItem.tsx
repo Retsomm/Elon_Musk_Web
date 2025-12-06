@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import books from "data/books.json";
 import podcasts from "data/podcasts.json";
 import youtubeVideos from "data/youtubes.json";
@@ -39,13 +39,7 @@ interface DataMapConfig {
 /**
  * FavoriteButton 組件的 Props 介面
  */
-interface FavoriteButtonProps {
-  type: string;
-  id: string;
-  noteIdx: number;
-  defaultContent: string;
-  title: string;
-}
+// FavoriteButtonProps 接口移除（未使用）
 
 /**
  * 資料映射類型

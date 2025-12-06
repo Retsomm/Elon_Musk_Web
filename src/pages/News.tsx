@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import useFetchNews, { clearNewsHistory } from "hooks/useFetchNews";
-import type { NewsArticle, NewsResponse } from "types/news";
+import type { NewsArticle } from "types/news";
 
 /**
  * News 組件介面
@@ -50,11 +50,25 @@ export default function News(): React.ReactElement {
   const news: NewsArticle[] = data?.articles || [];
   const lastUpdated: string | undefined = data?.timestamp;
 
-  if (error && news.length === 0) {
+  // 將 unknown 的 error 轉為可安全顯示的字串
+  const errorMessage: string | undefined = (() => {
+    if (!error) return undefined;
+    try {
+      if (typeof error === 'object' && error !== null && 'message' in (error as Record<string, unknown>)) {
+        const m = (error as Record<string, unknown>)['message'];
+        return typeof m === 'string' ? m : String(m ?? JSON.stringify(error));
+      }
+      return String(error);
+    } catch {
+      return String(error);
+    }
+  })();
+
+  if (errorMessage && news.length === 0) {
     return (
       <div className="text-center p-8">
         <div className="text-red-500 mb-4 text-lg">
-          載入失敗，請檢查網路連線後重試 (錯誤: {error.message})
+          載入失敗，請檢查網路連線後重試 (錯誤: {errorMessage})
         </div>
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
           <button
@@ -144,10 +158,10 @@ export default function News(): React.ReactElement {
           </div>
         )}
 
-        {error && news.length > 0 && (
+        {errorMessage && news.length > 0 && (
           <div className="alert alert-warning mt-3">
             <span>
-              ⚠️ 無法取得最新新聞，顯示先前資料 (錯誤: {error.message})
+              ⚠️ 無法取得最新新聞，顯示先前資料 (錯誤: {errorMessage})
             </span>
           </div>
         )}

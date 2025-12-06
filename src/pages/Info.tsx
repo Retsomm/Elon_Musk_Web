@@ -1,4 +1,4 @@
-import { useState, useEffect, JSX } from "react";
+import { useState, JSX } from "react";
 import books from "data/books.json";
 import podcasts from "data/podcasts.json";
 import youtubeVideos from "data/youtubes.json";
@@ -214,22 +214,15 @@ function InfoSection({
  * @returns JSX.Element
  */
 function Info(): JSX.Element {
-  const [data, setData] = useState<AppData>({
-    books: [],
-    youtubeVideos: [],
-    podcasts: [],
-  });
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const data: AppData = {
+    books: books as BookItem[],
+    youtubeVideos: youtubeVideos as YouTubeItem[],
+    podcasts: podcasts as PodcastItem[],
+  };
+  const isLoading = false;
   const [filter, setFilter] = useState<string>("");
   
-  useEffect(() => {
-    setData({
-      books: books as BookItem[],
-      youtubeVideos: youtubeVideos as YouTubeItem[],
-      podcasts: podcasts as PodcastItem[],
-    });
-    setIsLoading(false);
-  }, []);
+  // 已在初始化時將靜態資料載入 state，避免在 effect 中同步設置 state
   /**
    * 處理篩選器重置
    */

@@ -14,7 +14,7 @@ import { database } from "@/firebase";
  * - 監聽列表數據的變化 (陣列)
  * - 實時同步資料庫狀態到 React 組件
  */
-export const useDatabaseValue = <T = any>(
+export const useDatabaseValue = <T = unknown>(
   path: string | null | undefined, 
   defaultValue: T | null = null
 ): T | null => {

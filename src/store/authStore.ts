@@ -13,7 +13,6 @@ import { getDatabase, ref, update, get, type Database, type DatabaseReference } 
 import "../firebase"; // 引入 Firebase 配置文件
 import type { 
   AuthStore, 
-  AuthStoreCreator, 
   AppUser, 
   LoginType 
 } from '../types/auth';

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase";
-import type { UseFirebaseUserIdReturn, FirebaseError } from "types";
+import type { UseFirebaseUserIdReturn, FirebaseError } from "@/types";
 
 /**
  * 自定義 Hook - 用於監聽 Firebase 使用者認證狀態並取得使用者 ID

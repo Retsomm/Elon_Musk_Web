@@ -8,8 +8,7 @@ import type {
   UseFetchNewsReturn,
   SwrNewsOptions,
   FirebaseFunctionError,
-  DateString,
-  ISOString
+  DateString
 } from "types/news";
 
 /**
@@ -83,7 +82,7 @@ const fetcher = async (): Promise<NewsResponse> => {
     }
 
     const firebaseResult = (await resp.json()) as FirebaseNewsResponse;
-    let data: { articles: NewsArticle[]; metadata?: any };
+    let data: { articles: NewsArticle[]; metadata?: unknown };
     
     if (firebaseResult?.data) {
       data = firebaseResult.data;
@@ -102,19 +101,22 @@ const fetcher = async (): Promise<NewsResponse> => {
     
     // 轉換資料格式：將 Firebase Function 返回的 link 字段轉換為前端期待的 url 字段
     const newArticles: NewsArticle[] = rawArticles
-      .map((article: any) => ({
-        title: article.title || '',
-        description: article.description || '',
-        url: article.link || article.url || '', // 優先使用 link，後備 url
-        imageUrl: article.imageUrl || article.urlToImage || '',
-        source: article.source || '',
-        pubDate: article.pubDate || article.publishedAt || '',
-        timestamp: article.timestamp || new Date().toISOString(),
-        author: article.author || '',
-        content: article.content || '',
-        category: article.category || '',
-        language: article.language || 'en'
-      }))
+      .map((article: unknown) => {
+        const a = article as Record<string, unknown>;
+        return {
+          title: String(a['title'] ?? ''),
+          description: String(a['description'] ?? ''),
+          url: String(a['link'] ?? a['url'] ?? ''), // 優先使用 link，後備 url
+          imageUrl: String(a['imageUrl'] ?? a['urlToImage'] ?? ''),
+          source: String(a['source'] ?? ''),
+          pubDate: String(a['pubDate'] ?? a['publishedAt'] ?? ''),
+          timestamp: String(a['timestamp'] ?? new Date().toISOString()),
+          author: String(a['author'] ?? ''),
+          content: String(a['content'] ?? ''),
+          category: String(a['category'] ?? ''),
+          language: String(a['language'] ?? 'en')
+        } as NewsArticle;
+      })
       .filter((article: NewsArticle) => {
         // 過濾掉沒有有效 URL 的文章
         return article.url && article.url.trim() !== '' && article.title && article.title.trim() !== '';
@@ -138,19 +140,22 @@ const fetcher = async (): Promise<NewsResponse> => {
           const parsed: NewsCache = JSON.parse(cache);
           if (parsed.articles && parsed.articles.length > 0) {
             // 確保歷史快取資料也經過字段標準化處理
-            const normalizedArticles = parsed.articles.map((article: any) => ({
-              title: article.title || '',
-              description: article.description || '',
-              url: article.link || article.url || '', // 統一使用 url 字段
-              imageUrl: article.imageUrl || article.urlToImage || '',
-              source: article.source || '',
-              pubDate: article.pubDate || article.publishedAt || '',
-              timestamp: article.timestamp || new Date().toISOString(),
-              author: article.author || '',
-              content: article.content || '',
-              category: article.category || '',
-              language: article.language || 'en'
-            }));
+            const normalizedArticles = parsed.articles.map((article: unknown) => {
+              const a = article as Record<string, unknown>;
+              return {
+                title: String(a['title'] ?? ''),
+                description: String(a['description'] ?? ''),
+                url: String(a['link'] ?? a['url'] ?? ''), // 統一使用 url 字段
+                imageUrl: String(a['imageUrl'] ?? a['urlToImage'] ?? ''),
+                source: String(a['source'] ?? ''),
+                pubDate: String(a['pubDate'] ?? a['publishedAt'] ?? ''),
+                timestamp: String(a['timestamp'] ?? new Date().toISOString()),
+                author: String(a['author'] ?? ''),
+                content: String(a['content'] ?? ''),
+                category: String(a['category'] ?? ''),
+                language: String(a['language'] ?? 'en')
+              } as NewsArticle;
+            });
             
             console.log("返回歷史快取資料:", normalizedArticles.length, "篇新聞");
             
@@ -185,19 +190,22 @@ const fetcher = async (): Promise<NewsResponse> => {
       if (cache) {
         const parsed: NewsCache = JSON.parse(cache);
         // 確保現有快取資料也經過字段標準化處理
-        existingArticles = (parsed.articles || []).map((article: any) => ({
-          title: article.title || '',
-          description: article.description || '',
-          url: article.link || article.url || '', // 統一使用 url 字段
-          imageUrl: article.imageUrl || article.urlToImage || '',
-          source: article.source || '',
-          pubDate: article.pubDate || article.publishedAt || '',
-          timestamp: article.timestamp || new Date().toISOString(),
-          author: article.author || '',
-          content: article.content || '',
-          category: article.category || '',
-          language: article.language || 'en'
-        }));
+        existingArticles = (parsed.articles || []).map((article: unknown) => {
+          const a = article as Record<string, unknown>;
+          return {
+            title: String(a['title'] ?? ''),
+            description: String(a['description'] ?? ''),
+            url: String(a['link'] ?? a['url'] ?? ''), // 統一使用 url 字段
+            imageUrl: String(a['imageUrl'] ?? a['urlToImage'] ?? ''),
+            source: String(a['source'] ?? ''),
+            pubDate: String(a['pubDate'] ?? a['publishedAt'] ?? ''),
+            timestamp: String(a['timestamp'] ?? new Date().toISOString()),
+            author: String(a['author'] ?? ''),
+            content: String(a['content'] ?? ''),
+            category: String(a['category'] ?? ''),
+            language: String(a['language'] ?? 'en')
+          } as NewsArticle;
+        });
       }
     } catch (e) {
       console.warn("讀取歷史快取失敗:", e);
@@ -266,19 +274,22 @@ export default function useFetchNews(swrOptions: SwrNewsOptions = {}): UseFetchN
         // 確保快取資料格式正確且有文章
         if (Array.isArray(parsed.articles) && parsed.articles.length > 0) {
           // 確保歷史快取資料經過字段標準化處理
-          const normalizedArticles = parsed.articles.map((article: any) => ({
-            title: article.title || '',
-            description: article.description || '',
-            url: article.link || article.url || '', // 統一使用 url 字段
-            imageUrl: article.imageUrl || article.urlToImage || '',
-            source: article.source || '',
-            pubDate: article.pubDate || article.publishedAt || '',
-            timestamp: article.timestamp || new Date().toISOString(),
-            author: article.author || '',
-            content: article.content || '',
-            category: article.category || '',
-            language: article.language || 'en'
-          }));
+          const normalizedArticles = parsed.articles.map((article: unknown) => {
+            const a = article as Record<string, unknown>;
+            return {
+              title: String(a['title'] ?? ''),
+              description: String(a['description'] ?? ''),
+              url: String(a['link'] ?? a['url'] ?? ''), // 統一使用 url 字段
+              imageUrl: String(a['imageUrl'] ?? a['urlToImage'] ?? ''),
+              source: String(a['source'] ?? ''),
+              pubDate: String(a['pubDate'] ?? a['publishedAt'] ?? ''),
+              timestamp: String(a['timestamp'] ?? new Date().toISOString()),
+              author: String(a['author'] ?? ''),
+              content: String(a['content'] ?? ''),
+              category: String(a['category'] ?? ''),
+              language: String(a['language'] ?? 'en')
+            } as NewsArticle;
+          });
           
           console.log("使用歷史快取資料:", normalizedArticles.length, "篇新聞");
           return {
@@ -323,9 +334,10 @@ export default function useFetchNews(swrOptions: SwrNewsOptions = {}): UseFetchN
       }
     },
     // SWR 提供的配置選項
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       // 發生錯誤時，記錄錯誤並嘗試使用歷史快取
-      console.error("SWR 錯誤:", error.message);
+      const err = error as { message?: string };
+      console.error("SWR 錯誤:", err?.message ?? error);
       try {
         const cache = localStorage.getItem("newsHistoryCache");
         if (cache) {
@@ -348,7 +360,7 @@ export default function useFetchNews(swrOptions: SwrNewsOptions = {}): UseFetchN
   const { data, error, isLoading, mutate, isValidating } = useSWR<NewsResponse>(
     "getNews", // 固定的 key，因為不再依賴 URL，數據來源是 Firebase Cloud Function，而不是傳統的 REST API URL
     fetcher, // 資料獲取函數
-    { ...defaultOptions, ...swrOptions } as any // 合併預設和自訂選項
+    { ...defaultOptions, ...swrOptions } as SwrNewsOptions // 合併預設和自訂選項
   );
 
   // 返回 SWR 的狀態和資料

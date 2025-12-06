@@ -12,13 +12,6 @@ interface FavoriteButtonProps {
   title: string;
 }
 /**
- * useFavoriteItem Hook 返回類型介面
- */
-interface UseFavoriteItemReturn {
-  toggleFavorite: () => void;
-  isFavorited: boolean;
-}
-/**
  * FavoriteButton 元件 - 負責顯示和處理收藏功能
  * @param props - 組件屬性
  * @returns JSX.Element

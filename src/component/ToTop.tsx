@@ -27,7 +27,7 @@ const ToTop: FC<ToTopProps> = ({
 
   useEffect(() => {
     // 處理滾動事件的函數，決定是否顯示「回到頂部」按鈕
-    const handleScroll: ScrollEventHandler = (ev?: Event) => {
+    const handleScroll: ScrollEventHandler = (_ev?: Event) => {
       // 取得目前垂直滾動位置 (兼容不同瀏覽器)
       const scrollY = window.scrollY || window.pageYOffset;
 

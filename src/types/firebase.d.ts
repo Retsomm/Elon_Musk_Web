@@ -1,19 +1,19 @@
 declare module 'firebase/database' {
-  export function ref(database: any, path?: string): any;
-  export function set(ref: any, value: any): Promise<void>;
-  export function get(ref: any): Promise<any>;
-  export function onValue(ref: any, callback: (snapshot: any) => void): () => void;
-  export function off(ref: any, callback?: (snapshot: any) => void): void;
+  export function ref(database: unknown, path?: string): unknown;
+  export function set(ref: unknown, value: unknown): Promise<void>;
+  export function get(ref: unknown): Promise<unknown>;
+  export function onValue(ref: unknown, callback: (snapshot: unknown) => void): () => void;
+  export function off(ref: unknown, callback?: (snapshot: unknown) => void): void;
 }
 declare module 'firebase/app' {
-  export function initializeApp(config: any): any;
-  export function getApps(): any[];
-  export function getApp(name?: string): any;
+  export function initializeApp(config: unknown): unknown;
+  export function getApps(): unknown[];
+  export function getApp(name?: string): unknown;
 }
 declare module 'firebase/auth' {
-  export function getAuth(app?: any): any;
-  export function signInWithEmailAndPassword(auth: any, email: string, password: string): Promise<any>;
-  export function createUserWithEmailAndPassword(auth: any, email: string, password: string): Promise<any>;
-  export function signOut(auth: any): Promise<void>;
-  export function onAuthStateChanged(auth: any, callback: (user: any) => void): () => void;
+  export function getAuth(app?: unknown): unknown;
+  export function signInWithEmailAndPassword(auth: unknown, email: string, password: string): Promise<unknown>;
+  export function createUserWithEmailAndPassword(auth: unknown, email: string, password: string): Promise<unknown>;
+  export function signOut(auth: unknown): Promise<void>;
+  export function onAuthStateChanged(auth: unknown, callback: (user: unknown) => void): () => void;
 }

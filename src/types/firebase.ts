@@ -20,7 +20,7 @@ export interface FirebaseConfig {
 }
 
 // Firebase 資料庫快照類型
-export interface DatabaseSnapshot<T = any> {
+export interface DatabaseSnapshot<T = unknown> {
   exists(): boolean;
   val(): T | null;
   key: string | null;
@@ -40,14 +40,14 @@ export interface DatabaseReference {
   parent: DatabaseReference | null;
   root: DatabaseReference;
   child(path: string): DatabaseReference;
-  push(value?: any): Promise<DatabaseReference>;
-  set(value: any): Promise<void>;
-  update(values: any): Promise<void>;
+  push(value?: unknown): Promise<DatabaseReference>;
+  set(value: unknown): Promise<void>;
+  update(values: unknown): Promise<void>;
   remove(): Promise<void>;
   on(eventType: string, callback: (snapshot: DatabaseSnapshot) => void): (snapshot: DatabaseSnapshot) => void;
   off(eventType?: string, callback?: (snapshot: DatabaseSnapshot) => void): void;
   once(eventType: string): Promise<DatabaseSnapshot>;
-  transaction(updateFunction: (currentData: any) => any): Promise<{ committed: boolean; snapshot: DatabaseSnapshot }>;
+  transaction(updateFunction: (currentData: unknown) => unknown): Promise<{ committed: boolean; snapshot: DatabaseSnapshot }>;
 }
 
 // 認證提供者類型
@@ -82,7 +82,7 @@ export interface UserUpdateData {
 }
 
 // Firebase 操作結果類型
-export interface FirebaseOperationResult<T = any> {
+export interface FirebaseOperationResult<T = unknown> {
   success: boolean;
   data?: T;
   error?: FirebaseError;
@@ -93,7 +93,7 @@ export interface FirebaseOperationResult<T = any> {
 export interface BatchOperation {
   type: 'set' | 'update' | 'delete';
   path: string;
-  value?: any;
+  value?: unknown;
 }
 
 // Firebase 查詢選項類型
@@ -101,9 +101,9 @@ export interface QueryOptions {
   orderBy?: string;
   limitToFirst?: number;
   limitToLast?: number;
-  startAt?: any;
-  endAt?: any;
-  equalTo?: any;
+  startAt?: unknown;
+  endAt?: unknown;
+  equalTo?: unknown;
 }
 
 // Firebase 監聽器選項類型

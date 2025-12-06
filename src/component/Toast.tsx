@@ -36,7 +36,7 @@ interface ToastOptionsConfig {
 }
 
 // Toast 容器組件的型別定義
-interface ToastProps {}
+type ToastProps = object;
 
 // Toast 容器組件
 // 使用 react-hot-toast 的 Toaster 組件來顯示所有 toast
