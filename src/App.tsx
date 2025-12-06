@@ -2,6 +2,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import type { FC } from "react";
+import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
+import ErrorPage from 'components/ErrorPage';
 import "./App.css";
 import "./index.css";
 
@@ -19,7 +21,6 @@ const InfoItem = lazy(() => import("pages/InfoItem"));
 const Layout = lazy(() => import("components/Layout"));
 const ScrollToTop = lazy(() => import("hooks/useScrollToTop"));
 const ProtectedRoute = lazy(() => import("./component/ProtectedRoute.tsx"));
-const ErrorBoundary = lazy(() => import("./component/ErrorBoundary.tsx"));
 
 // 直接匯入的元件
 import Toast from "./component/Toast.tsx";
@@ -31,7 +32,7 @@ import Toast from "./component/Toast.tsx";
 const App: FC = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <ErrorBoundary>
+      <ReactErrorBoundary FallbackComponent={ErrorPage}>
         <BrowserRouter>
           <ScrollToTop />
           <Routes>
@@ -56,7 +57,7 @@ const App: FC = () => {
           </Routes>
         </BrowserRouter>
         <Toast />
-      </ErrorBoundary>
+      </ReactErrorBoundary>
     </Suspense>
   );
 };
